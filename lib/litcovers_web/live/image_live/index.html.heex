@@ -1,0 +1,45 @@
+<.header>
+  Listing Images
+  <:actions>
+    <.link patch={~p"/#{@locale}/images/new"}>
+      <.button>New Image</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table id="images" rows={@images} row_click={&JS.navigate(~p"/#{@locale}/images/#{&1}")}>
+  <:col :let={image} label="Url"><%= image.url %></:col>
+  <:col :let={image} label="Description"><%= image.description %></:col>
+  <:col :let={image} label="Completed"><%= image.completed %></:col>
+  <:col :let={image} label="Width"><%= image.width %></:col>
+  <:col :let={image} label="Height"><%= image.height %></:col>
+  <:col :let={image} label="Prompt"><%= image.prompt %></:col>
+  <:col :let={image} label="Character gender"><%= image.character_gender %></:col>
+  <:action :let={image}>
+    <div class="sr-only">
+      <.link navigate={~p"/#{@locale}/images/#{image}"}>Show</.link>
+    </div>
+    <.link patch={~p"/#{@locale}/images/#{image}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={image}>
+    <.link phx-click={JS.push("delete", value: %{id: image.id})} data-confirm="Are you sure?">
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="image-modal"
+  show
+  on_cancel={JS.navigate(~p"/#{@locale}/images")}
+>
+  <.live_component
+    module={LitcoversWeb.ImageLive.FormComponent}
+    id={@image.id || :new}
+    title={@page_title}
+    action={@live_action}
+    image={@image}
+    navigate={~p"/#{@locale}/images"}
+  />
+</.modal>
