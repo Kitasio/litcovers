@@ -6,4 +6,6 @@ defmodule LitcoversWeb.PageController do
     # so skip the default app layout.
     render(conn, :home, layout: false)
   end
+
+  def dummy(_conn, _params), do: nil
 end

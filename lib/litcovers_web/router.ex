@@ -8,6 +8,10 @@ defmodule LitcoversWeb.Router do
     plug :put_root_layout, {LitcoversWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+
+    plug SetLocale,
+      gettext: LitcoversWeb.Gettext,
+      default_locale: "ru"
   end
 
   pipeline :api do
@@ -15,6 +19,12 @@ defmodule LitcoversWeb.Router do
   end
 
   scope "/", LitcoversWeb do
+    pipe_through :browser
+
+    get "/", PageController, :dummy
+  end
+
+  scope "/:locale", LitcoversWeb do
     pipe_through :browser
 
     get "/", PageController, :home
