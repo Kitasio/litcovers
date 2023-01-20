@@ -39,7 +39,6 @@ defmodule LitcoversWeb do
   def controller do
     quote do
       use Phoenix.Controller,
-        namespace: LitcoversWeb,
         formats: [:html, :json],
         layouts: [html: LitcoversWeb.Layouts]
 

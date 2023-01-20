@@ -23,7 +23,7 @@ config :litcovers, LitcoversWeb.Endpoint,
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "wNE2JURdoH/wgWeGTKvTJd+9rpsYAxChXkt3G3zREaV06K/3zoyxcHYVfz+LT8hY",
+  secret_key_base: "x6gtVlsRMDGZwYHXdpKr4TPxi5BWj+7wDTZMwyka80oOf3AeUCX0UsjS8uCC3foE",
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
     tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
@@ -58,8 +58,7 @@ config :litcovers, LitcoversWeb.Endpoint,
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/litcovers_web/(live|views)/.*(ex)$",
-      ~r"lib/litcovers_web/templates/.*(eex)$"
+      ~r"lib/litcovers_web/(controllers|live|components)/.*(ex|heex)$"
     ]
   ]
 

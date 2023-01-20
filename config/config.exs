@@ -18,7 +18,7 @@ config :litcovers, LitcoversWeb.Endpoint,
     layout: false
   ],
   pubsub_server: Litcovers.PubSub,
-  live_view: [signing_salt: "WN619nvW"]
+  live_view: [signing_salt: "R90vzpNf"]
 
 # Configures the mailer
 #
@@ -41,7 +41,7 @@ config :esbuild,
 
 # Configure tailwind (the version is required)
 config :tailwind,
-  version: "3.1.8",
+  version: "3.2.4",
   default: [
     args: ~w(
       --config=tailwind.config.js

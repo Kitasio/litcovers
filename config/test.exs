@@ -17,7 +17,7 @@ config :litcovers, Litcovers.Repo,
 # you can enable the server option below.
 config :litcovers, LitcoversWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "SXZlhjyhcHQ6Tpe4e3XvDvIfia477jRQSo6wHOaEOPTqiE5Tc4nXGhtYlRXSanoS",
+  secret_key_base: "8RaXxnEultwRYiwH/qWgIM81nNIczutGBFYbN3m9auzOhXr+7yMEbRjYuBRthDuT",
   server: false
 
 # In test we don't send emails.

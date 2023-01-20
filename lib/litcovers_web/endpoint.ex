@@ -7,7 +7,7 @@ defmodule LitcoversWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_litcovers_key",
-    signing_salt: "Hnl3lTOA",
+    signing_salt: "7VYBZHDA",
     same_site: "Lax"
   ]
 
