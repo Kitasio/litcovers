@@ -85,6 +85,7 @@ defmodule LitcoversWeb do
       import Phoenix.HTML
       # Core UI components and translation
       import LitcoversWeb.CoreComponents
+      import LitcoversWeb.UiComponents
       import LitcoversWeb.Gettext
 
       # Shortcut for generating JS commands

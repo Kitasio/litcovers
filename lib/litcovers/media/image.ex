@@ -39,5 +39,6 @@ defmodule Litcovers.Media.Image do
       :prompt,
       :character_gender
     ])
+    |> validate_length(:description, max: 600)
   end
 end

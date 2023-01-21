@@ -53,7 +53,7 @@ defmodule LitcoversWeb.CoreComponents do
       phx-remove={hide_modal(@id)}
       class="relative z-50 hidden"
     >
-      <div id={"#{@id}-bg"} class="fixed inset-0 bg-zinc-50/90 transition-opacity" aria-hidden="true" />
+      <div id={"#{@id}-bg"} class="fixed inset-0 bg-main/90 transition-opacity" aria-hidden="true" />
       <div
         class="fixed inset-0 overflow-y-auto"
         aria-labelledby={"#{@id}-title"}
@@ -70,7 +70,7 @@ defmodule LitcoversWeb.CoreComponents do
               phx-window-keydown={hide_modal(@on_cancel, @id)}
               phx-key="escape"
               phx-click-away={hide_modal(@on_cancel, @id)}
-              class="hidden relative rounded-2xl bg-white p-14 shadow-lg shadow-zinc-700/10 ring-1 ring-zinc-700/10 transition"
+              class="hidden bg-sec relative rounded-2xl bg-white p-14 shadow-lg shadow-zinc-700/10 ring-1 ring-zinc-700/10 transition"
             >
               <div class="absolute top-6 right-5">
                 <button
@@ -200,7 +200,7 @@ defmodule LitcoversWeb.CoreComponents do
   def simple_form(assigns) do
     ~H"""
     <.form :let={f} for={@for} as={@as} {@rest}>
-      <div class="space-y-8 bg-white mt-10">
+      <div class="space-y-8 bg-sec mt-10">
         <%= render_slot(@inner_block, f) %>
         <div :for={action <- @actions} class="mt-2 flex items-center justify-between gap-6">
           <%= render_slot(action, f) %>
@@ -229,14 +229,34 @@ defmodule LitcoversWeb.CoreComponents do
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-zinc-900 hover:bg-zinc-700 py-2 px-3",
-        "text-sm font-semibold leading-6 text-white active:text-white/80",
+        "phx-submit-loading:opacity-75 py-2.5 px-4 bg-accent-main hover:bg-hover rounded-full",
+        "text-sm font-semibold leading-6 text-white active:text-white/80 transition disabled:bg-dis-btn",
         @class
       ]}
       {@rest}
     >
       <%= render_slot(@inner_block) %>
     </button>
+    """
+  end
+
+  attr :class, :string, default: nil
+  attr :navigate, :any, required: true
+
+  slot :inner_block, required: true
+
+  def link_button(assigns) do
+    ~H"""
+    <.link
+      navigate={@navigate}
+      class={[
+        "phx-submit-loading:opacity-75 py-2.5 px-4 bg-accent-main hover:bg-hover rounded-full",
+        "text-sm font-semibold leading-6 text-white active:text-white/80 transition disabled:bg-dis-btn",
+        @class
+      ]}
+    >
+      <%= render_slot(@inner_block) %>
+    </.link>
     """
   end
 
@@ -312,7 +332,7 @@ defmodule LitcoversWeb.CoreComponents do
       <select
         id={@id}
         name={@name}
-        class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-zinc-500 focus:border-zinc-500 sm:text-sm"
+        class="bg-sec mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-zinc-500 focus:border-zinc-500 sm:text-sm"
         multiple={@multiple}
         {@rest}
       >
@@ -333,9 +353,9 @@ defmodule LitcoversWeb.CoreComponents do
         name={@name}
         class={[
           input_border(@errors),
-          "mt-2 block min-h-[6rem] w-full rounded-lg border-zinc-300 py-[7px] px-[11px]",
-          "text-zinc-900 focus:border-zinc-400 focus:outline-none focus:ring-4 focus:ring-zinc-800/5 sm:text-sm sm:leading-6",
-          "phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400 phx-no-feedback:focus:ring-zinc-800/5"
+          "bg-sec mt-2 block min-h-[6rem] w-full rounded-lg border-stroke-main py-[7px] px-[11px]",
+          "text-slate-200 focus:border-stroke-main focus:outline-none focus:ring-4 focus:ring-zinc-800/5 sm:text-sm sm:leading-6",
+          "phx-no-feedback:border-stroke-main phx-no-feedback:focus:border-accent-main phx-no-feedback:focus:ring-zinc-800/5"
         ]}
         {@rest}
       >
@@ -356,7 +376,7 @@ defmodule LitcoversWeb.CoreComponents do
         value={@value}
         class={[
           input_border(@errors),
-          "mt-2 block w-full rounded-lg border-zinc-300 py-[7px] px-[11px]",
+          "bg-sec text-white mt-2 block w-full rounded-lg border-zinc-300 py-[7px] px-[11px]",
           "text-zinc-900 focus:outline-none focus:ring-4 sm:text-sm sm:leading-6",
           "phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400 phx-no-feedback:focus:ring-zinc-800/5"
         ]}
@@ -381,7 +401,7 @@ defmodule LitcoversWeb.CoreComponents do
 
   def label(assigns) do
     ~H"""
-    <label for={@for} class="block text-sm font-semibold leading-6 text-zinc-800">
+    <label for={@for} class="block text-sm font-semibold leading-6 text-slate-200">
       <%= render_slot(@inner_block) %>
     </label>
     """
@@ -414,7 +434,7 @@ defmodule LitcoversWeb.CoreComponents do
     ~H"""
     <header class={[@actions != [] && "flex items-center justify-between gap-6", @class]}>
       <div>
-        <h1 class="text-lg font-semibold leading-8 text-zinc-800">
+        <h1 class="text-slate-200 text-lg font-semibold leading-8 text-zinc-800">
           <%= render_slot(@inner_block) %>
         </h1>
         <p :if={@subtitle != []} class="mt-2 text-sm leading-6 text-zinc-600">

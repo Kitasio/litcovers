@@ -33,11 +33,19 @@ defmodule LitcoversWeb.Router do
     get "/", PageController, :home
 
     live "/images", ImageLive.Index, :index
-    live "/images/new", ImageLive.Index, :new
+    live "/images/new", ImageLive.New
+    live "/images/new_form", ImageLive.Index, :new
     live "/images/:id/edit", ImageLive.Index, :edit
 
     live "/images/:id", ImageLive.Show, :show
     live "/images/:id/show/edit", ImageLive.Show, :edit
+
+    live "/prompts", PromptLive.Index, :index
+    live "/prompts/new", PromptLive.Index, :new
+    live "/prompts/:id/edit", PromptLive.Index, :edit
+
+    live "/prompts/:id", PromptLive.Show, :show
+    live "/prompts/:id/show/edit", PromptLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.
