@@ -10,7 +10,9 @@ defmodule Litcovers.Media.Image do
     field :prompt, :string
     field :url, :string
     field :width, :integer
-    field :user_id, :id
+    field :favorite, :boolean, default: false
+
+    belongs_to :user, Litcovers.Accounts.User
 
     timestamps()
   end
@@ -18,7 +20,24 @@ defmodule Litcovers.Media.Image do
   @doc false
   def changeset(image, attrs) do
     image
-    |> cast(attrs, [:url, :description, :completed, :width, :height, :prompt, :character_gender])
-    |> validate_required([:url, :description, :completed, :width, :height, :prompt, :character_gender])
+    |> cast(attrs, [
+      :url,
+      :description,
+      :completed,
+      :width,
+      :height,
+      :prompt,
+      :character_gender,
+      :favorite
+    ])
+    |> validate_required([
+      :url,
+      :description,
+      :completed,
+      :width,
+      :height,
+      :prompt,
+      :character_gender
+    ])
   end
 end
