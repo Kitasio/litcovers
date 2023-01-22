@@ -5,7 +5,6 @@ defmodule LitcoversWeb.ImageLive.Show do
 
   @impl true
   def mount(%{"locale" => locale}, _session, socket) do
-    Gettext.put_locale(locale)
     {:ok, assign(socket, locale: locale)}
   end
 

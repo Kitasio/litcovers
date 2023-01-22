@@ -32,14 +32,6 @@ defmodule LitcoversWeb.Router do
 
     get "/", PageController, :home
 
-    live "/images", ImageLive.Index, :index
-    live "/images/new", ImageLive.New
-    live "/images/new_form", ImageLive.Index, :new
-    live "/images/:id/edit", ImageLive.Index, :edit
-
-    live "/images/:id", ImageLive.Show, :show
-    live "/images/:id/show/edit", ImageLive.Show, :edit
-
     live "/prompts", PromptLive.Index, :index
     live "/prompts/new", PromptLive.Index, :new
     live "/prompts/:id/edit", PromptLive.Index, :edit
@@ -93,6 +85,14 @@ defmodule LitcoversWeb.Router do
       on_mount: [{LitcoversWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+
+      live "/images", ImageLive.Index, :index
+      live "/images/new", ImageLive.New
+      live "/images/new_form", ImageLive.Index, :new
+      live "/images/:id/edit", ImageLive.Index, :edit
+
+      live "/images/:id", ImageLive.Show, :show
+      live "/images/:id/show/edit", ImageLive.Show, :edit
     end
   end
 

@@ -23,4 +23,18 @@ defmodule Litcovers.MediaFixtures do
 
     image
   end
+
+  @doc """
+  Generate a idea.
+  """
+  def idea_fixture(attrs \\ %{}) do
+    {:ok, idea} =
+      attrs
+      |> Enum.into(%{
+        idea: "some idea"
+      })
+      |> Litcovers.Media.create_idea()
+
+    idea
+  end
 end

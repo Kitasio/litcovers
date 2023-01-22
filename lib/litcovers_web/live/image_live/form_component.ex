@@ -72,16 +72,16 @@ defmodule LitcoversWeb.ImageLive.FormComponent do
     end
   end
 
-  defp save_image(socket, :new, image_params) do
-    case Media.create_image(image_params) do
-      {:ok, _image} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "Image created successfully")
-         |> push_navigate(to: socket.assigns.navigate)}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
-    end
-  end
+  # defp save_image(socket, :new, image_params) do
+  #   case Media.create_image(image_params) do
+  #     {:ok, _image} ->
+  #       {:noreply,
+  #        socket
+  #        |> put_flash(:info, "Image created successfully")
+  #        |> push_navigate(to: socket.assigns.navigate)}
+  #
+  #     {:error, %Ecto.Changeset{} = changeset} ->
+  #       {:noreply, assign(socket, changeset: changeset)}
+  #   end
+  # end
 end

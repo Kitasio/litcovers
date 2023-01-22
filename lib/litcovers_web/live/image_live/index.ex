@@ -6,8 +6,7 @@ defmodule LitcoversWeb.ImageLive.Index do
 
   @impl true
   def mount(%{"locale" => locale}, _session, socket) do
-    Gettext.put_locale(locale)
-    {:ok, assign(socket, images: list_images(), locale: locale)}
+    {:ok, assign(socket, images: list_images(socket.assigns.current_user), locale: locale)}
   end
 
   @impl true
@@ -38,10 +37,10 @@ defmodule LitcoversWeb.ImageLive.Index do
     image = Media.get_image!(id)
     {:ok, _} = Media.delete_image(image)
 
-    {:noreply, assign(socket, :images, list_images())}
+    {:noreply, assign(socket, :images, list_images(socket.assigns.current_user))}
   end
 
-  defp list_images do
-    Media.list_images()
+  defp list_images(user) do
+    Media.list_user_images(user)
   end
 end

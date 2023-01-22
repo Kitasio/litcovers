@@ -141,7 +141,7 @@
             <.input field={{f, :height}} value={@height} type="hidden" />
           </div>
 
-          <.generate_btn request_id={@request_id} request_completed={@request_completed} />
+          <.generate_btn image_id={@image_id} request_completed={@request_completed} />
         </.form>
       </div>
     <% else %>
@@ -152,7 +152,7 @@
     <.img
       aspect_ratio={@aspect_ratio}
       img_url={@img_url}
-      request_id={@request_id}
+      image_id={@image_id}
       request_completed={@request_completed}
     />
   </div>

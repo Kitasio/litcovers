@@ -1,6 +1,11 @@
 defmodule LitcoversWeb.UserLoginLive do
   use LitcoversWeb, :live_view
 
+  def mount(%{"locale" => locale}, _session, socket) do
+    email = live_flash(socket.assigns.flash, :email)
+    {:ok, assign(socket, email: email, locale: locale), temporary_assigns: [email: nil]}
+  end
+
   def render(assigns) do
     ~H"""
     <div class="mx-auto max-w-sm">
@@ -8,7 +13,10 @@ defmodule LitcoversWeb.UserLoginLive do
         Sign in to account
         <:subtitle>
           Don't have an account?
-          <.link navigate={~p"/users/register"} class="font-semibold text-brand hover:underline">
+          <.link
+            navigate={~p"/#{@locale}/users/register"}
+            class="font-semibold text-brand hover:underline"
+          >
             Sign up
           </.link>
           for an account now.
@@ -19,7 +27,7 @@ defmodule LitcoversWeb.UserLoginLive do
         :let={f}
         id="login_form"
         for={:user}
-        action={~p"/users/log_in"}
+        action={~p"/#{@locale}/users/log_in"}
         as={:user}
         phx-update="ignore"
       >
@@ -28,7 +36,7 @@ defmodule LitcoversWeb.UserLoginLive do
 
         <:actions :let={f}>
           <.input field={{f, :remember_me}} type="checkbox" label="Keep me logged in" />
-          <.link href={~p"/users/reset_password"} class="text-sm font-semibold">
+          <.link href={~p"/#{@locale}/users/reset_password"} class="text-sm font-semibold">
             Forgot your password?
           </.link>
         </:actions>
@@ -40,10 +48,5 @@ defmodule LitcoversWeb.UserLoginLive do
       </.simple_form>
     </div>
     """
-  end
-
-  def mount(_params, _session, socket) do
-    email = live_flash(socket.assigns.flash, :email)
-    {:ok, assign(socket, email: email), temporary_assigns: [email: nil]}
   end
 end

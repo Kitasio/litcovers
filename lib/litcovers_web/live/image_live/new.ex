@@ -1,4 +1,5 @@
 defmodule LitcoversWeb.ImageLive.New do
+  alias CoverGen.Create
   alias Litcovers.Media
   alias Litcovers.Media.Image
   alias Litcovers.Metadata
@@ -31,8 +32,8 @@ defmodule LitcoversWeb.ImageLive.New do
 
   @impl true
   def mount(%{"locale" => locale}, _session, socket) do
+    if connected?(socket), do: CoverGen.Create.subscribe()
     Gettext.put_locale(locale)
-    # TODO current_user
 
     style_prompts = Metadata.list_all_where(:fantasy, :positive, :setting)
     prompt = style_prompts |> List.first()
@@ -40,7 +41,6 @@ defmodule LitcoversWeb.ImageLive.New do
 
     {:ok,
      assign(socket,
-       # current_user: current_user,
        changeset: Media.change_image(%Image{}),
        locale: locale,
        lit_ai: true,
@@ -61,23 +61,23 @@ defmodule LitcoversWeb.ImageLive.New do
        width: 512,
        height: 768,
        img_url: nil,
-       request_id: nil,
+       image_id: nil,
        request_completed: false
      )}
   end
 
-  # def handle_info({:gen_complete, request}, socket) do
-  #   request = Media.get_request_and_covers!(request.id)
-  #   cover = request.covers |> List.first()
-  #
-  #   {:noreply,
-  #    socket
-  #    |> assign(
-  #      img_url: cover.cover_url,
-  #      request_id: request.id,
-  #      request_completed: request.completed
-  #    )}
-  # end
+  @impl true
+  def handle_info({:gen_complete, image}, socket) do
+    image = Media.get_image_preload!(image.id)
+
+    {:noreply,
+     socket
+     |> assign(
+       img_url: image.url,
+       image_id: image.id,
+       request_completed: image.completed
+     )}
+  end
 
   @impl true
   def handle_event("validate", %{"image" => image_params}, socket) do
@@ -89,30 +89,31 @@ defmodule LitcoversWeb.ImageLive.New do
     {:noreply, assign(socket, :changeset, changeset)}
   end
 
-  def handle_event("save", %{"image" => image_params}, socket) do
-    save_image(socket, socket.assigns.action, image_params)
-  end
-
-  # def handle_event("save", %{"request" => request_params}, socket) do
-  #   %{"prompt_id" => prompt_id} = request_params
-  #   prompt = Litcovers.Sd.get_prompt!(prompt_id)
-  #
-  #   case Media.create_request(socket.assigns.current_user, prompt, request_params) do
-  #     {:ok, request} ->
-  #       Task.start(fn ->
-  #         Create.new(request)
-  #       end)
-  #
-  #       socket = socket |> assign(request_id: request.id, request_completed: false, img_url: nil)
-  #
-  #       {:noreply, socket}
-  #
-  #     {:error, %Ecto.Changeset{} = changeset} ->
-  #       IO.inspect(changeset)
-  #       placeholder = placeholder_or_empty(Media.get_random_placeholder() |> List.first())
-  #       {:noreply, assign(socket, changeset: changeset, placeholder: placeholder)}
-  #   end
+  # def handle_event("save", %{"image" => image_params}, socket) do
+  #   save_image(socket, socket.assigns.action, image_params)
   # end
+
+  def handle_event("save", %{"image" => image_params}, socket) do
+    %{"prompt_id" => prompt_id} = image_params
+    prompt = Metadata.get_prompt!(prompt_id)
+
+    case Media.create_image(socket.assigns.current_user, prompt, image_params) do
+      {:ok, image} ->
+        Task.start(fn ->
+          Create.new(image)
+        end)
+
+        socket = socket |> assign(image_id: image.id, request_completed: false, img_url: nil)
+
+        {:noreply, socket}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        IO.inspect(changeset)
+        # placeholder = placeholder_or_empty(Media.get_random_placeholder() |> List.first())
+        placeholder = placeholder_or_empty(nil)
+        {:noreply, assign(socket, changeset: changeset, placeholder: placeholder)}
+    end
+  end
 
   def handle_event(
         "aspect-ratio-change",
@@ -252,12 +253,12 @@ defmodule LitcoversWeb.ImageLive.New do
   end
 
   def generate_btn(assigns) do
-    assigns = assign_new(assigns, :request_id, fn -> nil end)
+    assigns = assign_new(assigns, :image_id, fn -> nil end)
     assigns = assign_new(assigns, :request_completed, fn -> false end)
 
     assigns =
       assign_new(assigns, :spin, fn ->
-        assigns.request_id != nil and assigns.request_completed == false
+        assigns.image_id != nil and assigns.request_completed == false
       end)
 
     ~H"""

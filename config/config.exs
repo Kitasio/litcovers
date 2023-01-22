@@ -59,6 +59,21 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+config :litcovers,
+  imagekit_url: "https://ik.imagekit.io/soulgenesis",
+  bucket: "sapimedia"
+
+config :ex_aws,
+  debug_requests: true,
+  json_codec: Jason,
+  access_key_id: {:system, "SPACES_ACCESS_KEY_ID"},
+  secret_access_key: {:system, "SPACES_SECRET_ACCESS_KEY"}
+
+config :ex_aws, :s3,
+  scheme: "https://",
+  host: "fra1.digitaloceanspaces.com",
+  region: "fra1"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

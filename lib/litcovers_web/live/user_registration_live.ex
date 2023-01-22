@@ -11,7 +11,10 @@ defmodule LitcoversWeb.UserRegistrationLive do
         Register for an account
         <:subtitle>
           Already registered?
-          <.link navigate={~p"/users/log_in"} class="font-semibold text-brand hover:underline">
+          <.link
+            navigate={~p"/#{@locale}/users/log_in"}
+            class="font-semibold text-brand hover:underline"
+          >
             Sign in
           </.link>
           to your account now.
@@ -25,7 +28,7 @@ defmodule LitcoversWeb.UserRegistrationLive do
         phx-submit="save"
         phx-change="validate"
         phx-trigger-action={@trigger_submit}
-        action={~p"/users/log_in?_action=registered"}
+        action={~p"/#{@locale}/users/log_in?_action=registered"}
         method="post"
         as={:user}
       >
@@ -44,9 +47,9 @@ defmodule LitcoversWeb.UserRegistrationLive do
     """
   end
 
-  def mount(_params, _session, socket) do
+  def mount(%{"locale" => locale}, _session, socket) do
     changeset = Accounts.change_user_registration(%User{})
-    socket = assign(socket, changeset: changeset, trigger_submit: false)
+    socket = assign(socket, changeset: changeset, trigger_submit: false, locale: locale)
     {:ok, socket, temporary_assigns: [changeset: nil]}
   end
 
@@ -56,7 +59,7 @@ defmodule LitcoversWeb.UserRegistrationLive do
         {:ok, _} =
           Accounts.deliver_user_confirmation_instructions(
             user,
-            &url(~p"/users/confirm/#{&1}")
+            &url(~p"/#{socket.assigns.locale}/users/confirm/#{&1}")
           )
 
         changeset = Accounts.change_user_registration(user)

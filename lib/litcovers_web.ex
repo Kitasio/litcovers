@@ -62,6 +62,7 @@ defmodule LitcoversWeb do
     quote do
       use Phoenix.LiveComponent
 
+      on_mount(LitcoversWeb.RestoreLocale)
       unquote(html_helpers())
     end
   end

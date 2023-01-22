@@ -52,7 +52,10 @@ defmodule Litcovers.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:set_locale, "~> 0.2.9"}
+      {:set_locale, "~> 0.2.9"},
+      {:ex_aws, "~> 2.1"},
+      {:ex_aws_s3, "~> 2.0"},
+      {:httpoison, "~> 1.8"}
     ]
   end
 

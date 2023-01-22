@@ -80,13 +80,13 @@ defmodule LitcoversWeb.UiComponents do
 
   attr :img_url, :string, default: nil
   attr :aspect_ratio, :string, default: "cover"
-  attr :request_id, :integer, default: nil
+  attr :image_id, :integer, default: nil
   attr :request_completed, :boolean, default: false
 
   def img(assigns) do
     assigns =
       assign_new(assigns, :spin, fn ->
-        assigns.request_id != nil and assigns.request_completed == false
+        assigns.image_id != nil and assigns.request_completed == false
       end)
 
     if assigns.spin do
