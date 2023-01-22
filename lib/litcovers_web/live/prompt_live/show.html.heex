@@ -2,7 +2,7 @@
   Prompt <%= @prompt.id %>
   <:subtitle>This is a prompt record from your database.</:subtitle>
   <:actions>
-    <.link patch={~p"/prompts/#{@prompt}/show/edit"} phx-click={JS.push_focus()}>
+    <.link patch={~p"/#{@locale}/prompts/#{@prompt}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit prompt</.button>
     </.link>
   </:actions>
@@ -19,13 +19,18 @@
 
 <.back navigate={~p"/prompts"}>Back to prompts</.back>
 
-<.modal :if={@live_action == :edit} id="prompt-modal" show on_cancel={JS.patch(~p"/prompts/#{@prompt}")}>
+<.modal
+  :if={@live_action == :edit}
+  id="prompt-modal"
+  show
+  on_cancel={JS.patch(~p"/#{@locale}/prompts/#{@prompt}")}
+>
   <.live_component
     module={LitcoversWeb.PromptLive.FormComponent}
     id={@prompt.id}
     title={@page_title}
     action={@live_action}
     prompt={@prompt}
-    navigate={~p"/prompts/#{@prompt}"}
+    navigate={~p"/#{@locale}/prompts/#{@prompt}"}
   />
 </.modal>

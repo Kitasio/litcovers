@@ -4,7 +4,8 @@ defmodule LitcoversWeb.PromptLive.Show do
   alias Litcovers.Metadata
 
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(%{"locale" => locale}, _session, socket) do
+    socket = assign(socket, :locale, locale)
     {:ok, socket}
   end
 
