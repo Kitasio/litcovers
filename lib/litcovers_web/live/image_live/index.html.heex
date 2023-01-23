@@ -1,12 +1,17 @@
 <.navbar locale={@locale} request_path={~p"/#{@locale}/images"} />
 <div class="bg-sec px-8 py-10">
-  <div class="mt-7 grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-10 lg:gap-20">
+  <div
+    id="user-images"
+    phx-update="replace"
+    class="mt-7 grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-10 lg:gap-20"
+  >
     <%= for image <- @images do %>
-      <div>
+      <div id={"image-#{image.id}"}>
         <.img
           locale={@locale}
           image_id={image.id}
           img_url={image.url}
+          favorite={image.favorite}
           aspect_ratio={aspect_ratio({image.width, image.height})}
         />
       </div>

@@ -130,6 +130,18 @@ defmodule LitcoversWeb.ImageLive.New do
     {:noreply, assign(socket, :lit_ai, toggle)}
   end
 
+  def handle_event("toggle-favorite", %{"image_id" => image_id}, socket) do
+    image = Media.get_image!(image_id)
+
+    case Media.update_image(image, %{favorite: !image.favorite}) do
+      {:ok, image} ->
+        {:noreply, assign(socket, :image, image)}
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        {:noreply, assign(socket, :changeset, changeset)}
+    end
+  end
+
   def handle_event("set_stage", %{"stage" => stage}, socket) do
     stage = get_stage(stage |> String.to_integer())
     socket = assign(socket, stage: stage)

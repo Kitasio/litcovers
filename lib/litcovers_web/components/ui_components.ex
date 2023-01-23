@@ -2,6 +2,7 @@ defmodule LitcoversWeb.UiComponents do
   use Phoenix.Component
   import LitcoversWeb.Gettext
   import LitcoversWeb.CoreComponents
+  alias Phoenix.LiveView.JS
 
   attr :request_path, :string, required: true
   attr :locale, :string, required: true
@@ -82,13 +83,17 @@ defmodule LitcoversWeb.UiComponents do
   attr :image_id, :string, default: nil
   attr :locale, :string, default: "en"
   attr :aspect_ratio, :string, default: "cover"
+  attr :favorite, :boolean, default: false
 
   def img(assigns) do
     if assigns.img_url do
       ~H"""
       <div
-        x-data={"{ showImage: false, imageUrl: '#{@img_url}' }"}
-        class={"relative bg-sec max-w-lg overflow-hidden rounded-lg aspect-#{@aspect_ratio} transition-all duration-300 mx-auto"}
+        x-data={"{ showImage: false, showToolbar: false, imageUrl: '#{@img_url}' }"}
+        class={"relative group bg-sec max-w-lg overflow-hidden rounded-lg aspect-#{@aspect_ratio} transition-all duration-300 mx-auto"}
+        x-on:mouseenter="showToolbar = !showToolbar"
+        x-on:mouseleave="showToolbar = !showToolbar"
+        id={"img-box-#{@image_id}"}
       >
         <.link navigate={"/#{@locale}/images/#{@image_id}"}>
           <img
@@ -100,10 +105,16 @@ defmodule LitcoversWeb.UiComponents do
             class="w-full h-full object-cover aspect-cover"
           />
         </.link>
-        <div>
-          <button class="absolute z-20 bottom-5 left-5 bg-red-500 p-4">
-            save
-          </button>
+        <div
+          x-show="showToolbar"
+          x-transition
+          class="p-5 absolute gap-5 flex justify-center z-20 bottom-0 left-0 w-full"
+        >
+          <.heart_button favorite={@favorite} image_id={@image_id} />
+
+          <Heroicons.academic_cap class="w-8 h-8" />
+          <Heroicons.bars_arrow_up class="w-8 h-8" />
+          <Heroicons.magnifying_glass class="w-8 h-8" />
         </div>
       </div>
       """
@@ -112,6 +123,29 @@ defmodule LitcoversWeb.UiComponents do
       <div class={"relative bg-sec max-w-lg overflow-hidden rounded-lg aspect-#{@aspect_ratio} transition-all duration-300 mx-auto"} />
       """
     end
+  end
+
+  attr :image_id, :string, default: nil
+  attr :favorite, :boolean, default: false
+
+  def heart_button(assigns) do
+    ~H"""
+    <button
+      id={"heart-#{@image_id}"}
+      class="transition duration-300 ease-out"
+      phx-value-image_id={@image_id}
+      phx-click={
+        JS.push("toggle-favorite")
+        |> JS.transition("-translate-y-1.5", to: "#heart-#{@image_id}")
+      }
+    >
+      <%= if @favorite do %>
+        <Heroicons.heart class="fill-accent-main w-8 h-8 transition-all" />
+      <% else %>
+        <Heroicons.heart class="w-8 h-8 transition-all" />
+      <% end %>
+    </button>
+    """
   end
 
   attr :aspect_ratio, :string, default: "cover"
