@@ -20,8 +20,9 @@
           <.input
             field={{f, :description}}
             type="textarea"
-            class="border-accent-main"
             label="Description"
+            placeholder={@placeholder.description}
+            rows="4"
           />
 
           <div>
@@ -149,12 +150,15 @@
     <% end %>
   </div>
   <div class="py-20 px-8 lg:col-start-6 lg:col-end-13 lg:py-auto">
-    <.img
-      aspect_ratio={@aspect_ratio}
-      img_url={@img_url}
-      image_id={@image_id}
-      request_completed={@request_completed}
-    />
+    <%= if @image_id != nil and @request_completed == false do %>
+      <.loader aspect_ratio={@aspect_ratio} />
+    <% else %>
+      <.img
+        locale={@locale}      
+        aspect_ratio={@aspect_ratio}
+        img_url={@img_url}
+        image_id={@image_id}
+      />
+    <% end %>
   </div>
-  <div class="aspect-square translate-y-6 hidden" />
 </div>

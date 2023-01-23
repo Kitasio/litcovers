@@ -1,10 +1,15 @@
 <.navbar locale={@locale} request_path={~p"/#{@locale}/images"} />
 <div class="bg-sec px-8 py-10">
-  <div class="mt-7 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-20">
+  <div class="mt-7 grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-10 lg:gap-20">
     <%= for image <- @images do %>
-      <.link navigate={~p"/#{@locale}/images/#{image.id}"}>
-        <.img img_url={image.url} />
-      </.link>
+      <div>
+        <.img
+          locale={@locale}
+          image_id={image.id}
+          img_url={image.url}
+          aspect_ratio={aspect_ratio({image.width, image.height})}
+        />
+      </div>
     <% end %>
   </div>
 </div>

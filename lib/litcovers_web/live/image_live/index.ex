@@ -43,4 +43,7 @@ defmodule LitcoversWeb.ImageLive.Index do
   defp list_images(user) do
     Media.list_user_images(user)
   end
+
+  def aspect_ratio({512, 512}), do: "square"
+  def aspect_ratio({512, 768}), do: "cover"
 end

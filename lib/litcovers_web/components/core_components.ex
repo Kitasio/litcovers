@@ -353,8 +353,8 @@ defmodule LitcoversWeb.CoreComponents do
         name={@name}
         class={[
           input_border(@errors),
-          "bg-sec mt-2 block min-h-[6rem] w-full rounded-lg border-stroke-main py-[7px] px-[11px]",
-          "text-slate-200 focus:border-stroke-main focus:outline-none focus:ring-4 focus:ring-zinc-800/5 sm:text-sm sm:leading-6",
+          "bg-sec mt-2 block min-h-[6rem] w-full rounded-lg border-2 border-stroke-main py-[7px] px-[11px]",
+          "text-slate-200 focus:border-accent-main focus:outline-none focus:ring-4 focus:ring-zinc-800/5 sm:text-sm sm:leading-6",
           "phx-no-feedback:border-stroke-main phx-no-feedback:focus:border-accent-main phx-no-feedback:focus:ring-zinc-800/5"
         ]}
         {@rest}

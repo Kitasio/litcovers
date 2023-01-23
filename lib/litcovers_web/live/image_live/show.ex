@@ -4,8 +4,9 @@ defmodule LitcoversWeb.ImageLive.Show do
   alias Litcovers.Media
 
   @impl true
-  def mount(%{"locale" => locale}, _session, socket) do
-    {:ok, assign(socket, locale: locale)}
+  def mount(%{"locale" => locale, "id" => id}, _session, socket) do
+    image = Media.get_image!(id)
+    {:ok, assign(socket, locale: locale, image: image)}
   end
 
   @impl true
