@@ -107,7 +107,7 @@ defmodule LitcoversWeb.UiComponents do
         </.link>
         <div
           x-show="showToolbar"
-          x-transition
+          x-transition.duration.200ms
           class="p-5 absolute gap-5 flex justify-center z-20 bottom-0 left-0 w-full"
         >
           <.heart_button favorite={@favorite} image_id={@image_id} />
@@ -139,11 +139,13 @@ defmodule LitcoversWeb.UiComponents do
         |> JS.transition("-translate-y-1.5", to: "#heart-#{@image_id}")
       }
     >
-      <%= if @favorite do %>
-        <Heroicons.heart class="fill-accent-main w-8 h-8 transition-all" />
-      <% else %>
-        <Heroicons.heart class="w-8 h-8 transition-all" />
-      <% end %>
+      <div class="bg-sec/50 p-2.5 rounded-full">
+        <%= if @favorite do %>
+          <Heroicons.heart class="fill-accent-main w-6 h-6 transition-all" />
+        <% else %>
+          <Heroicons.heart class="w-6 h-6 transition-all" />
+        <% end %>
+      </div>
     </button>
     """
   end
