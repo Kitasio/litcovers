@@ -252,7 +252,7 @@ defmodule LitcoversWeb.ImageLive.New do
     <div class="pb-7 pt-12 flex">
       <button
         type="submit"
-        class="btn-small flex items-center justify-center gap-3 py-5 bg-accent-main rounded-full w-full"
+        class="btn-small flex items-center justify-center gap-3 py-5 bg-accent-main disabled:bg-dis-btn rounded-full w-full"
         x-bind:disabled={"#{@spin} && true"}
       >
         <svg
