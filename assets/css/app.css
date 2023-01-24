@@ -3,3 +3,9 @@
 @import "tailwindcss/utilities";
 
 /* This file is for your main application CSS */
+
+@layer components {
+  .input {
+    @apply block p-3 bg-tag-main w-full rounded-lg focus:ring-0 focus:border-accent-main border-2 border-stroke-main;
+  }
+}

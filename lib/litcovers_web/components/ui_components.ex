@@ -82,6 +82,7 @@ defmodule LitcoversWeb.UiComponents do
   attr :img_url, :string, default: nil
   attr :image_id, :string, default: nil
   attr :locale, :string, default: "en"
+  attr :id, :string, default: "mainImage"
   attr :aspect_ratio, :string, default: "cover"
   attr :favorite, :boolean, default: false
 
@@ -97,6 +98,7 @@ defmodule LitcoversWeb.UiComponents do
       >
         <.link navigate={"/#{@locale}/images/#{@image_id}"}>
           <img
+            id={@id}
             x-show="showImage"
             x-transition.duration.300ms
             x-bind:src="imageUrl"
@@ -132,16 +134,16 @@ defmodule LitcoversWeb.UiComponents do
     ~H"""
     <button
       id={"heart-#{@image_id}"}
-      class="transition duration-300 ease-out"
+      class="transition duration-150 ease-out"
       phx-value-image_id={@image_id}
       phx-click={
         JS.push("toggle-favorite")
-        |> JS.transition("-translate-y-1.5", to: "#heart-#{@image_id}")
+        |> JS.transition("scale-90", to: "#heart-#{@image_id}")
       }
     >
       <div class="bg-sec/50 p-2.5 rounded-full">
         <%= if @favorite do %>
-          <Heroicons.heart class="fill-accent-main w-6 h-6 transition-all" />
+          <Heroicons.heart solid class="fill-accent-main w-6 h-6 transition-all" />
         <% else %>
           <Heroicons.heart class="w-6 h-6 transition-all" />
         <% end %>
@@ -177,6 +179,54 @@ defmodule LitcoversWeb.UiComponents do
           <clipPath><path fill="#fff" d="M0 0h14v14H0z" /></clipPath>
         </defs>
       </svg>
+    </div>
+    """
+  end
+
+  attr :value, :string, default: "Dostoyevsky"
+
+  def author_input(assigns) do
+    ~H"""
+    <div>
+      <div class="flex justify-between items-center">
+        <.header><%= gettext("Author's name") %></.header>
+        <div class="px-2.5 flex items-center gap-3 border-2 border-stroke-sec bg-tag-sec rounded-lg">
+          <Heroicons.chevron_left class="w-5 h-5" phx-click="prev-author-font" />
+          <span>T</span>
+          <Heroicons.chevron_right class="w-5 h-5" phx-click="next-author-font" />
+        </div>
+      </div>
+      <.input
+        id="author-input"
+        value={@value}
+        class="input p-10"
+        type="text"
+        errors={[]}
+        name="params[author]"
+      />
+    </div>
+    """
+  end
+
+  def title_input(assigns) do
+    ~H"""
+    <div>
+      <div class="flex justify-between items-center">
+        <.header><%= gettext("Title") %></.header>
+        <div class="px-2.5 flex items-center gap-3 border-2 border-stroke-sec bg-tag-sec rounded-lg">
+          <Heroicons.chevron_left class="w-5 h-5" phx-click="prev-title-font" />
+          <span>T</span>
+          <Heroicons.chevron_right class="w-5 h-5" phx-click="next-title-font" />
+        </div>
+      </div>
+      <.input
+        id="title-input"
+        value={@value}
+        class="input p-10"
+        type="text"
+        errors={[]}
+        name="params[title]"
+      />
     </div>
     """
   end
