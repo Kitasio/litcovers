@@ -12,16 +12,6 @@ defmodule LitcoversWeb.ImageLive.Show do
     author_current_font = fonts_list() |> List.first()
     author_font_base64 = author_current_font |> font_to_base64()
 
-    params = %{
-      author: "",
-      author_position: "TopCenter",
-      title: "Harry Potter and other people",
-      title_position: "BottomCenter",
-      blend_mode: "Overlay",
-      alfa: "3.0",
-      line_length: "16"
-    }
-
     {:ok,
      assign(socket,
        locale: locale,
@@ -31,8 +21,20 @@ defmodule LitcoversWeb.ImageLive.Show do
        author_font_base64: author_font_base64,
        title_font_base64: author_font_base64,
        title_current_font: author_current_font,
-       params: params
+       params: initial_params()
      )}
+  end
+
+  def initial_params do
+    %{
+      author: "",
+      author_position: "TopCenter",
+      title: "Harry Potter and other people",
+      title_position: "BottomCenter",
+      blend_mode: "Overlay",
+      alfa: "3.0",
+      line_length: "16"
+    }
   end
 
   def title_position_opts do

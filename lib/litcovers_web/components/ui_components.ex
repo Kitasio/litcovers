@@ -183,49 +183,46 @@ defmodule LitcoversWeb.UiComponents do
     """
   end
 
-  attr :value, :string, default: "Dostoyevsky"
+  attr :value, :string
+  attr :for, :string
 
-  def author_input(assigns) do
+  def input_overlay(%{for: "author"} = assigns) do
     ~H"""
-    <div>
+    <div class="flex flex-col gap-5">
       <div class="flex justify-between items-center">
         <.header><%= gettext("Author's name") %></.header>
-        <div class="px-2.5 flex items-center gap-3 border-2 border-stroke-sec bg-tag-sec rounded-lg">
-          <Heroicons.chevron_left class="w-5 h-5" phx-click="prev-author-font" />
-          <span>T</span>
-          <Heroicons.chevron_right class="w-5 h-5" phx-click="next-author-font" />
-        </div>
+        <.type_selector type="author" />
       </div>
-      <.input
-        id="author-input"
-        value={@value}
-        class="input p-10"
-        type="text"
-        errors={[]}
-        name="params[author]"
-      />
+      <.input id="author-input" value={@value} type="text" errors={[]} name="params[author]" />
     </div>
     """
   end
 
-  def title_input(assigns) do
+  def input_overlay(%{for: "title"} = assigns) do
     ~H"""
-    <div>
+    <div class="flex flex-col gap-5">
       <div class="flex justify-between items-center">
         <.header><%= gettext("Title") %></.header>
-        <div class="px-2.5 flex items-center gap-3 border-2 border-stroke-sec bg-tag-sec rounded-lg">
-          <Heroicons.chevron_left class="w-5 h-5" phx-click="prev-title-font" />
-          <span>T</span>
-          <Heroicons.chevron_right class="w-5 h-5" phx-click="next-title-font" />
-        </div>
+        <.type_selector type="title" />
       </div>
-      <.input
-        id="title-input"
-        value={@value}
-        class="input p-10"
-        type="text"
-        errors={[]}
-        name="params[title]"
+      <.input id="title-input" value={@value} type="text" errors={[]} name="params[title]" />
+    </div>
+    """
+  end
+
+  attr :type, :string
+
+  def type_selector(assigns) do
+    ~H"""
+    <div class="px-2.5 flex items-center gap-3 border-2 border-stroke-sec bg-tag-sec rounded-lg">
+      <Heroicons.chevron_left
+        class="w-5 h-5 cursor-pointer hover:scale-105 transition"
+        phx-click={"prev-#{@type}-font"}
+      />
+      <span>T</span>
+      <Heroicons.chevron_right
+        class="w-5 h-5 cursor-pointer hover:scale-105 transition"
+        phx-click={"next-#{@type}-font"}
       />
     </div>
     """

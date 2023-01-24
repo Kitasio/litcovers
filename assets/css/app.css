@@ -9,3 +9,11 @@
     @apply block p-3 bg-tag-main w-full rounded-lg focus:ring-0 focus:border-accent-main border-2 border-stroke-main;
   }
 }
+
+input[type=range] {
+  @apply h-1 bg-stroke-main appearance-none;
+  direction: rtl;
+}
+input[type='range']::-webkit-slider-thumb {
+  @apply appearance-none cursor-grab bg-gray h-4 w-4 rounded-full;
+}
