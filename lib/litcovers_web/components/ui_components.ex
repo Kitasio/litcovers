@@ -96,7 +96,7 @@ defmodule LitcoversWeb.UiComponents do
         x-on:mouseleave="showToolbar = !showToolbar"
         id={"img-box-#{@image_id}"}
       >
-        <.link navigate={"/#{@locale}/images/#{@image_id}"}>
+        <.link href={"/#{@locale}/images/#{@image_id}"}>
           <img
             id={@id}
             x-show="showImage"

@@ -12,7 +12,6 @@
 
     window.cover = cover;
 
-    // TEST HERE
     window.addEventListener("phx:create_cover", (e) => {
       cover(e.detail.image_base64, e.detail.author_font_base64, e.detail.title_font_base64, e.detail.params)
     });

@@ -6,8 +6,9 @@
     class="mt-7 grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-10 lg:gap-20"
   >
     <%= for image <- @images do %>
-      <div id={"image-#{image.id}"}>
+      <div>
         <.img
+          id={"image-#{image.id}"}
           locale={@locale}
           image_id={image.id}
           img_url={image.url}
