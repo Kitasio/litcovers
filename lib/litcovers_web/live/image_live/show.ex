@@ -174,10 +174,6 @@ defmodule LitcoversWeb.ImageLive.Show do
     end
   end
 
-  defp fonts_list() do
-    File.ls!(fonts_base_path())
-  end
-
   def font_to_base64(font_name) do
     [fonts_base_path(), font_name]
     |> Path.join()
@@ -208,5 +204,69 @@ defmodule LitcoversWeb.ImageLive.Show do
     |> List.first()
     |> String.replace("-", " ")
     |> String.capitalize()
+  end
+
+  defp fonts_list() do
+    [
+      "ProstoOne-Regular.ttf",
+      "Brygada1918-Bold.ttf",
+      "ZenAntiqueSoft-Regular.ttf",
+      "Alice-Regular.ttf",
+      "Rubik80sFade-Regular.ttf",
+      "Nunito-Black.ttf",
+      "EBGaramond-Bold.ttf",
+      "DotGothic16-Regular.ttf",
+      "MontserratAlternates-ExtraBold.ttf",
+      "Alegreya-Black.ttf",
+      "RubikGlitch-Regular.ttf",
+      "SourceSerifPro-Black.ttf",
+      "RussoOne-Regular.ttf",
+      "OldStandardTT-Bold.ttf",
+      "Forum-Regular.ttf",
+      "PressStart2P-Regular.ttf",
+      "Lora-Bold.ttf",
+      "Oswald-Bold.ttf",
+      "IBMPlexSerif-Bold.ttf",
+      "DelaGothicOne-Regular.ttf",
+      "BadScript-Regular.ttf",
+      "Vollkorn-ExtraBold.ttf",
+      "AlumniSans-Black.ttf",
+      "Montserrat-Black.ttf",
+      "Unbounded-Black.ttf",
+      "PlayfairDisplay-ExtraBold.ttf",
+      "PTSerif-Bold.ttf",
+      "FiraSansExtraCondensed-Black.ttf",
+      "Comfortaa-Bold.ttf",
+      "RobotoSlab-ExtraBold.ttf",
+      "YanoneKaffeesatz-Bold.ttf",
+      "Oi-Regular.ttf",
+      "StalinistOne-Regular.ttf",
+      "ElMessiri-SemiBold.ttf",
+      "YesevaOne-Regular.ttf",
+      "SeymourOne-Regular.ttf",
+      "Oranienbaum-Regular.ttf",
+      "PoiretOne-Regular.ttf",
+      "Cuprum-VariableFont_wght.ttf",
+      "Neucha-Regular.ttf",
+      "Cormorant-Bold.ttf",
+      "Play-Bold.ttf",
+      "Prata-Regular.ttf",
+      "Stick-Regular.ttf",
+      "RuslanDisplay-Regular.ttf",
+      "Merriweather-Bold.ttf",
+      "AlumniSansPinstripe-Regular.ttf",
+      "AmaticSC-Bold.ttf",
+      "Tinos-Bold.ttf",
+      "Pattaya-Regular.ttf",
+      "TenorSans-Regular.ttf",
+      "NotoSerif-Bold.ttf",
+      "Spectral-ExtraBold.ttf",
+      "Bitter-ExtraBold.ttf",
+      "RubikSprayPaint-Regular.ttf",
+      "Podkova-ExtraBold.ttf",
+      "CormorantGaramond-SemiBold.ttf",
+      "PlayfairDisplaySC-Black.ttf",
+      "Jost-Black.ttf"
+    ]
   end
 end
