@@ -201,4 +201,12 @@ defmodule LitcoversWeb.ImageLive.Show do
     prev_font_index = current_font_index - 1
     fonts_list() |> Enum.at(prev_font_index)
   end
+
+  def get_font_name(font_file_name) do
+    font_file_name
+    |> String.split(".")
+    |> List.first()
+    |> String.replace("-", " ")
+    |> String.capitalize()
+  end
 end

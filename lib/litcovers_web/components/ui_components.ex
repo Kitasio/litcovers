@@ -186,13 +186,17 @@ defmodule LitcoversWeb.UiComponents do
   attr :value, :string
   attr :for, :string
   attr :placeholder, :string
+  attr :font, :string
 
   def input_overlay(%{for: "author"} = assigns) do
     ~H"""
     <div class="flex flex-col gap-5">
       <div class="flex justify-between items-center">
-        <.header><%= gettext("Author's name") %></.header>
-        <.type_selector type="author" />
+        <.header><%= gettext("Name") %></.header>
+        <div class="flex gap-3 items-center">
+          <span class="text-xs"><%= @font %></span>
+          <.type_selector type="author" />
+        </div>
       </div>
       <.input
         id="author-input"
@@ -211,7 +215,10 @@ defmodule LitcoversWeb.UiComponents do
     <div class="flex flex-col gap-5">
       <div class="flex justify-between items-center">
         <.header><%= gettext("Title") %></.header>
-        <.type_selector type="title" />
+        <div class="flex gap-3 items-center">
+          <span class="text-xs"><%= @font %></span>
+          <.type_selector type="title" />
+        </div>
       </div>
       <.input
         id="title-input"
