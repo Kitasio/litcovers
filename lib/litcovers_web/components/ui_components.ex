@@ -261,9 +261,9 @@ defmodule LitcoversWeb.UiComponents do
     >
       <span class="self-center bg-stroke-main w-24 h-4 rounded-full"></span>
       <div class="w-full flex flex-col gap-3">
-        <span class="self-center bg-stroke-main w-full h-4 rounded-full"></span>
-        <span class="self-center bg-stroke-main w-full h-4 rounded-full"></span>
-        <span class="self-center bg-stroke-main w-full h-4 rounded-full"></span>
+        <span class="self-center bg-stroke-main max-w-full w-32 sm:w-full h-4 rounded-full"></span>
+        <span class="self-center bg-stroke-main max-w-full w-32 sm:w-full h-4 rounded-full"></span>
+        <span class="self-center bg-stroke-main max-w-full w-32 sm:w-full h-4 rounded-full"></span>
       </div>
     </button>
     """

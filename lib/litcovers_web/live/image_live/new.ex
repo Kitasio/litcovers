@@ -420,7 +420,7 @@ defmodule LitcoversWeb.ImageLive.New do
 
   def stage_box(assigns) do
     ~H"""
-    <div class="min-h-[400px] sm:min-h-full  flex flex-nowrap sm:gap-5 overflow-x-scroll sm:overflow-x-hidden hide-scroll-bar sm:grid sm:grid-cols-3">
+    <div class="min-h-[400px] sm:min-h-full flex flex-nowrap sm:gap-5 overflow-x-scroll sm:overflow-x-hidden hide-scroll-bar sm:grid sm:grid-cols-3">
       <%= render_slot(@inner_block) %>
     </div>
     """

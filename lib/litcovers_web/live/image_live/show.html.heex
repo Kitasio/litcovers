@@ -59,14 +59,14 @@
 
           <div class="flex flex-col gap-5">
             <.header><%= gettext("Composition") %></.header>
-            <div class="grid grid-cols-3 gap-5">
+            <div class="flex flex-nowrap sm:gap-5 overflow-x-scroll sm:overflow-x-hidden sm:grid sm:grid-cols-3 gap-5">
               <%= for pos <- title_position_opts() do %>
                 <%= if pos == @params.title_position do %>
-                  <div class="border-2 rounded-lg border-accent-main">
+                  <div class="border-2 aspect-cover rounded-lg border-accent-main">
                     <.title_position position={pos} />
                   </div>
                 <% else %>
-                  <div class="border-2 rounded-lg border-stroke-main hover:border-accent-main transition">
+                  <div class="border-2 aspect-cover rounded-lg border-stroke-main hover:border-accent-main transition">
                     <.title_position position={pos} />
                   </div>
                 <% end %>
