@@ -47,27 +47,33 @@
             />
           </div>
 
-          <div>
+          <div class="flex flex-col gap-5">
             <.header><%= gettext("Composition") %></.header>
-            <.input
-              id="title_position"
-              class="bg-sec"
-              value={@params.title_position}
-              type="select"
-              name="params[title_position]"
-              errors={[]}
-              options={title_position_opts()}
-            />
+            <div class="grid grid-cols-3 gap-5">
+              <%= for pos <- title_position_opts() do %>
+                <%= if pos == @params.title_position do %>
+                  <div class="border-2 rounded-lg border-accent-main">
+                    <.title_position position={pos} />
+                  </div>
+                <% else %>
+                  <div class="border-2 rounded-lg border-stroke-main hover:border-accent-main transition">
+                    <.title_position position={pos} />
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
           </div>
         </div>
       </.form>
     </div>
   </div>
-  <div class="py-20 px-8 lg:col-start-6 lg:col-end-13 lg:py-auto">
-    <.img
-      id="mainImage"
-      img_url={"data:image/png;charset=utf-8;base64,#{@image_base64}"}
-      aspect_ratio={aspect_ratio({@image.width, @image.height})}
-    />
+  <div class="px-8 lg:col-start-6 lg:col-end-13 lg:py-auto">
+    <div class="my-20 sticky top-20">
+      <.img
+        id="mainImage"
+        img_url={"data:image/png;charset=utf-8;base64,#{@image_base64}"}
+        aspect_ratio={aspect_ratio({@image.width, @image.height})}
+      />
+    </div>
   </div>
 </div>

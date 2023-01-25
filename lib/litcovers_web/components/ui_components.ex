@@ -227,4 +227,74 @@ defmodule LitcoversWeb.UiComponents do
     </div>
     """
   end
+
+  attr :position, :string, default: "BottomStretch"
+
+  def title_position(%{position: "BottomStretch"} = assigns) do
+    ~H"""
+    <button
+      class="w-full flex flex-col justify-between p-6 rounded-lg aspect-cover bg-stroke-sec"
+      phx-click="title-position-change"
+      phx-value-position={@position}
+    >
+      <span class="self-center bg-stroke-main w-24 h-4 rounded-full"></span>
+      <div class="w-full flex flex-col gap-3">
+        <span class="self-center bg-stroke-main w-full h-4 rounded-full"></span>
+        <span class="self-center bg-stroke-main w-full h-4 rounded-full"></span>
+        <span class="self-center bg-stroke-main w-full h-4 rounded-full"></span>
+      </div>
+    </button>
+    """
+  end
+
+  def title_position(%{position: "BottomLeft"} = assigns) do
+    ~H"""
+    <button
+      class="w-full flex flex-col justify-between p-6 rounded-lg aspect-cover bg-stroke-sec"
+      phx-click="title-position-change"
+      phx-value-position={@position}
+    >
+      <span class="self-center bg-stroke-main w-24 h-4 rounded-full"></span>
+      <div class="w-full flex flex-col gap-3">
+        <span class="bg-stroke-main max-w-full w-24 h-4 rounded-full"></span>
+        <span class="bg-stroke-main max-w-full w-32 h-4 rounded-full"></span>
+        <span class="bg-stroke-main max-w-full w-16 h-4 rounded-full"></span>
+      </div>
+    </button>
+    """
+  end
+
+  def title_position(%{position: "BottomCenter"} = assigns) do
+    ~H"""
+    <button
+      class="w-full flex flex-col justify-between p-6 rounded-lg aspect-cover bg-stroke-sec"
+      phx-click="title-position-change"
+      phx-value-position={@position}
+    >
+      <span class="self-center bg-stroke-main w-24 h-4 rounded-full"></span>
+      <div class="w-full flex flex-col gap-3">
+        <span class="self-center bg-stroke-main max-w-full w-24 h-4 rounded-full"></span>
+        <span class="self-center bg-stroke-main max-w-full w-32 h-4 rounded-full"></span>
+        <span class="self-center bg-stroke-main max-w-full w-16 h-4 rounded-full"></span>
+      </div>
+    </button>
+    """
+  end
+
+  def title_position(%{position: "BottomSides"} = assigns) do
+    ~H"""
+    <button
+      class="w-full flex flex-col justify-between p-6 rounded-lg aspect-cover bg-stroke-sec"
+      phx-click="title-position-change"
+      phx-value-position={@position}
+    >
+      <span class="self-center bg-stroke-main w-24 h-4 rounded-full"></span>
+      <div class="w-full flex flex-col gap-3">
+        <span class="bg-stroke-main max-w-full w-24 h-4 rounded-full"></span>
+        <span class="self-end bg-stroke-main max-w-full w-20 h-4 rounded-full"></span>
+        <span class="bg-stroke-main max-w-full w-32 h-4 rounded-full"></span>
+      </div>
+    </button>
+    """
+  end
 end

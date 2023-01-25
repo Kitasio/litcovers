@@ -25,6 +25,17 @@ defmodule LitcoversWeb.ImageLive.Show do
      )}
   end
 
+  @impl true
+  def handle_params(_params, _url, socket) do
+    {:noreply,
+     push_event(socket, "create_cover", %{
+       author_font_base64: socket.assigns.author_font_base64,
+       title_font_base64: socket.assigns.title_font_base64,
+       image_base64: socket.assigns.image_base64,
+       params: socket.assigns.params
+     })}
+  end
+
   def initial_params do
     %{
       author: "",
@@ -39,6 +50,34 @@ defmodule LitcoversWeb.ImageLive.Show do
 
   def title_position_opts do
     ["BottomCenter", "BottomLeft", "BottomStretch", "BottomSides"]
+  end
+
+  @impl true
+  def handle_event("create-cover", %{"params" => params}, socket) do
+    params = update_params(params, socket)
+    socket = assign(socket, params: params)
+
+    {:noreply,
+     push_event(socket, "create_cover", %{
+       author_font_base64: socket.assigns.author_font_base64,
+       title_font_base64: socket.assigns.title_font_base64,
+       image_base64: socket.assigns.image_base64,
+       params: params
+     })}
+  end
+
+  @impl true
+  def handle_event("title-position-change", %{"position" => position}, socket) do
+    params = update_params(%{"title_position" => position}, socket)
+    socket = assign(socket, params: params)
+
+    {:noreply,
+     push_event(socket, "create_cover", %{
+       author_font_base64: socket.assigns.author_font_base64,
+       title_font_base64: socket.assigns.title_font_base64,
+       image_base64: socket.assigns.image_base64,
+       params: params
+     })}
   end
 
   @impl true
@@ -118,20 +157,6 @@ defmodule LitcoversWeb.ImageLive.Show do
        title_font_base64: socket.assigns.title_font_base64,
        image_base64: socket.assigns.image_base64,
        params: socket.assigns.params
-     })}
-  end
-
-  @impl true
-  def handle_event("create-cover", %{"params" => params}, socket) do
-    params = update_params(params, socket)
-    socket = assign(socket, params: params)
-
-    {:noreply,
-     push_event(socket, "create_cover", %{
-       author_font_base64: socket.assigns.author_font_base64,
-       title_font_base64: socket.assigns.title_font_base64,
-       image_base64: socket.assigns.image_base64,
-       params: params
      })}
   end
 
