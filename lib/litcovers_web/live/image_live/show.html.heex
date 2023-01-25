@@ -31,8 +31,8 @@
         class="px-8 space-y-5"
       >
         <div class="mt-5 flex flex-col gap-10">
-          <.input_overlay for="author" value={@params.author} />
-          <.input_overlay for="title" value={@params.title} />
+          <.input_overlay for="author" placeholder={@placeholder.author} value={@params.author} />
+          <.input_overlay for="title" placeholder={@placeholder.title} value={@params.title} />
 
           <div class="flex flex-col gap-5">
             <.header><%= gettext("Text size") %></.header>

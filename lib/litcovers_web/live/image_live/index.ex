@@ -58,4 +58,15 @@ defmodule LitcoversWeb.ImageLive.Index do
 
   def aspect_ratio({512, 512}), do: "square"
   def aspect_ratio({512, 768}), do: "cover"
+
+  def placeholder_or_empty(nil),
+    do: %{
+      author: "Герман Мелвилл",
+      title: "Моби Дик",
+      description:
+        "История о мести человека гигантскому белому киту. После того, как кит нападает и убивает его друга, мужчина, Ахав, посвящает свою жизнь выслеживанию и убийству этого существа. В романе затрагиваются темы борьбы добра со злом, Бога и человеческой способности к дикости.",
+      vibe: "приключения, опасность, одержимость"
+    }
+
+  def placeholder_or_empty(placeholder), do: placeholder
 end

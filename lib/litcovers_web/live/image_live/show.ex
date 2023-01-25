@@ -21,7 +21,8 @@ defmodule LitcoversWeb.ImageLive.Show do
        author_font_base64: author_font_base64,
        title_font_base64: author_font_base64,
        title_current_font: author_current_font,
-       params: initial_params()
+       params: initial_params(),
+       placeholder: placeholder_or_empty(nil)
      )}
   end
 
@@ -40,8 +41,8 @@ defmodule LitcoversWeb.ImageLive.Show do
     %{
       author: "",
       author_position: "TopCenter",
-      title: "Harry Potter and other people",
-      title_position: "BottomCenter",
+      title: "",
+      title_position: "BottomStretch",
       blend_mode: "Overlay",
       alfa: "3.0",
       line_length: "16"

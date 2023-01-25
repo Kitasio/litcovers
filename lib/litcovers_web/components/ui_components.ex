@@ -185,6 +185,7 @@ defmodule LitcoversWeb.UiComponents do
 
   attr :value, :string
   attr :for, :string
+  attr :placeholder, :string
 
   def input_overlay(%{for: "author"} = assigns) do
     ~H"""
@@ -193,7 +194,14 @@ defmodule LitcoversWeb.UiComponents do
         <.header><%= gettext("Author's name") %></.header>
         <.type_selector type="author" />
       </div>
-      <.input id="author-input" value={@value} type="text" errors={[]} name="params[author]" />
+      <.input
+        id="author-input"
+        placeholder={@placeholder}
+        value={@value}
+        type="text"
+        errors={[]}
+        name="params[author]"
+      />
     </div>
     """
   end
@@ -205,7 +213,14 @@ defmodule LitcoversWeb.UiComponents do
         <.header><%= gettext("Title") %></.header>
         <.type_selector type="title" />
       </div>
-      <.input id="title-input" value={@value} type="text" errors={[]} name="params[title]" />
+      <.input
+        id="title-input"
+        placeholder={@placeholder}
+        value={@value}
+        type="text"
+        errors={[]}
+        name="params[title]"
+      />
     </div>
     """
   end
