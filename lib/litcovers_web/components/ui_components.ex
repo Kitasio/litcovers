@@ -160,7 +160,7 @@ defmodule LitcoversWeb.UiComponents do
 
   def download_btn(assigns) do
     ~H"""
-    <a download={@download} href={@image_url}>
+    <a target="_blank" download={@download} href={@image_url}>
       <div class="bg-sec/50 p-2.5 rounded-full" class="bg-sec/50 p-2.5 rounded-full">
         <Heroicons.arrow_down_on_square class="w-6 h-6 transition-all" />
       </div>

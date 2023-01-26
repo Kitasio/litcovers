@@ -62,7 +62,8 @@ defmodule LitcoversWeb.ImageLive.New do
        height: 768,
        img_url: nil,
        image_id: nil,
-       request_completed: false
+       request_completed: false,
+       image: nil
      )}
   end
 
@@ -73,6 +74,7 @@ defmodule LitcoversWeb.ImageLive.New do
     {:noreply,
      socket
      |> assign(
+       image: image,
        img_url: image.url,
        image_id: image.id,
        request_completed: true
@@ -88,10 +90,6 @@ defmodule LitcoversWeb.ImageLive.New do
 
     {:noreply, assign(socket, :changeset, changeset)}
   end
-
-  # def handle_event("save", %{"image" => image_params}, socket) do
-  #   save_image(socket, socket.assigns.action, image_params)
-  # end
 
   def handle_event("save", %{"image" => image_params}, socket) do
     %{"prompt_id" => prompt_id} = image_params

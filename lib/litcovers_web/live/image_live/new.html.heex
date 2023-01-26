@@ -159,7 +159,26 @@
         aspect_ratio={@aspect_ratio}
         img_url={@img_url}
         image_id={@image_id}
-      />
+      >
+          <.edit_btn url={~p"/#{@locale}/images/#{@image_id}"} />
+          <.heart_button
+            phx-click={
+              JS.push("toggle-favorite", value: %{image_id: @image_id})
+              |> JS.transition("scale-90", to: "#heart-#{@image_id}")
+            }
+            favorite={@image.favorite}
+            image_id={@image_id}
+          />
+          <.download_btn image_url={@img_url} />
+          <.delete_img_button
+            phx-click={
+              JS.push("delete-image", value: %{image_id: @image_id})
+              |> JS.transition("scale-90", to: "#delete-#{@image_id}")
+            }
+            image_id={@image_id}
+          />
+        </.img>
+ 
     <% end %>
   </div>
 </div>
