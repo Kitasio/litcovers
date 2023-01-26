@@ -26,7 +26,9 @@ defmodule LitcoversWeb.ImageLive.Index do
 
   defp apply_action(socket, :favorites, _params) do
     IO.inspect(socket)
-    socket |> assign(images: list_favorite_images(socket.assigns.current_user))
+
+    socket
+    |> assign(images: list_favorite_images(socket.assigns.current_user))
   end
 
   @impl true

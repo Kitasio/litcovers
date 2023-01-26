@@ -3,10 +3,18 @@
   locale={@locale}
   request_path={~p"/#{@locale}/images"}
 />
-<div class="bg-sec grow px-8 py-10">
+<div x-data="" class="bg-sec grow px-8 py-10">
   <div class="flex gap-10">
-    <.link patch={~p"/#{@locale}/images"}><%= gettext("All") %></.link>
-    <.link patch={~p"/#{@locale}/images/favorites"}><%= gettext("Favorites") %></.link>
+    <.link patch={~p"/#{@locale}/images"}>
+      <span x-bind:class={"'#{@live_action}' == 'index' && 'text-accent-main'"}>
+        <%= gettext("All") %>
+      </span>
+    </.link>
+    <.link patch={~p"/#{@locale}/images/favorites"}>
+      <span x-bind:class={"'#{@live_action}' == 'favorites' && 'text-accent-main'"}>
+        <%= gettext("Favorites") %>
+      </span>
+    </.link>
   </div>
   <div
     id="user-images"
