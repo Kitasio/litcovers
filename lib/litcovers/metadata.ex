@@ -18,7 +18,9 @@ defmodule Litcovers.Metadata do
 
   """
   def list_prompts do
-    Repo.all(Prompt)
+    Prompt
+    |> order_by(:name)
+    |> Repo.all()
   end
 
   defp order_by_query(query, field), do: from(p in query, order_by: [desc: ^field])
