@@ -18,6 +18,7 @@
           img_url={image.url}
           aspect_ratio={aspect_ratio({image.width, image.height})}
         >
+          <.edit_btn url={~p"/#{@locale}/images/#{image.id}"} />
           <.heart_button
             phx-click={
               JS.push("toggle-favorite", value: %{image_id: image.id})

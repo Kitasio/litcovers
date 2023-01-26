@@ -170,6 +170,18 @@ defmodule LitcoversWeb.UiComponents do
     """
   end
 
+  attr :url, :string, required: true
+
+  def edit_btn(assigns) do
+    ~H"""
+    <.link href={@url}>
+      <div class="bg-sec/50 p-2.5 rounded-full" class="bg-sec/50 p-2.5 rounded-full">
+        <Heroicons.pencil_square class="w-6 h-6 transition-all" />
+      </div>
+    </.link>
+    """
+  end
+
   attr :aspect_ratio, :string, default: "cover"
   attr :class, :string, default: nil
 
