@@ -19,6 +19,7 @@
           aspect_ratio={aspect_ratio({image.width, image.height})}
         >
           <.heart_button favorite={image.favorite} image_id={image.id} />
+          <.download_btn image_url={image.url} />
           <.delete_img_button image_id={image.id} />
         </.img>
       </div>

@@ -172,6 +172,18 @@ defmodule LitcoversWeb.UiComponents do
     """
   end
 
+  attr :image_url, :string, required: true
+
+  def download_btn(assigns) do
+    ~H"""
+    <a href={"#{@image_url}?ik-attachment=true"}>
+      <div class="bg-sec/50 p-2.5 rounded-full" class="bg-sec/50 p-2.5 rounded-full">
+        <Heroicons.arrow_down_on_square class="w-6 h-6 transition-all" />
+      </div>
+    </a>
+    """
+  end
+
   attr :aspect_ratio, :string, default: "cover"
   attr :class, :string, default: nil
 
