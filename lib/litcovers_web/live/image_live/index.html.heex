@@ -18,9 +18,22 @@
           img_url={image.url}
           aspect_ratio={aspect_ratio({image.width, image.height})}
         >
-          <.heart_button favorite={image.favorite} image_id={image.id} />
+          <.heart_button
+            phx-click={
+              JS.push("toggle-favorite", value: %{image_id: image.id})
+              |> JS.transition("scale-90", to: "#heart-#{image.id}")
+            }
+            favorite={image.favorite}
+            image_id={image.id}
+          />
           <.download_btn image_url={image.url} />
-          <.delete_img_button image_id={image.id} />
+          <.delete_img_button
+            phx-click={
+              JS.push("delete-image", value: %{image_id: image.id})
+              |> JS.transition("scale-90", to: "#delete-#{image.id}")
+            }
+            image_id={image.id}
+          />
         </.img>
       </div>
     <% end %>

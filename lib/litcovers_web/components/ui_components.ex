@@ -129,18 +129,11 @@ defmodule LitcoversWeb.UiComponents do
 
   attr :image_id, :string, default: nil
   attr :favorite, :boolean, default: false
+  attr :rest, :global
 
   def heart_button(assigns) do
     ~H"""
-    <button
-      id={"heart-#{@image_id}"}
-      class="transition duration-150 ease-out"
-      phx-value-image_id={@image_id}
-      phx-click={
-        JS.push("toggle-favorite")
-        |> JS.transition("scale-90", to: "#heart-#{@image_id}")
-      }
-    >
+    <button id={"heart-#{@image_id}"} class="transition duration-150 ease-out" {@rest}>
       <div class="bg-sec/50 p-2.5 rounded-full">
         <%= if @favorite do %>
           <Heroicons.heart solid class="fill-accent-main w-6 h-6 transition-all" />
@@ -153,18 +146,11 @@ defmodule LitcoversWeb.UiComponents do
   end
 
   attr :image_id, :string, required: true
+  attr :rest, :global
 
   def delete_img_button(assigns) do
     ~H"""
-    <button
-      id={"delete-#{@image_id}"}
-      class="transition duration-150 ease-out"
-      phx-value-image_id={@image_id}
-      phx-click={
-        JS.push("delete-image")
-        |> JS.transition("scale-90", to: "#delete-#{@image_id}")
-      }
-    >
+    <button id={"delete-#{@image_id}"} class="transition duration-150 ease-out" {@rest}>
       <div class="bg-sec/50 p-2.5 rounded-full">
         <Heroicons.trash class="w-6 h-6 transition-all" />
       </div>
