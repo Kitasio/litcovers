@@ -169,7 +169,7 @@
             favorite={@image.favorite}
             image_id={@image_id}
           />
-          <.download_btn image_url={@img_url} />
+          <.download_btn image_url={"#{@img_url}?ik-attachment=true"} />
           <.delete_img_button
             phx-click={
               JS.push("delete-image", value: %{image_id: @image_id})
