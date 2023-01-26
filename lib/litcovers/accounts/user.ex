@@ -9,6 +9,8 @@ defmodule Litcovers.Accounts.User do
     field :confirmed_at, :naive_datetime
     field :enabled, :boolean, default: false
 
+    has_many :images, Litcovers.Media.Image
+
     timestamps()
   end
 
