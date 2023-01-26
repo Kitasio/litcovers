@@ -8,6 +8,7 @@ defmodule Litcovers.Accounts.User do
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
     field :enabled, :boolean, default: false
+    field :is_admin, :boolean, default: false
 
     has_many :images, Litcovers.Media.Image
 
@@ -44,6 +45,18 @@ defmodule Litcovers.Accounts.User do
     |> validate_password(opts)
   end
 
+  def admin_registration_changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:email, :password, :is_admin])
+    |> validate_email(opts)
+    |> validate_password(opts)
+  end
+
+  def enabled_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:enabled])
+  end
+
   defp validate_email(changeset, opts) do
     changeset
     |> validate_required([:email])
@@ -55,7 +68,7 @@ defmodule Litcovers.Accounts.User do
   defp validate_password(changeset, opts) do
     changeset
     |> validate_required([:password])
-    |> validate_length(:password, min: 10, max: 72)
+    |> validate_length(:password, min: 8, max: 72)
     # |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character")
     # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")
     # |> validate_format(:password, ~r/[!?@#$%^&*_0-9]/, message: "at least one digit or punctuation character")

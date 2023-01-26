@@ -166,13 +166,28 @@ defmodule LitcoversWeb.UserAuth do
   def on_mount(:enabled_user, _params, session, socket) do
     socket = mount_current_user(session, socket)
 
-    if socket.assigns.current_user && socket.assigns.current_user.enabled? do
+    if socket.assigns.current_user && socket.assigns.current_user.enabled do
       {:cont, socket}
     else
       socket =
         socket
         |> Phoenix.LiveView.put_flash(:error, "Your account is not active.")
-        |> Phoenix.LiveView.redirect(to: ~p"/#{socket.assigns.locale}/users/log_in")
+        |> Phoenix.LiveView.redirect(to: ~p"/")
+
+      {:halt, socket}
+    end
+  end
+
+  def on_mount(:is_admin, _params, session, socket) do
+    socket = mount_current_user(session, socket)
+
+    if socket.assigns.current_user && socket.assigns.current_user.is_admin do
+      {:cont, socket}
+    else
+      socket =
+        socket
+        |> Phoenix.LiveView.put_flash(:error, "You can't access this page.")
+        |> Phoenix.LiveView.redirect(to: ~p"/")
 
       {:halt, socket}
     end
@@ -226,7 +241,7 @@ defmodule LitcoversWeb.UserAuth do
       conn
       |> put_flash(:error, "You must log in to access this page.")
       |> maybe_store_return_to()
-      |> redirect(to: ~p"/#{conn.assigns.locale}/users/log_in")
+      |> redirect(to: ~p"/")
       |> halt()
     end
   end

@@ -26,6 +26,27 @@ defmodule Litcovers.Accounts do
     Repo.get_by(User, email: email)
   end
 
+  def list_regular_users() do
+    User
+    |> list_not_admins_query()
+    |> order_by_id_query()
+    |> Repo.all()
+  end
+
+  def order_by_id_query(query) do
+    from(u in query, order_by: [desc: u.id])
+  end
+
+  defp list_not_admins_query(query) do
+    from(u in query, where: u.is_admin == false)
+  end
+
+  def update_enabled(user, attrs) do
+    user
+    |> User.enabled_changeset(attrs)
+    |> Repo.update!()
+  end
+
   @doc """
   Gets a user by email and password.
 
@@ -77,6 +98,12 @@ defmodule Litcovers.Accounts do
   def register_user(attrs) do
     %User{}
     |> User.registration_changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def register_admin(attrs) do
+    %User{}
+    |> User.admin_registration_changeset(attrs)
     |> Repo.insert()
   end
 

@@ -65,6 +65,14 @@ defmodule LitcoversWeb.Router do
   ## Authentication routes
 
   scope "/:locale", LitcoversWeb do
+    pipe_through [:browser, :require_authenticated_admin]
+
+    live_session :is_admin, on_mount: [{LitcoversWeb.UserAuth, :is_admin}] do
+      live "/admin", AdminLive.Index, :index
+    end
+  end
+
+  scope "/:locale", LitcoversWeb do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
     live_session :redirect_if_user_is_authenticated,
@@ -83,7 +91,8 @@ defmodule LitcoversWeb.Router do
 
     live_session :enabled_user,
       on_mount: [{LitcoversWeb.UserAuth, :enabled_user}] do
-      live "/images/:id/edit", ImageLive.Show
+      live "/images/new", ImageLive.New
+      live "/images/:id/edit", ImageLive.Show, :show
     end
   end
 
@@ -97,7 +106,6 @@ defmodule LitcoversWeb.Router do
 
       live "/images", ImageLive.Index, :index
       live "/images/favorites", ImageLive.Index, :favorites
-      live "/images/new", ImageLive.New
     end
   end
 

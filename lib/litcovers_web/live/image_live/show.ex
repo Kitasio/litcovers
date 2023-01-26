@@ -57,7 +57,7 @@ defmodule LitcoversWeb.ImageLive.Show do
       author_position: "TopCenter",
       title: "",
       title_position: "BottomStretch",
-      blend_mode: "Overlay",
+      blend_mode: "None",
       alfa: "3.0",
       line_length: "16"
     }
