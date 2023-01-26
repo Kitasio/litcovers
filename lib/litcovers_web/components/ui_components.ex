@@ -87,7 +87,8 @@ defmodule LitcoversWeb.UiComponents do
   attr :locale, :string, default: "en"
   attr :id, :string, default: "mainImage"
   attr :aspect_ratio, :string, default: "cover"
-  attr :favorite, :boolean, default: false
+
+  slot :inner_block
 
   def img(assigns) do
     if assigns.img_url do
@@ -115,11 +116,7 @@ defmodule LitcoversWeb.UiComponents do
           x-transition.duration.200ms
           class="p-5 absolute gap-5 flex justify-center z-20 bottom-0 left-0 w-full"
         >
-          <.heart_button favorite={@favorite} image_id={@image_id} />
-
-          <Heroicons.academic_cap class="w-8 h-8" />
-          <Heroicons.bars_arrow_up class="w-8 h-8" />
-          <Heroicons.magnifying_glass class="w-8 h-8" />
+          <%= render_slot(@inner_block) %>
         </div>
       </div>
       """
@@ -150,6 +147,26 @@ defmodule LitcoversWeb.UiComponents do
         <% else %>
           <Heroicons.heart class="w-6 h-6 transition-all" />
         <% end %>
+      </div>
+    </button>
+    """
+  end
+
+  attr :image_id, :string, required: true
+
+  def delete_img_button(assigns) do
+    ~H"""
+    <button
+      id={"delete-#{@image_id}"}
+      class="transition duration-150 ease-out"
+      phx-value-image_id={@image_id}
+      phx-click={
+        JS.push("delete-image")
+        |> JS.transition("scale-90", to: "#delete-#{@image_id}")
+      }
+    >
+      <div class="bg-sec/50 p-2.5 rounded-full">
+        <Heroicons.trash class="w-6 h-6 transition-all" />
       </div>
     </button>
     """

@@ -32,4 +32,10 @@ defmodule CoverGen.Spaces do
     ExAws.S3.put_object(bucket, filename, image_bytes) |> ExAws.request!()
     Path.join(imagekit_url, filename)
   end
+
+  def delete_object(url) do
+    bucket = Application.get_env(:litcovers, :bucket)
+    filename = Path.basename(url)
+    ExAws.S3.delete_object(bucket, filename) |> ExAws.request!()
+  end
 end

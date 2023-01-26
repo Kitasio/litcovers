@@ -16,9 +16,11 @@
           locale={@locale}
           image_id={image.id}
           img_url={image.url}
-          favorite={image.favorite}
           aspect_ratio={aspect_ratio({image.width, image.height})}
-        />
+        >
+          <.heart_button favorite={image.favorite} image_id={image.id} />
+          <.delete_img_button image_id={image.id} />
+        </.img>
       </div>
     <% end %>
   </div>
