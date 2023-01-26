@@ -27,7 +27,9 @@ defmodule LitcoversWeb.ImageLive.Show do
   end
 
   @impl true
-  def handle_params(_params, _url, socket) do
+  def handle_params(params, _url, socket) do
+    socket = apply_action(socket, socket.assigns.live_action, params)
+
     {:noreply,
      push_event(socket, "create_cover", %{
        author_font_base64: socket.assigns.author_font_base64,
@@ -35,6 +37,18 @@ defmodule LitcoversWeb.ImageLive.Show do
        image_base64: socket.assigns.image_base64,
        params: socket.assigns.params
      })}
+  end
+
+  def apply_action(socket, :show, %{"id" => id}) do
+    image = Media.get_image_preload!(id)
+
+    if image.user_id == socket.assigns.current_user.id do
+      assign(socket, image: image)
+    else
+      socket
+      |> put_flash(:error, gettext("You don't have access to this image"))
+      |> push_navigate(to: ~p"/#{socket.assigns.locale}/images")
+    end
   end
 
   def initial_params do
