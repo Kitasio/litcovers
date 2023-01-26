@@ -29,7 +29,15 @@ defmodule Litcovers.Media do
     |> order_by_date_insert()
     |> completed_query()
     |> Repo.all()
-    |> Repo.preload([:user, :prompt, :ideas])
+  end
+
+  def list_user_favorite_images(%Accounts.User{} = user) do
+    Image
+    |> user_requests_query(user)
+    |> order_by_date_insert()
+    |> completed_query()
+    |> favorite_query()
+    |> Repo.all()
   end
 
   # defp limit_query(query, limit) do
@@ -42,6 +50,10 @@ defmodule Litcovers.Media do
 
   defp completed_query(query) do
     from(r in query, where: r.completed == true)
+  end
+
+  defp favorite_query(query) do
+    from(r in query, where: r.favorite == true)
   end
 
   defp user_requests_query(query, %Accounts.User{id: user_id}) do

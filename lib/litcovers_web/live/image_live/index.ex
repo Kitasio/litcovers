@@ -5,7 +5,7 @@ defmodule LitcoversWeb.ImageLive.Index do
 
   @impl true
   def mount(%{"locale" => locale}, _session, socket) do
-    {:ok, assign(socket, images: list_images(socket.assigns.current_user), locale: locale)}
+    {:ok, assign(socket, locale: locale)}
   end
 
   @impl true
@@ -14,12 +14,19 @@ defmodule LitcoversWeb.ImageLive.Index do
   end
 
   defp apply_action(socket, :index, _params) do
+    IO.inspect(socket)
+
     if has_images?(socket.assigns.current_user) do
-      socket
+      socket |> assign(images: list_images(socket.assigns.current_user))
     else
       socket
       |> push_navigate(to: ~p"/#{socket.assigns.locale}/images/new")
     end
+  end
+
+  defp apply_action(socket, :favorites, _params) do
+    IO.inspect(socket)
+    socket |> assign(images: list_favorite_images(socket.assigns.current_user))
   end
 
   @impl true
@@ -53,6 +60,10 @@ defmodule LitcoversWeb.ImageLive.Index do
 
   defp list_images(user) do
     Media.list_user_images(user)
+  end
+
+  defp list_favorite_images(user) do
+    Media.list_user_favorite_images(user)
   end
 
   def aspect_ratio({512, 512}), do: "square"

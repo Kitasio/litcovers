@@ -88,7 +88,7 @@ defmodule LitcoversWeb.Router do
 
       live "/images", ImageLive.Index, :index
       live "/images/new", ImageLive.New
-      live "/images/new_form", ImageLive.Index, :new
+      live "/images/favorites", ImageLive.Index, :favorites
       live "/images/:id/edit", ImageLive.Index, :edit
 
       live "/images/:id", ImageLive.Show, :show
