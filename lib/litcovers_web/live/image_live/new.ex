@@ -347,16 +347,14 @@ defmodule LitcoversWeb.ImageLive.New do
     else
       src = default_img_or(assigns.src)
 
-      label = assigns.label |> String.upcase()
-      url = insert_tr(src, label)
-      assigns = assign(assigns, :url, url)
+      assigns = assign(assigns, :src, src)
 
       ~H"""
       <div
-        id={"#{@url}"}
+        id={"#{@src}"}
         class="mr-8 aspect-cover overflow-hidden rounded-xl border-2 border-stroke-main hover:border-accent-main transition inline-block min-w-[250px] sm:min-w-fit sm:mr-0"
         x-bind:class={"'#{@value}' == '#{@prompt_id}' && 'border-accent-main'"}
-        x-data={"{ showImage: false, imageUrl: '#{@url}' }"}
+        x-data={"{ showImage: false, imageUrl: '#{@src}' }"}
       >
         <img
           x-show="showImage"
@@ -391,26 +389,26 @@ defmodule LitcoversWeb.ImageLive.New do
 
   def gender_picker(assigns) do
     ~H"""
-    <div class="px-8 mt-5 mb-4 flex w-full gap-5">
-      <button
+    <div x-data="" class="mt-5 mb-4 flex w-full gap-5">
+      <span
         x-bind:class={"'#{assigns.gender}' == 'female' ? 'underline text-pink-600': ''"}
-        class="capitalize link"
+        class="cursor-pointer capitalize link"
         phx-click="change_gender"
         phx-value-gender={:female}
       >
         <%= gettext("Female") %>
-      </button>
+      </span>
       <!-- <button class="capitalize link text-xl" phx-click="change_gender" phx-value-gender={:couple}> -->
       <!--   Пара -->
       <!-- </button> -->
-      <button
+      <span
         x-bind:class={"'#{assigns.gender}' == 'male' ? 'underline text-pink-600': ''"}
-        class="capitalize link"
+        class="cursor-pointer capitalize link"
         phx-click="change_gender"
         phx-value-gender={:male}
       >
         <%= gettext("Male") %>
-      </button>
+      </span>
     </div>
     """
   end

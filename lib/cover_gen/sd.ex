@@ -62,14 +62,14 @@ defmodule CoverGen.SD do
 
   defp get_version(type, _gender) do
     case type do
-      :object ->
+      :setting ->
         "8abccf52e7cba9f6e82317253f4a3549082e966db5584e92c808ece132037776"
 
-      :subject ->
-        "9936c2001faa2194a261c01381f90e65261879985476014a0a37a334593a05eb"
+      :portrait ->
+        "139abcbafe063bd8569836fbc97913ff9d0db1308a93e6f9a2a4d7d721008b9c"
 
       _ ->
-        "9936c2001faa2194a261c01381f90e65261879985476014a0a37a334593a05eb"
+        "139abcbafe063bd8569836fbc97913ff9d0db1308a93e6f9a2a4d7d721008b9c"
     end
   end
 

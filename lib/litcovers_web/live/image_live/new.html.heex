@@ -70,12 +70,12 @@
 
               <%= if @stage.id == 1 do %>
                 <.stage_msg msg={@stage.msg} />
-                <%= if @type == "subject" do %>
+                <%= if @type == "portrait" do %>
                   <.gender_picker gender={@gender} />
                 <% end %>
                 <.stage_box>
                   <%= for r <- @realms do %>
-                    <%= if @type == "subject" do %>
+                    <%= if @type == "portrait" do %>
                       <.img_box
                         src={"https://ik.imagekit.io/soulgenesis/litnet/#{@type}_#{@gender}_#{r.name}.jpg"}
                         label={r.label}
@@ -98,7 +98,7 @@
                 <.stage_msg msg={@stage.msg} />
                 <.stage_box>
                   <%= for s <- @sentiments do %>
-                    <%= if @type == "subject" do %>
+                    <%= if @type == "portrait" do %>
                       <.img_box
                         src={"https://ik.imagekit.io/soulgenesis/litnet/#{@type}_#{@gender}_#{@realm}_#{s.name}.jpg"}
                         stage_id={@stage.id}
