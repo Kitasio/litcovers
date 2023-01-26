@@ -48,6 +48,12 @@ defmodule Litcovers.Media do
     from(r in query, where: r.user_id == ^user_id)
   end
 
+  def user_images_amount(%Accounts.User{} = user) do
+    Image
+    |> user_requests_query(user)
+    |> Repo.aggregate(:count)
+  end
+
   @doc """
   Gets a single image.
 

@@ -6,6 +6,7 @@ defmodule LitcoversWeb.UiComponents do
 
   attr :request_path, :string, required: true
   attr :locale, :string, required: true
+  attr :images_exist, :boolean, default: false
 
   def navbar(assigns) do
     ~H"""
@@ -62,18 +63,20 @@ defmodule LitcoversWeb.UiComponents do
         </div>
       <% end %>
 
-      <%= if @request_path == "/#{@locale}/images" do %>
-        <div class="flex items-center gap-2 px-8 py-4 bg-sec -mb-0.5 rounded-tl-lg rounded-tr-lg border-l-2 border-t-2 border-r-2 border-accent-sec">
-          <.link navigate={"/#{@locale}/images"}>
-            <%= gettext("My generations") %>
-          </.link>
-        </div>
-      <% else %>
-        <div class="flex items-center gap-2 px-8 py-4 bg-main -mb-0.5 border-b-2 border-accent-sec">
-          <.link navigate={"/#{@locale}/images"}>
-            <%= gettext("My generations") %>
-          </.link>
-        </div>
+      <%= if @images_exist do %>
+        <%= if @request_path == "/#{@locale}/images" do %>
+          <div class="flex items-center gap-2 px-8 py-4 bg-sec -mb-0.5 rounded-tl-lg rounded-tr-lg border-l-2 border-t-2 border-r-2 border-accent-sec">
+            <.link navigate={"/#{@locale}/images"}>
+              <%= gettext("My generations") %>
+            </.link>
+          </div>
+        <% else %>
+          <div class="flex items-center gap-2 px-8 py-4 bg-main -mb-0.5 border-b-2 border-accent-sec">
+            <.link navigate={"/#{@locale}/images"}>
+              <%= gettext("My generations") %>
+            </.link>
+          </div>
+        <% end %>
       <% end %>
     </div>
     """

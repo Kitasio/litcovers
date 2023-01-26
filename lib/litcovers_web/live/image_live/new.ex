@@ -34,7 +34,6 @@ defmodule LitcoversWeb.ImageLive.New do
   @impl true
   def mount(%{"locale" => locale}, _session, socket) do
     if connected?(socket), do: CoverGen.Create.subscribe()
-    Gettext.put_locale(locale)
 
     style_prompts = Metadata.list_all_where(:fantasy, :positive, :setting)
     prompt = style_prompts |> List.first()

@@ -1,5 +1,5 @@
 <div class="flex flex-col h-screen lg:grid grid-cols-12">
-  <.navbar locale={@locale} request_path={~p"/#{@locale}/images/new"} />
+  <.navbar images_exist={has_images?(@current_user)} locale={@locale} request_path={~p"/#{@locale}/images/new"} />
   <div class="lg:col-span-5">
     <!-- <div class="bg-sec px-8 py-5 rounded-tr-xl"> -->
     <!--   <div class="flex items-center gap-8"> -->

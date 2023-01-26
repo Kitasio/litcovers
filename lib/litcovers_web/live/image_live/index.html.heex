@@ -1,4 +1,8 @@
-<.navbar locale={@locale} request_path={~p"/#{@locale}/images"} />
+<.navbar
+  images_exist={has_images?(@current_user)}
+  locale={@locale}
+  request_path={~p"/#{@locale}/images"}
+/>
 <div class="bg-sec h-screen px-8 py-10">
   <div
     id="user-images"
