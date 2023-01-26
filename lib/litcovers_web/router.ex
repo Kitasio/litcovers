@@ -79,6 +79,16 @@ defmodule LitcoversWeb.Router do
   end
 
   scope "/:locale", LitcoversWeb do
+    pipe_through [:browser, :require_authenticated_user, :enabled_user]
+
+    live_session :enabled_user,
+      on_mount: [{LitcoversWeb.UserAuth, :enabled_user}] do
+      live "/images/new", ImageLive.New
+      live "/images/:id/edit", ImageLive.Show
+    end
+  end
+
+  scope "/:locale", LitcoversWeb do
     pipe_through [:browser, :require_authenticated_user]
 
     live_session :require_authenticated_user,
@@ -87,11 +97,7 @@ defmodule LitcoversWeb.Router do
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
 
       live "/images", ImageLive.Index, :index
-      live "/images/new", ImageLive.New
       live "/images/favorites", ImageLive.Index, :favorites
-      live "/images/:id/edit", ImageLive.Index, :edit
-
-      live "/images/:id", ImageLive.Show, :show
     end
   end
 

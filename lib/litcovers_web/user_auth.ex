@@ -4,6 +4,7 @@ defmodule LitcoversWeb.UserAuth do
   import Plug.Conn
   import Phoenix.Controller
 
+  import LitcoversWeb.Gettext
   alias Litcovers.Accounts
 
   # Make the remember me cookie valid for 60 days.
@@ -162,6 +163,21 @@ defmodule LitcoversWeb.UserAuth do
     end
   end
 
+  def on_mount(:enabled_user, _params, session, socket) do
+    socket = mount_current_user(session, socket)
+
+    if socket.assigns.current_user && socket.assigns.current_user.enabled? do
+      {:cont, socket}
+    else
+      socket =
+        socket
+        |> Phoenix.LiveView.put_flash(:error, "Your account is not active.")
+        |> Phoenix.LiveView.redirect(to: ~p"/#{socket.assigns.locale}/users/log_in")
+
+      {:halt, socket}
+    end
+  end
+
   def on_mount(:redirect_if_user_is_authenticated, _params, session, socket) do
     socket = mount_current_user(session, socket)
 
@@ -211,6 +227,38 @@ defmodule LitcoversWeb.UserAuth do
       |> put_flash(:error, "You must log in to access this page.")
       |> maybe_store_return_to()
       |> redirect(to: ~p"/#{conn.assigns.locale}/users/log_in")
+      |> halt()
+    end
+  end
+
+  def require_authenticated_admin(conn, _opts) do
+    if conn.assigns[:current_user] do
+      if conn.assigns[:current_user].is_admin do
+        conn
+      else
+        conn
+        |> put_flash(:error, gettext("You cannot access this page."))
+        |> maybe_store_return_to()
+        |> redirect(to: "/")
+        |> halt()
+      end
+    else
+      conn
+      |> put_flash(:error, gettext("You must log in to access this page."))
+      |> maybe_store_return_to()
+      |> redirect(to: "/")
+      |> halt()
+    end
+  end
+
+  def enabled_user(conn, _opts) do
+    if conn.assigns[:current_user].enabled do
+      conn
+    else
+      conn
+      |> put_flash(:error, gettext("Your account is not active."))
+      |> maybe_store_return_to()
+      |> redirect(to: "/")
       |> halt()
     end
   end
