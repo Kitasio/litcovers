@@ -14,8 +14,6 @@ defmodule LitcoversWeb.ImageLive.Index do
   end
 
   defp apply_action(socket, :index, _params) do
-    IO.inspect(socket)
-
     if has_images?(socket.assigns.current_user) do
       socket |> assign(images: list_images(socket.assigns.current_user))
     else
@@ -25,8 +23,6 @@ defmodule LitcoversWeb.ImageLive.Index do
   end
 
   defp apply_action(socket, :favorites, _params) do
-    IO.inspect(socket)
-
     socket
     |> assign(images: list_favorite_images(socket.assigns.current_user))
   end

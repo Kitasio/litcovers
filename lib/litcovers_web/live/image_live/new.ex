@@ -33,7 +33,7 @@ defmodule LitcoversWeb.ImageLive.New do
 
   @impl true
   def mount(%{"locale" => locale}, _session, socket) do
-    if connected?(socket), do: CoverGen.Create.subscribe()
+    if connected?(socket), do: CoverGen.Create.subscribe(socket.assigns.current_user.id)
 
     style_prompts = Metadata.list_all_where(:fantasy, :positive, :setting)
     prompt = style_prompts |> List.first()
@@ -68,8 +68,8 @@ defmodule LitcoversWeb.ImageLive.New do
   end
 
   @impl true
-  def handle_info({:gen_complete, image}, socket) do
-    image = Media.get_image_preload!(image.id)
+  def handle_info({:gen_complete, image_id}, socket) do
+    image = Media.get_image_preload!(image_id)
 
     {:noreply,
      socket

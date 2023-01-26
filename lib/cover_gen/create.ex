@@ -49,7 +49,7 @@ defmodule CoverGen.Create do
           for url <- img_urls do
             image_params = %{url: url, completed: true}
             {:ok, image} = ai_update_image(image, image_params)
-            broadcast(image, :gen_complete)
+            broadcast(image.user_id, image.id, :gen_complete)
           end
       end
     end
@@ -130,12 +130,12 @@ defmodule CoverGen.Create do
     end
   end
 
-  def subscribe do
-    Phoenix.PubSub.subscribe(Litcovers.PubSub, "generations")
+  def subscribe(user_id) do
+    Phoenix.PubSub.subscribe(Litcovers.PubSub, "generations:#{user_id}")
   end
 
-  defp broadcast(image, event) do
-    Phoenix.PubSub.broadcast(Litcovers.PubSub, "generations", {event, image})
-    {:ok, image}
+  defp broadcast(user_id, image_id, event) do
+    Phoenix.PubSub.broadcast(Litcovers.PubSub, "generations:#{user_id}", {event, image_id})
+    {:ok, image_id}
   end
 end
