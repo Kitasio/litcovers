@@ -2,11 +2,10 @@ defmodule LitcoversWeb.UiComponents do
   use Phoenix.Component
   import LitcoversWeb.Gettext
   import LitcoversWeb.CoreComponents
-  alias Phoenix.LiveView.JS
 
   attr :request_path, :string, required: true
   attr :locale, :string, required: true
-  attr :images_exist, :boolean, default: false
+  attr :images_exist, :boolean, default: true
 
   def navbar(assigns) do
     ~H"""
@@ -100,17 +99,15 @@ defmodule LitcoversWeb.UiComponents do
         x-on:mouseleave="showToolbar = !showToolbar"
         id={"img-box-#{@image_id}"}
       >
-        <.link href={"/#{@locale}/images/#{@image_id}"}>
-          <img
-            id={@id}
-            x-show="showImage"
-            x-transition.duration.300ms
-            x-bind:src="imageUrl"
-            x-on:load="showImage = true"
-            alt="Generated picture"
-            class="w-full h-full object-cover aspect-cover"
-          />
-        </.link>
+        <img
+          id={@id}
+          x-show="showImage"
+          x-transition.duration.300ms
+          x-bind:src="imageUrl"
+          x-on:load="showImage = true"
+          alt="Generated picture"
+          class="w-full h-full object-cover aspect-cover"
+        />
         <div
           x-show="showToolbar"
           x-transition.duration.200ms
@@ -159,10 +156,11 @@ defmodule LitcoversWeb.UiComponents do
   end
 
   attr :image_url, :string, required: true
+  attr :download, :string, default: "litcovers_image.png"
 
   def download_btn(assigns) do
     ~H"""
-    <a href={"#{@image_url}?ik-attachment=true"}>
+    <a download={@download} href={@image_url}>
       <div class="bg-sec/50 p-2.5 rounded-full" class="bg-sec/50 p-2.5 rounded-full">
         <Heroicons.arrow_down_on_square class="w-6 h-6 transition-all" />
       </div>
