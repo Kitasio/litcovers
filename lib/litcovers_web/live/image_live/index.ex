@@ -37,15 +37,16 @@ defmodule LitcoversWeb.ImageLive.Index do
 
     {:ok, _} = Media.delete_image(image)
 
-    {:noreply, assign(socket, :images, list_images(socket.assigns.current_user))}
+    {:noreply, apply_action(socket, socket.assigns.live_action, %{})}
   end
 
+  @impl true
   def handle_event("toggle-favorite", %{"image_id" => image_id}, socket) do
     image = Media.get_image!(image_id)
 
     case Media.update_image(image, %{favorite: !image.favorite}) do
       {:ok, _image} ->
-        {:noreply, assign(socket, :images, list_images(socket.assigns.current_user))}
+        {:noreply, apply_action(socket, socket.assigns.live_action, %{})}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :changeset, changeset)}
