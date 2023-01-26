@@ -9,6 +9,20 @@ defmodule LitcoversWeb.ImageLive.Index do
   end
 
   @impl true
+  def handle_params(params, _url, socket) do
+    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+  end
+
+  defp apply_action(socket, :index, _params) do
+    if has_images?(socket.assigns.current_user) do
+      socket
+    else
+      socket
+      |> push_navigate(to: ~p"/#{socket.assigns.locale}/images/new")
+    end
+  end
+
+  @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     image = Media.get_image!(id)
     {:ok, _} = Media.delete_image(image)
