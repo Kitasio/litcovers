@@ -59,22 +59,6 @@ defmodule CoverGen.SD do
     end
   end
 
-  def process_testing do
-    {:ok, pid} =
-      Task.start_link(fn ->
-        :timer.seconds(5) |> Process.sleep()
-        IO.puts("5 seconds passed")
-      end)
-
-    {:ok, killer_pid} =
-      Task.start_link(fn ->
-        :timer.seconds(6) |> Process.sleep()
-        Process.exit(pid, :kill)
-      end)
-
-    {pid, killer_pid}
-  end
-
   defp check_for_output(generation_url, headers, options) do
     %Response{body: res} = HTTPoison.get!(generation_url, headers, options)
     res = res |> Jason.decode!()

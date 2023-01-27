@@ -9,6 +9,8 @@ defmodule CoverGen.Create do
   alias CoverGen.Helpers
   alias CoverGen.Spaces
 
+  require Elixir.Logger
+
   def new(%Image{} = image) do
     with {:ok, ideas_list} <-
            OAI.description_to_cover_idea(
@@ -52,6 +54,32 @@ defmodule CoverGen.Create do
             broadcast(image.user_id, image.id, :gen_complete)
           end
       end
+    end
+  end
+
+  def new_async(%Image{} = image, root_pid) do
+    Task.start_link(fn ->
+      caller = self()
+
+      {:ok, pid} =
+        Task.start_link(fn ->
+          new(image)
+          send(caller, {:ok, :finished})
+        end)
+
+      get_result_or_kill(pid, root_pid, image.id)
+    end)
+  end
+
+  defp get_result_or_kill(pid, root_pid, image_id) do
+    receive do
+      {:ok, :finished} ->
+        Logger.info("Finished generating, image id: #{image_id}")
+    after
+      :timer.minutes(7) ->
+        Process.exit(pid, :kill)
+        Logger.error("Timeout generating image, id: #{image_id}")
+        send(root_pid, {:error, :gen_timeout})
     end
   end
 
