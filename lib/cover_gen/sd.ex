@@ -37,23 +37,9 @@ defmodule CoverGen.SD do
 
     Logger.info("Generating images with SD")
 
-    case HTTPoison.post(endpoint, body, headers, options) do
-      {:ok, %Response{body: res_body}} ->
-        %{"urls" => %{"get" => generation_url}} = Jason.decode!(res_body)
-
-        case check_for_output(generation_url, headers, options, 50) do
-          {:ok, image_links} ->
-            {:ok, image_links}
-
-          {:error, reason} ->
-            Logger.error("Stable diffusion image fetch failed, reason: #{reason}")
-            {:error, reason}
-        end
-
-      {:error, reason} ->
-        Logger.error("Stable diffusion post request failed, reason: #{reason}")
-        {:error, reason}
-    end
+    {:ok, %Response{body: res_body}} = HTTPoison.post(endpoint, body, headers, options)
+    %{"urls" => %{"get" => generation_url}} = Jason.decode!(res_body)
+    check_for_output(generation_url, headers, options)
   end
 
   defp get_version(_type, "couple") do
@@ -73,30 +59,51 @@ defmodule CoverGen.SD do
     end
   end
 
-  defp check_for_output(generation_url, headers, options, num_of_tries) do
-    Logger.debug("Checking images, remaining tries: #{num_of_tries}")
+  def process_testing do
+    {:ok, pid} =
+      Task.start_link(fn ->
+        :timer.seconds(5) |> Process.sleep()
+        IO.puts("5 seconds passed")
+      end)
+
+    {:ok, killer_pid} =
+      Task.start_link(fn ->
+        :timer.seconds(6) |> Process.sleep()
+        Process.exit(pid, :kill)
+      end)
+
+    {pid, killer_pid}
+  end
+
+  defp check_for_output(generation_url, headers, options) do
     %Response{body: res} = HTTPoison.get!(generation_url, headers, options)
     res = res |> Jason.decode!()
 
-    case check_image(res["output"], num_of_tries) do
-      {:error, :out_of_tries} ->
-        {:error, :out_of_tries}
+    case res["error"] do
+      nil ->
+        case res["status"] do
+          "starting" ->
+            Logger.debug("Starting")
+            :timer.seconds(2) |> Process.sleep()
+            check_for_output(generation_url, headers, options)
 
-      {:ok, :not_ready} ->
-        :timer.sleep(2000)
-        check_for_output(generation_url, headers, options, num_of_tries - 1)
+          "processing" ->
+            Logger.debug("Processing")
+            :timer.seconds(1) |> Process.sleep()
+            check_for_output(generation_url, headers, options)
 
-      {:ok, :not_ready_slower} ->
-        :timer.sleep(15000)
-        check_for_output(generation_url, headers, options, num_of_tries - 1)
+          "succeeded" ->
+            Logger.debug("Succeeded")
+            {:ok, res}
 
-      {:ok, :ready} ->
-        {:ok, res}
+          "failed" ->
+            Logger.debug("Failed")
+            IO.inspect(res)
+            {:error, res}
+        end
+
+      error ->
+        {:error, error}
     end
   end
-
-  defp check_image(_image_list, num_of_tries) when num_of_tries <= 0, do: {:error, :out_of_tries}
-  defp check_image(nil, num_of_tries) when num_of_tries <= 5, do: {:ok, :not_ready_slower}
-  defp check_image(nil, _num_of_tries), do: {:ok, :not_ready}
-  defp check_image(_image_list, _num_of_tries), do: {:ok, :ready}
 end

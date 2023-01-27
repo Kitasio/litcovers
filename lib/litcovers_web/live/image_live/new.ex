@@ -3,6 +3,7 @@ defmodule LitcoversWeb.ImageLive.New do
   alias Litcovers.Media
   alias Litcovers.Media.Image
   alias Litcovers.Metadata
+  require Elixir.Logger
   import LitcoversWeb.ImageLive.Index
 
   use LitcoversWeb, :live_view
@@ -97,8 +98,16 @@ defmodule LitcoversWeb.ImageLive.New do
 
     case Media.create_image(socket.assigns.current_user, prompt, image_params) do
       {:ok, image} ->
-        Task.start(fn ->
-          Create.new(image)
+        {:ok, pid} =
+          Task.start_link(fn ->
+            Create.new(image)
+          end)
+
+        # killer task for the case of infinite loop of `Create.new(image)`
+        Task.start_link(fn ->
+          :timer.minutes(10) |> Process.sleep()
+          Logger.error("killing generation process for image id #{image.id}")
+          Process.exit(pid, :kill)
         end)
 
         socket = socket |> assign(image_id: image.id, request_completed: false, img_url: nil)
