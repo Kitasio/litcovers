@@ -82,12 +82,11 @@ defmodule CoverGen.SD do
 
           "failed" ->
             Logger.debug("Failed")
-            IO.inspect(res)
-            {:error, res}
+            {:error, :sd_failed, "Generation failed, try again"}
         end
 
       error ->
-        {:error, error}
+        {:error, :sd_failed, error}
     end
   end
 end

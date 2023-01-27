@@ -11,7 +11,7 @@ defmodule CoverGen.Create do
 
   require Elixir.Logger
 
-  def new(%Image{} = image) do
+  def new(%Image{} = image, root_pid) do
     with {:ok, ideas_list} <-
            OAI.description_to_cover_idea(
              image.description,
@@ -54,6 +54,12 @@ defmodule CoverGen.Create do
             broadcast(image.user_id, image.id, :gen_complete)
           end
       end
+    else
+      {:error, :oai_failed} ->
+        send(root_pid, {:error, :oai_failed})
+
+      {:error, :sd_failed, error} ->
+        send(root_pid, {:error, :sd_failed, error})
     end
   end
 
@@ -63,7 +69,7 @@ defmodule CoverGen.Create do
 
       {:ok, pid} =
         Task.start_link(fn ->
-          new(image)
+          new(image, root_pid)
           send(caller, {:ok, :finished})
         end)
 

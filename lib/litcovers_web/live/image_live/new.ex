@@ -76,6 +76,18 @@ defmodule LitcoversWeb.ImageLive.New do
   end
 
   @impl true
+  def handle_info({:error, :oai_failed}, socket) do
+    socket = assign(socket, gen_error: "Idea creation failed")
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_info({:error, :sd_failed, error}, socket) do
+    socket = assign(socket, gen_error: error)
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_info({:gen_complete, image_id}, socket) do
     image = Media.get_image_preload!(image_id)
 
