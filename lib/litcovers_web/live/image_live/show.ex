@@ -2,6 +2,7 @@ defmodule LitcoversWeb.ImageLive.Show do
   use LitcoversWeb, :live_view
   import LitcoversWeb.ImageLive.Index
 
+  alias Litcovers.Metadata
   alias Litcovers.Media
 
   @impl true
@@ -22,7 +23,7 @@ defmodule LitcoversWeb.ImageLive.Show do
        title_font_base64: author_font_base64,
        title_current_font: author_current_font,
        params: initial_params(),
-       placeholder: placeholder_or_empty(nil)
+       placeholder: placeholder_or_empty(Metadata.get_random_placeholder())
      )}
   end
 

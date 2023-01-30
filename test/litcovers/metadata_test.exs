@@ -66,4 +66,62 @@ defmodule Litcovers.MetadataTest do
       assert %Ecto.Changeset{} = Metadata.change_prompt(prompt)
     end
   end
+
+  describe "placeholders" do
+    alias Litcovers.Metadata.Placeholder
+
+    import Litcovers.MetadataFixtures
+
+    @invalid_attrs %{author: nil, description: nil, title: nil}
+
+    test "list_placeholders/0 returns all placeholders" do
+      placeholder = placeholder_fixture()
+      assert Metadata.list_placeholders() == [placeholder]
+    end
+
+    test "get_placeholder!/1 returns the placeholder with given id" do
+      placeholder = placeholder_fixture()
+      assert Metadata.get_placeholder!(placeholder.id) == placeholder
+    end
+
+    test "create_placeholder/1 with valid data creates a placeholder" do
+      valid_attrs = %{author: "some author", description: "some description", title: "some title"}
+
+      assert {:ok, %Placeholder{} = placeholder} = Metadata.create_placeholder(valid_attrs)
+      assert placeholder.author == "some author"
+      assert placeholder.description == "some description"
+      assert placeholder.title == "some title"
+    end
+
+    test "create_placeholder/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Metadata.create_placeholder(@invalid_attrs)
+    end
+
+    test "update_placeholder/2 with valid data updates the placeholder" do
+      placeholder = placeholder_fixture()
+      update_attrs = %{author: "some updated author", description: "some updated description", title: "some updated title"}
+
+      assert {:ok, %Placeholder{} = placeholder} = Metadata.update_placeholder(placeholder, update_attrs)
+      assert placeholder.author == "some updated author"
+      assert placeholder.description == "some updated description"
+      assert placeholder.title == "some updated title"
+    end
+
+    test "update_placeholder/2 with invalid data returns error changeset" do
+      placeholder = placeholder_fixture()
+      assert {:error, %Ecto.Changeset{}} = Metadata.update_placeholder(placeholder, @invalid_attrs)
+      assert placeholder == Metadata.get_placeholder!(placeholder.id)
+    end
+
+    test "delete_placeholder/1 deletes the placeholder" do
+      placeholder = placeholder_fixture()
+      assert {:ok, %Placeholder{}} = Metadata.delete_placeholder(placeholder)
+      assert_raise Ecto.NoResultsError, fn -> Metadata.get_placeholder!(placeholder.id) end
+    end
+
+    test "change_placeholder/1 returns a placeholder changeset" do
+      placeholder = placeholder_fixture()
+      assert %Ecto.Changeset{} = Metadata.change_placeholder(placeholder)
+    end
+  end
 end

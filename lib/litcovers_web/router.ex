@@ -38,6 +38,13 @@ defmodule LitcoversWeb.Router do
 
     live "/prompts/:id", PromptLive.Show, :show
     live "/prompts/:id/show/edit", PromptLive.Show, :edit
+
+    live "/placeholders", PlaceholderLive.Index, :index
+    live "/placeholders/new", PlaceholderLive.Index, :new
+    live "/placeholders/:id/edit", PlaceholderLive.Index, :edit
+
+    live "/placeholders/:id", PlaceholderLive.Show, :show
+    live "/placeholders/:id/show/edit", PlaceholderLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.

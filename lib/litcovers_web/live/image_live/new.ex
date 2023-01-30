@@ -57,8 +57,7 @@ defmodule LitcoversWeb.ImageLive.New do
        sentiment: :positive,
        gender: :female,
        prompt_id: prompt.id,
-       # placeholder: placeholder_or_empty(Media.get_random_placeholder() |> List.first())
-       placeholder: placeholder_or_empty(nil),
+       placeholder: placeholder_or_empty(Metadata.get_random_placeholder()),
        width: 512,
        height: 768,
        img_url: nil,
@@ -125,8 +124,7 @@ defmodule LitcoversWeb.ImageLive.New do
 
       {:error, %Ecto.Changeset{} = changeset} ->
         IO.inspect(changeset)
-        # placeholder = placeholder_or_empty(Media.get_random_placeholder() |> List.first())
-        placeholder = placeholder_or_empty(nil)
+        placeholder = placeholder_or_empty(Metadata.get_random_placeholder())
         {:noreply, assign(socket, changeset: changeset, placeholder: placeholder)}
     end
   end

@@ -16,16 +16,16 @@ defmodule LitcoversWeb.UserConfirmationLive do
       </.simple_form>
 
       <p class="text-center mt-4">
-        <.link href={~p"/users/register"}>Register</.link>
+        <.link href={~p"/#{@locale}/users/register"}>Register</.link>
         |
-        <.link href={~p"/users/log_in"}>Log in</.link>
+        <.link href={~p"/#{@locale}/users/log_in"}>Log in</.link>
       </p>
     </div>
     """
   end
 
   def mount(params, _session, socket) do
-    {:ok, assign(socket, token: params["token"]), temporary_assigns: [token: nil]}
+    {:ok, assign(socket, token: params["token"], locale: params["locale"]), temporary_assigns: [token: nil]}
   end
 
   # Do not log in the user after confirmation to avoid a
@@ -36,7 +36,7 @@ defmodule LitcoversWeb.UserConfirmationLive do
         {:noreply,
          socket
          |> put_flash(:info, "User confirmed successfully.")
-         |> redirect(to: ~p"/")}
+         |> redirect(to: ~p"/#{socket.assigns.locale}/")}
 
       :error ->
         # If there is a current user and the account was already confirmed,
@@ -45,13 +45,13 @@ defmodule LitcoversWeb.UserConfirmationLive do
         # a warning message.
         case socket.assigns do
           %{current_user: %{confirmed_at: confirmed_at}} when not is_nil(confirmed_at) ->
-            {:noreply, redirect(socket, to: ~p"/")}
+            {:noreply, redirect(socket, to: ~p"/#{socket.assigns.locale}/")}
 
           %{} ->
             {:noreply,
              socket
              |> put_flash(:error, "User confirmation link is invalid or it has expired.")
-             |> redirect(to: ~p"/")}
+             |> redirect(to: ~p"/#{socket.assigns.locale}/")}
         end
     end
   end

@@ -5,7 +5,6 @@ defmodule CoverGen.Create do
 
   alias CoverGen.OAI
   alias CoverGen.SD
-  # alias CoverGen.Overlay
   alias CoverGen.Helpers
   alias CoverGen.Spaces
 

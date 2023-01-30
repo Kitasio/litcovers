@@ -22,4 +22,20 @@ defmodule Litcovers.MetadataFixtures do
 
     prompt
   end
+
+  @doc """
+  Generate a placeholder.
+  """
+  def placeholder_fixture(attrs \\ %{}) do
+    {:ok, placeholder} =
+      attrs
+      |> Enum.into(%{
+        author: "some author",
+        description: "some description",
+        title: "some title"
+      })
+      |> Litcovers.Metadata.create_placeholder()
+
+    placeholder
+  end
 end
