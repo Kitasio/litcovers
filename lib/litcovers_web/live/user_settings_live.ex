@@ -70,7 +70,7 @@ defmodule LitcoversWeb.UserSettingsLive do
     """
   end
 
-  def mount(%{"token" => token}, _session, socket) do
+  def mount(%{"token" => token, "locale" => locale}, _session, socket) do
     socket =
       case Accounts.update_user_email(socket.assigns.current_user, token) do
         :ok ->
@@ -80,10 +80,10 @@ defmodule LitcoversWeb.UserSettingsLive do
           put_flash(socket, :error, "Email change link is invalid or it has expired.")
       end
 
-    {:ok, push_navigate(socket, to: ~p"/users/settings")}
+    {:ok, push_navigate(socket, to: ~p"/#{locale}/users/settings")}
   end
 
-  def mount(_params, _session, socket) do
+  def mount(%{"locale" => locale}, _session, socket) do
     user = socket.assigns.current_user
 
     socket =
@@ -94,6 +94,7 @@ defmodule LitcoversWeb.UserSettingsLive do
       |> assign(:email_changeset, Accounts.change_user_email(user))
       |> assign(:password_changeset, Accounts.change_user_password(user))
       |> assign(:trigger_submit, false)
+      |> assign(:locale, locale)
 
     {:ok, socket}
   end
