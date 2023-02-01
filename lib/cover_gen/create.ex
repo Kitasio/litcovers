@@ -88,68 +88,6 @@ defmodule CoverGen.Create do
     end
   end
 
-  # def more(%Image{} = image) do
-  # if image.ideas == [] do
-  #   {:ok, ideas_list} =
-  #     OAI.description_to_cover_idea(
-  #       image.description,
-  #       image.prompt.type,
-  #       image.character_gender,
-  #       System.get_env("OAI_TOKEN")
-  #     )
-  #
-  #   save_ideas(ideas_list, image)
-  # end
-  #
-  # %{idea: idea} = image.ideas |> Enum.random()
-  #
-  # with prompt <-
-  #        Helpers.create_prompt(
-  #          idea,
-  #          image.prompt.style_prompt,
-  #          image.character_gender,
-  #          image.prompt.type
-  #        ),
-  #      {:ok, sd_res} <-
-  #        SD.diffuse(
-  #          prompt,
-  #          image.character_gender,
-  #          image.prompt.type,
-  #          1,
-  #          System.get_env("REPLICATE_TOKEN")
-  #        ) do
-  #   %{"output" => image_list} = sd_res
-  #
-  #   case Spaces.save_to_spaces(image_list) do
-  #     {:error, reason} ->
-  #       IO.inspect(reason)
-  #
-  #     img_urls ->
-  #       for url <- img_urls do
-  #         image_params = %{"cover_url" => url, "prompt" => prompt}
-  #         {:ok, cover} = Media.create_cover(image, image_params)
-  #
-  #         urls =
-  #           Overlay.put_text_on_images(
-  #             image.title |> Overlay.get_line_length_list(),
-  #             cover.cover_url,
-  #             image.author,
-  #             image.title,
-  #             image.prompt.realm |> to_string()
-  #           )
-  #
-  #         for url <- urls do
-  #           Media.create_overlay(cover, %{url: url})
-  #         end
-  #       end
-  #
-  #       image = Media.get_request_and_covers!(image.id)
-  #
-  #       broadcast(image, :gen_complete)
-  #   end
-  # end
-  # end
-
   def ai_update_image(%Image{} = image, attrs) do
     image
     |> Image.ai_changeset(attrs)
