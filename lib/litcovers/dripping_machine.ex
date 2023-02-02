@@ -11,6 +11,7 @@ defmodule Litcovers.DrippingMachine do
   end
 
   def init(state) do
+    CoverGen.SD.dummy_diffuse()
     state = Map.put(state, :timer_ref, schedule_work())
     {:ok, state}
   end

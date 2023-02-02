@@ -1,4 +1,15 @@
-<div class="max-w-screen-xl mx-auto">
+
+<div class="pt-10 max-w-screen-xl mx-auto">
+  <div>
+    <button phx-click={JS.push("toggle-dripping_machine")}>
+      <%= if @drip_machine do %>
+        Stop Dripping
+      <% else %>
+        Start Dripping
+      <% end %>
+    </button>
+  </div>
+
   <.table id="users" rows={@users}>
     <:col :let={user} label="ID"><%= user.id %></:col>
     <:col :let={user} label="Name"><%= user.email %></:col>

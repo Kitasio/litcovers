@@ -25,7 +25,7 @@ defmodule CoverGen.SD do
   end
 
   # Returns a list of image links
-  def diffuse(_prompt, _amount, nil),
+  def diffuse(_sd_params, nil),
     do: raise("REPLICATE_TOKEN was not set\nVisit https://replicate.com/account to get it")
 
   def diffuse(sd_params, replicate_token) do
@@ -88,5 +88,26 @@ defmodule CoverGen.SD do
       error ->
         {:error, :sd_failed, error}
     end
+  end
+
+  def dummy_diffuse do
+    params = %{
+      version: "139abcbafe063bd8569836fbc97913ff9d0db1308a93e6f9a2a4d7d721008b9c",
+      input: %{
+        prompt: "a cjw cat",
+        width: 128,
+        height: 128,
+        num_outputs: 1,
+        num_inference_steps: 1
+      }
+    }
+    replicate_token = System.get_env("REPLICATE_TOKEN")
+
+    body = Jason.encode!(params)
+    headers = [Authorization: "Token #{replicate_token}", "Content-Type": "application/json"]
+    options = [timeout: 50_000, recv_timeout: 165_000]
+
+    endpoint = "https://api.replicate.com/v1/predictions"
+    HTTPoison.post(endpoint, body, headers, options)
   end
 end
