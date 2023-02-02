@@ -10,9 +10,10 @@ defmodule CoverGen.Helpers do
   end
 
   defp random_portrait(gender) do
-    ["A cjw side profile portrait of a #{gender_to_naming(gender)}",
+    [
       "A cjw close up portrait of a #{gender_to_naming(gender)}",
-      "A cjw symmetrical face portrait of a #{gender_to_naming(gender)}"]
+      "A cjw symmetrical face portrait of a #{gender_to_naming(gender)}"
+    ]
     |> Enum.random()
   end
 
