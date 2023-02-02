@@ -14,6 +14,7 @@
   <:col :let={prompt} label="Type"><%= prompt.type %></:col>
   <:col :let={prompt} label="Style prompt"><%= prompt.style_prompt %></:col>
   <:col :let={prompt} label="Image url"><%= prompt.image_url %></:col>
+  <:col :let={prompt} label="Secondary url"><%= prompt.secondary_url %></:col>
   <:action :let={prompt}>
     <div class="sr-only">
       <.link navigate={~p"/#{@locale}/prompts/#{prompt}"}>Show</.link>

@@ -121,13 +121,23 @@
                 <.stage_msg msg={@stage.msg} />
                 <.stage_box>
                   <%= for p <- @style_prompts do %>
-                    <.img_box
-                      src={p.image_url}
-                      label={p.name}
-                      value={p.id}
-                      prompt_id={@prompt_id}
-                      stage_id={@stage.id}
-                    />
+                    <%= if p.secondary_url != nil && @gender == "male" do %>
+                      <.img_box
+                        src={p.secondary_url}
+                        label={p.name}
+                        value={p.id}
+                        prompt_id={@prompt_id}
+                        stage_id={@stage.id}
+                      />
+                    <% else %>
+                      <.img_box
+                        src={p.image_url}
+                        label={p.name}
+                        value={p.id}
+                        prompt_id={@prompt_id}
+                        stage_id={@stage.id}
+                      />
+                    <% end %>
                   <% end %>
                 </.stage_box>
               <% end %>

@@ -44,6 +44,7 @@ defmodule LitcoversWeb.PromptLive.FormComponent do
         />
         <.input field={{f, :style_prompt}} type="text" label="Style prompt" />
         <.input field={{f, :image_url}} type="text" label="Image url" />
+        <.input field={{f, :secondary_url}} type="text" label="Secondary url" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Prompt</.button>
         </:actions>
