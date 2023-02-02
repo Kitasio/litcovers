@@ -88,6 +88,12 @@ defmodule Litcovers.Media do
     |> Repo.preload([:user, :prompt])
   end
 
+  def get_image_preload_all!(id) do
+    Image
+    |> Repo.get!(id)
+    |> Repo.preload([:user, :prompt, :ideas])
+  end
+
   @doc """
   Creates a image.
 
