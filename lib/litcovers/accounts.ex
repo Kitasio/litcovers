@@ -8,6 +8,18 @@ defmodule Litcovers.Accounts do
 
   alias Litcovers.Accounts.{User, UserToken, UserNotifier}
 
+  def add_litcoins(%User{} = user, amount) do
+    user
+    |> User.litcoins_changeset(%{litcoins: user.litcoins + amount})
+    |> Repo.update()
+  end
+
+  def remove_litcoins(%User{} = user, amount) do
+    user
+    |> User.litcoins_changeset(%{litcoins: user.litcoins - amount})
+    |> Repo.update()
+  end
+
   ## Database getters
 
   @doc """
