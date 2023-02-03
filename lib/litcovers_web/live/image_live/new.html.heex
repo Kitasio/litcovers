@@ -189,13 +189,6 @@
             image_id={@image_id}
           />
           <.download_btn image_url={"#{@img_url}?ik-attachment=true"} />
-          <.delete_img_button
-            phx-click={
-              JS.push("delete-image", value: %{image_id: @image_id})
-              |> JS.transition("scale-90", to: "#delete-#{@image_id}")
-            }
-            image_id={@image_id}
-          />
         <% else %>
           <.unlock_img_button phx-click={JS.push("unlock", value: %{image_id: @image_id})} image_id={@image_id} />
         <% end %>
