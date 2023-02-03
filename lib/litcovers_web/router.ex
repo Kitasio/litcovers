@@ -100,6 +100,14 @@ defmodule LitcoversWeb.Router do
     live_session :enabled_user,
       on_mount: [{LitcoversWeb.UserAuth, :enabled_user}] do
       live "/images/new", ImageLive.New
+    end
+  end
+
+  scope "/:locale", LitcoversWeb do
+    pipe_through [:browser, :require_authenticated_user, :enabled_user]
+
+    live_session :unlocked_image,
+      on_mount: [{LitcoversWeb.UserAuth, :unlocked_image}] do
       live "/images/:id/edit", ImageLive.Show, :show
     end
   end

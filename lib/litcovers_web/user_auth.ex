@@ -178,6 +178,22 @@ defmodule LitcoversWeb.UserAuth do
     end
   end
 
+  def on_mount(:unlocked_image, %{"id" => id}, session, socket) do
+    socket = mount_current_user(session, socket)
+
+    image = Litcovers.Media.get_image!(id)
+    if image.unlocked do
+      {:cont, socket}
+    else
+      socket =
+        socket
+        |> Phoenix.LiveView.put_flash(:error, "You can't access this image.")
+        |> Phoenix.LiveView.redirect(to: ~p"/")
+
+      {:halt, socket}
+    end
+  end
+
   def on_mount(:is_admin, _params, session, socket) do
     socket = mount_current_user(session, socket)
 
