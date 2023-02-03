@@ -145,6 +145,19 @@ defmodule LitcoversWeb.UiComponents do
   attr :image_id, :string, required: true
   attr :rest, :global
 
+  def unlock_img_button(assigns) do
+    ~H"""
+    <button id={"unlock-#{@image_id}"} class="transition duration-150 ease-out" {@rest}>
+      <div class="bg-sec/50 p-2.5 rounded-full">
+        <Heroicons.lock_open class="w-6 h-6 transition-all" />
+      </div>
+    </button>
+    """
+  end
+
+  attr :image_id, :string, required: true
+  attr :rest, :global
+
   def delete_img_button(assigns) do
     ~H"""
     <button id={"delete-#{@image_id}"} class="transition duration-150 ease-out" {@rest}>

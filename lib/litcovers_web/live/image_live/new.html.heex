@@ -178,6 +178,7 @@
         img_url={@img_url}
         image_id={@image_id}
       >
+        <%= if @image.unlocked do %>
           <.edit_btn url={~p"/#{@locale}/images/#{@image_id}/edit"} />
           <.heart_button
             phx-click={
@@ -195,8 +196,10 @@
             }
             image_id={@image_id}
           />
-        <button phx-click={JS.push("unlock", value: %{image_id: @image_id})}>unlock</button>
-        </.img>
+        <% else %>
+          <.unlock_img_button phx-click={JS.push("unlock", value: %{image_id: @image_id})} image_id={@image_id} />
+        <% end %>
+      </.img>
     <% end %>
   </div>
 </div>
