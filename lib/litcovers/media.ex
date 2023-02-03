@@ -51,6 +51,7 @@ defmodule Litcovers.Media do
     |> user_requests_query(user)
     |> order_by_date_insert()
     |> completed_query()
+    |> unlocked_query()
     |> favorite_query()
     |> Repo.all()
   end
