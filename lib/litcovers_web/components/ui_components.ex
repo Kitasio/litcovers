@@ -95,8 +95,8 @@ defmodule LitcoversWeb.UiComponents do
       <div
         x-data={"{ showImage: false, showToolbar: false, imageUrl: '#{@img_url}' }"}
         class={"relative group bg-sec max-w-lg overflow-hidden rounded-lg aspect-#{@aspect_ratio} transition-all duration-300 mx-auto"}
-        x-on:mouseenter="showToolbar = !showToolbar"
-        x-on:mouseleave="showToolbar = !showToolbar"
+        x-on:mouseenter="showToolbar = true"
+        x-on:mouseleave="showToolbar = false"
         id={"img-box-#{@image_id}"}
       >
         <img
