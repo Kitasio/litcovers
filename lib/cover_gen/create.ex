@@ -68,11 +68,12 @@ defmodule CoverGen.Create do
       send(Litcovers.DrippingMachine, {:drip, :user})
     end
 
-    Task.start_link(fn ->
+    Task.start(fn ->
       caller = self()
 
       {:ok, pid} =
         Task.start_link(fn ->
+          Logger.info("Starting generation, image id: #{image.id}")
           new(image, root_pid)
           send(caller, {:ok, :finished})
         end)
