@@ -7,7 +7,7 @@ defmodule Litcovers.Accounts.User do
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
-    field :enabled, :boolean, default: false
+    field :enabled, :boolean, default: true
     field :is_admin, :boolean, default: false
     field :litcoins, :integer, default: 1
 

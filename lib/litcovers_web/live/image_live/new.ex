@@ -111,6 +111,8 @@ defmodule LitcoversWeb.ImageLive.New do
       {:ok, image} = Media.unlock_image(image)
       {:ok, user} = Accounts.remove_litcoins(socket.assigns.current_user, 1)
       {:noreply, assign(socket, litcoins: user.litcoins, image: image)}
+    else
+      {:noreply, socket}
     end
   end
 
