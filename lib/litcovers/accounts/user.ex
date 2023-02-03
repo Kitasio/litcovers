@@ -9,6 +9,7 @@ defmodule Litcovers.Accounts.User do
     field :confirmed_at, :naive_datetime
     field :enabled, :boolean, default: false
     field :is_admin, :boolean, default: false
+    field :litcoins, :integer, default: 1
 
     has_many :images, Litcovers.Media.Image
 
@@ -55,6 +56,11 @@ defmodule Litcovers.Accounts.User do
   def enabled_changeset(user, attrs) do
     user
     |> cast(attrs, [:enabled])
+  end
+
+  def litcoins_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:litcoins])
   end
 
   defp validate_email(changeset, opts) do
