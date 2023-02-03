@@ -9,6 +9,9 @@
     <!-- </div> -->
     <%= if @lit_ai do %>
       <div class="pt-7 bg-sec flex flex-col justify-between lg:h-full">
+    <div>
+      <%= @litcoins %> litcoins
+    </div>
         <.form
           :let={f}
           class="px-8 bg-sec flex flex-col gap-5"
@@ -192,8 +195,8 @@
             }
             image_id={@image_id}
           />
+        <button phx-click={JS.push("unlock", value: %{image_id: @image_id})}>unlock</button>
         </.img>
- 
     <% end %>
   </div>
 </div>

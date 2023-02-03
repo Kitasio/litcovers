@@ -54,11 +54,11 @@ defmodule LitcoversWeb.ImageLive.Index do
   end
 
   def has_images?(user) do
-    Media.user_images_amount(user) > 0
+    Media.user_unlocked_images_amount(user) > 0
   end
 
   defp list_images(user) do
-    Media.list_user_images(user)
+    Media.list_unlocked_user_images(user)
   end
 
   defp list_favorite_images(user) do

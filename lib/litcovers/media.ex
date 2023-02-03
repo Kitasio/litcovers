@@ -29,6 +29,15 @@ defmodule Litcovers.Media do
     Repo.all(Image)
   end
 
+  def list_unlocked_user_images(%Accounts.User{} = user) do
+    Image
+    |> user_requests_query(user)
+    |> order_by_date_insert()
+    |> completed_query()
+    |> unlocked_query()
+    |> Repo.all()
+  end
+
   def list_user_images(%Accounts.User{} = user) do
     Image
     |> user_requests_query(user)
@@ -66,9 +75,20 @@ defmodule Litcovers.Media do
     from(r in query, where: r.user_id == ^user_id)
   end
 
+  defp unlocked_query(query) do
+    from(r in query, where: r.unlocked == true)
+  end
+
   def user_images_amount(%Accounts.User{} = user) do
     Image
     |> user_requests_query(user)
+    |> Repo.aggregate(:count)
+  end
+
+  def user_unlocked_images_amount(%Accounts.User{} = user) do
+    Image
+    |> user_requests_query(user)
+    |> unlocked_query()
     |> Repo.aggregate(:count)
   end
 

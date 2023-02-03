@@ -1,4 +1,5 @@
 defmodule LitcoversWeb.ImageLive.New do
+  alias Litcovers.Accounts
   alias CoverGen.Create
   alias Litcovers.Media
   alias Litcovers.Media.Image
@@ -64,7 +65,8 @@ defmodule LitcoversWeb.ImageLive.New do
        image_id: nil,
        request_completed: false,
        image: nil,
-       gen_error: nil
+       gen_error: nil,
+       litcoins: socket.assigns.current_user.litcoins,
      )}
   end
 
@@ -98,6 +100,18 @@ defmodule LitcoversWeb.ImageLive.New do
        image_id: image.id,
        request_completed: true
      )}
+  end
+
+  # unlocks image spending 1 litcoin to current user
+  @impl true
+  def handle_event("unlock", %{"image_id" => image_id}, socket) do
+    litcoins = socket.assigns.current_user.litcoins
+    if litcoins > 0 do
+      image = Media.get_image!(image_id)
+      {:ok, image} = Media.unlock_image(image)
+      {:ok, user} = Accounts.remove_litcoins(socket.assigns.current_user, 1)
+      {:noreply, assign(socket, litcoins: user.litcoins, image: image)}
+    end
   end
 
   @impl true
