@@ -10,6 +10,7 @@ defmodule Litcovers.Media.Image do
     field :url, :string
     field :width, :integer
     field :favorite, :boolean, default: false
+    field :unlocked, :boolean, default: false
 
     belongs_to :user, Litcovers.Accounts.User
     belongs_to :prompt, Litcovers.Metadata.Prompt
@@ -43,5 +44,10 @@ defmodule Litcovers.Media.Image do
   def ai_changeset(image, attrs) do
     image
     |> cast(attrs, [:completed, :url])
+  end
+
+  def unlocked_changeset(image, attrs) do
+    image
+    |> cast(attrs, [:unlocked])
   end
 end

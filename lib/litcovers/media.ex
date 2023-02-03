@@ -10,6 +10,12 @@ defmodule Litcovers.Media do
 
   alias Litcovers.Media.Image
 
+  def unlock_image(%Image{} = image) do
+    image
+    |> Image.unlocked_changeset(%{unlocked: true})
+    |> Repo.update()
+  end
+
   @doc """
   Returns the list of images.
 
