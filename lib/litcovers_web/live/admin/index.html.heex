@@ -19,5 +19,16 @@
         Toggle enabled
       </.link>
     </:action>
+    <:col :let={user} label="Litcoins">
+      <div class="flex gap-3">
+        <%= user.litcoins %>
+        <button phx-click={JS.push("add-litcoin", value: %{id: user.id})}>
+          +
+        </button>
+        <button phx-click={JS.push("remove-litcoin", value: %{id: user.id})}>
+          -
+        </button>
+      </div>
+    </:col>
   </.table>
 </div>
