@@ -8,7 +8,15 @@ defmodule Litcovers.MediaTest do
 
     import Litcovers.MediaFixtures
 
-    @invalid_attrs %{character_gender: nil, completed: nil, description: nil, height: nil, prompt: nil, url: nil, width: nil}
+    @invalid_attrs %{
+      character_gender: nil,
+      completed: nil,
+      description: nil,
+      height: nil,
+      prompt: nil,
+      url: nil,
+      width: nil
+    }
 
     test "list_images/0 returns all images" do
       image = image_fixture()
@@ -21,7 +29,15 @@ defmodule Litcovers.MediaTest do
     end
 
     test "create_image/1 with valid data creates a image" do
-      valid_attrs = %{character_gender: "some character_gender", completed: true, description: "some description", height: 42, prompt: "some prompt", url: "some url", width: 42}
+      valid_attrs = %{
+        character_gender: "some character_gender",
+        completed: true,
+        description: "some description",
+        height: 42,
+        prompt: "some prompt",
+        url: "some url",
+        width: 42
+      }
 
       assert {:ok, %Image{} = image} = Media.create_image(valid_attrs)
       assert image.character_gender == "some character_gender"
@@ -39,7 +55,16 @@ defmodule Litcovers.MediaTest do
 
     test "update_image/2 with valid data updates the image" do
       image = image_fixture()
-      update_attrs = %{character_gender: "some updated character_gender", completed: false, description: "some updated description", height: 43, prompt: "some updated prompt", url: "some updated url", width: 43}
+
+      update_attrs = %{
+        character_gender: "some updated character_gender",
+        completed: false,
+        description: "some updated description",
+        height: 43,
+        prompt: "some updated prompt",
+        url: "some updated url",
+        width: 43
+      }
 
       assert {:ok, %Image{} = image} = Media.update_image(image, update_attrs)
       assert image.character_gender == "some updated character_gender"

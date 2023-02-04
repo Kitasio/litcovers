@@ -182,6 +182,7 @@ defmodule LitcoversWeb.UserAuth do
     socket = mount_current_user(session, socket)
 
     image = Litcovers.Media.get_image!(id)
+
     if image.unlocked do
       {:cont, socket}
     else

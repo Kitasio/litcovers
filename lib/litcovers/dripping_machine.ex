@@ -32,5 +32,5 @@ defmodule Litcovers.DrippingMachine do
 
   defp schedule_work do
     Process.send_after(self(), {:drip, :server}, :timer.minutes(6))
-  end 
+  end
 end

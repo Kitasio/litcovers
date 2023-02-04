@@ -21,7 +21,7 @@ defmodule CoverGen.Helpers do
     case gender do
       "male" ->
         "man"
-      
+
       "female" ->
         "woman"
     end

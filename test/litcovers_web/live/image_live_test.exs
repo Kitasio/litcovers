@@ -4,9 +4,33 @@ defmodule LitcoversWeb.ImageLiveTest do
   import Phoenix.LiveViewTest
   import Litcovers.MediaFixtures
 
-  @create_attrs %{character_gender: "some character_gender", completed: true, description: "some description", height: 42, prompt: "some prompt", url: "some url", width: 42}
-  @update_attrs %{character_gender: "some updated character_gender", completed: false, description: "some updated description", height: 43, prompt: "some updated prompt", url: "some updated url", width: 43}
-  @invalid_attrs %{character_gender: nil, completed: false, description: nil, height: nil, prompt: nil, url: nil, width: nil}
+  @create_attrs %{
+    character_gender: "some character_gender",
+    completed: true,
+    description: "some description",
+    height: 42,
+    prompt: "some prompt",
+    url: "some url",
+    width: 42
+  }
+  @update_attrs %{
+    character_gender: "some updated character_gender",
+    completed: false,
+    description: "some updated description",
+    height: 43,
+    prompt: "some updated prompt",
+    url: "some updated url",
+    width: 43
+  }
+  @invalid_attrs %{
+    character_gender: nil,
+    completed: false,
+    description: nil,
+    height: nil,
+    prompt: nil,
+    url: nil,
+    width: nil
+  }
 
   defp create_image(_) do
     image = image_fixture()

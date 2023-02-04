@@ -7,7 +7,11 @@
   </:actions>
 </.header>
 
-<.table id="placeholders" rows={@placeholders} row_click={&JS.navigate(~p"/en/placeholders/#{&1}")}>
+<.table
+  id="placeholders"
+  rows={@placeholders}
+  row_click={&JS.navigate(~p"/en/placeholders/#{&1}")}
+>
   <:col :let={placeholder} label="Author"><%= placeholder.author %></:col>
   <:col :let={placeholder} label="Title"><%= placeholder.title %></:col>
   <:col :let={placeholder} label="Description"><%= placeholder.description %></:col>
@@ -18,7 +22,10 @@
     <.link patch={~p"/en/placeholders/#{placeholder}/edit"}>Edit</.link>
   </:action>
   <:action :let={placeholder}>
-    <.link phx-click={JS.push("delete", value: %{id: placeholder.id})} data-confirm="Are you sure?">
+    <.link
+      phx-click={JS.push("delete", value: %{id: placeholder.id})}
+      data-confirm="Are you sure?"
+    >
       Delete
     </.link>
   </:action>

@@ -8,7 +8,14 @@ defmodule Litcovers.MetadataTest do
 
     import Litcovers.MetadataFixtures
 
-    @invalid_attrs %{image_url: nil, name: nil, realm: nil, sentiment: nil, style_prompt: nil, type: nil}
+    @invalid_attrs %{
+      image_url: nil,
+      name: nil,
+      realm: nil,
+      sentiment: nil,
+      style_prompt: nil,
+      type: nil
+    }
 
     test "list_prompts/0 returns all prompts" do
       prompt = prompt_fixture()
@@ -21,7 +28,14 @@ defmodule Litcovers.MetadataTest do
     end
 
     test "create_prompt/1 with valid data creates a prompt" do
-      valid_attrs = %{image_url: "some image_url", name: "some name", realm: :fantasy, sentiment: :positive, style_prompt: "some style_prompt", type: :setting}
+      valid_attrs = %{
+        image_url: "some image_url",
+        name: "some name",
+        realm: :fantasy,
+        sentiment: :positive,
+        style_prompt: "some style_prompt",
+        type: :setting
+      }
 
       assert {:ok, %Prompt{} = prompt} = Metadata.create_prompt(valid_attrs)
       assert prompt.image_url == "some image_url"
@@ -38,7 +52,15 @@ defmodule Litcovers.MetadataTest do
 
     test "update_prompt/2 with valid data updates the prompt" do
       prompt = prompt_fixture()
-      update_attrs = %{image_url: "some updated image_url", name: "some updated name", realm: :realism, sentiment: :neutral, style_prompt: "some updated style_prompt", type: :portrait}
+
+      update_attrs = %{
+        image_url: "some updated image_url",
+        name: "some updated name",
+        realm: :realism,
+        sentiment: :neutral,
+        style_prompt: "some updated style_prompt",
+        type: :portrait
+      }
 
       assert {:ok, %Prompt{} = prompt} = Metadata.update_prompt(prompt, update_attrs)
       assert prompt.image_url == "some updated image_url"
@@ -99,9 +121,16 @@ defmodule Litcovers.MetadataTest do
 
     test "update_placeholder/2 with valid data updates the placeholder" do
       placeholder = placeholder_fixture()
-      update_attrs = %{author: "some updated author", description: "some updated description", title: "some updated title"}
 
-      assert {:ok, %Placeholder{} = placeholder} = Metadata.update_placeholder(placeholder, update_attrs)
+      update_attrs = %{
+        author: "some updated author",
+        description: "some updated description",
+        title: "some updated title"
+      }
+
+      assert {:ok, %Placeholder{} = placeholder} =
+               Metadata.update_placeholder(placeholder, update_attrs)
+
       assert placeholder.author == "some updated author"
       assert placeholder.description == "some updated description"
       assert placeholder.title == "some updated title"
@@ -109,7 +138,10 @@ defmodule Litcovers.MetadataTest do
 
     test "update_placeholder/2 with invalid data returns error changeset" do
       placeholder = placeholder_fixture()
-      assert {:error, %Ecto.Changeset{}} = Metadata.update_placeholder(placeholder, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Metadata.update_placeholder(placeholder, @invalid_attrs)
+
       assert placeholder == Metadata.get_placeholder!(placeholder.id)
     end
 

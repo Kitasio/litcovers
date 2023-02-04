@@ -16,7 +16,12 @@
 
 <.back navigate={~p"/en/placeholders"}>Back to placeholders</.back>
 
-<.modal :if={@live_action == :edit} id="placeholder-modal" show on_cancel={JS.patch(~p"/en/placeholders/#{@placeholder}")}>
+<.modal
+  :if={@live_action == :edit}
+  id="placeholder-modal"
+  show
+  on_cancel={JS.patch(~p"/en/placeholders/#{@placeholder}")}
+>
   <.live_component
     module={LitcoversWeb.PlaceholderLive.FormComponent}
     id={@placeholder.id}

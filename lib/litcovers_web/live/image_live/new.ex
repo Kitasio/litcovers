@@ -66,7 +66,7 @@ defmodule LitcoversWeb.ImageLive.New do
        request_completed: false,
        image: nil,
        gen_error: nil,
-       litcoins: socket.assigns.current_user.litcoins,
+       litcoins: socket.assigns.current_user.litcoins
      )}
   end
 
@@ -106,6 +106,7 @@ defmodule LitcoversWeb.ImageLive.New do
   @impl true
   def handle_event("unlock", %{"image_id" => image_id}, socket) do
     litcoins = socket.assigns.current_user.litcoins
+
     if litcoins > 0 do
       image = Media.get_image!(image_id)
       {:ok, image} = Media.unlock_image(image)

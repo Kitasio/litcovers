@@ -4,9 +4,30 @@ defmodule LitcoversWeb.PromptLiveTest do
   import Phoenix.LiveViewTest
   import Litcovers.MetadataFixtures
 
-  @create_attrs %{image_url: "some image_url", name: "some name", realm: :fantasy, sentiment: :positive, style_prompt: "some style_prompt", type: :setting}
-  @update_attrs %{image_url: "some updated image_url", name: "some updated name", realm: :realism, sentiment: :neutral, style_prompt: "some updated style_prompt", type: :portrait}
-  @invalid_attrs %{image_url: nil, name: nil, realm: nil, sentiment: nil, style_prompt: nil, type: nil}
+  @create_attrs %{
+    image_url: "some image_url",
+    name: "some name",
+    realm: :fantasy,
+    sentiment: :positive,
+    style_prompt: "some style_prompt",
+    type: :setting
+  }
+  @update_attrs %{
+    image_url: "some updated image_url",
+    name: "some updated name",
+    realm: :realism,
+    sentiment: :neutral,
+    style_prompt: "some updated style_prompt",
+    type: :portrait
+  }
+  @invalid_attrs %{
+    image_url: nil,
+    name: nil,
+    realm: nil,
+    sentiment: nil,
+    style_prompt: nil,
+    type: nil
+  }
 
   defp create_prompt(_) do
     prompt = prompt_fixture()

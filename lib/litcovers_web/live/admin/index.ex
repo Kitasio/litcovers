@@ -5,10 +5,13 @@ defmodule LitcoversWeb.AdminLive.Index do
   @impl true
   def mount(%{"locale" => locale}, _session, socket) do
     users = Accounts.list_regular_users()
-    drip_machine = case GenServer.whereis(Litcovers.DrippingMachine) do
-      nil -> false
-      _ -> true
-    end
+
+    drip_machine =
+      case GenServer.whereis(Litcovers.DrippingMachine) do
+        nil -> false
+        _ -> true
+      end
+
     {:ok, assign(socket, locale: locale, users: users, drip_machine: drip_machine)}
   end
 
@@ -41,10 +44,11 @@ defmodule LitcoversWeb.AdminLive.Index do
       Litcovers.DrippingMachine.start_link()
     end
 
-    drip_machine = case GenServer.whereis(Litcovers.DrippingMachine) do
-      nil -> false
-      _ -> true
-    end
+    drip_machine =
+      case GenServer.whereis(Litcovers.DrippingMachine) do
+        nil -> false
+        _ -> true
+      end
 
     {:noreply, assign(socket, users: Accounts.list_regular_users(), drip_machine: drip_machine)}
   end

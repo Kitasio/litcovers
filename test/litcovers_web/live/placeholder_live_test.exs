@@ -5,7 +5,11 @@ defmodule LitcoversWeb.PlaceholderLiveTest do
   import Litcovers.MetadataFixtures
 
   @create_attrs %{author: "some author", description: "some description", title: "some title"}
-  @update_attrs %{author: "some updated author", description: "some updated description", title: "some updated title"}
+  @update_attrs %{
+    author: "some updated author",
+    description: "some updated description",
+    title: "some updated title"
+  }
   @invalid_attrs %{author: nil, description: nil, title: nil}
 
   defp create_placeholder(_) do
@@ -70,7 +74,10 @@ defmodule LitcoversWeb.PlaceholderLiveTest do
     test "deletes placeholder in listing", %{conn: conn, placeholder: placeholder} do
       {:ok, index_live, _html} = live(conn, ~p"/placeholders")
 
-      assert index_live |> element("#placeholders-#{placeholder.id} a", "Delete") |> render_click()
+      assert index_live
+             |> element("#placeholders-#{placeholder.id} a", "Delete")
+             |> render_click()
+
       refute has_element?(index_live, "#placeholder-#{placeholder.id}")
     end
   end

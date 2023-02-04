@@ -101,6 +101,7 @@ defmodule CoverGen.SD do
         num_inference_steps: 1
       }
     }
+
     replicate_token = System.get_env("REPLICATE_TOKEN")
 
     body = Jason.encode!(params)
