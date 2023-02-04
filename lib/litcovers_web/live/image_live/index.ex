@@ -27,6 +27,11 @@ defmodule LitcoversWeb.ImageLive.Index do
     |> assign(images: list_favorite_images(socket.assigns.current_user))
   end
 
+  defp apply_action(socket, :all, _params) do
+    socket
+    |> assign(images: list_all_images(socket.assigns.current_user))
+  end
+
   @impl true
   def handle_event("delete-image", %{"image_id" => id}, socket) do
     image = Media.get_image!(id)
@@ -59,6 +64,10 @@ defmodule LitcoversWeb.ImageLive.Index do
 
   defp list_images(user) do
     Media.list_unlocked_user_images(user)
+  end
+
+  defp list_all_images(user) do
+    Media.list_user_images(user)
   end
 
   defp list_favorite_images(user) do

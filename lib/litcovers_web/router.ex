@@ -122,6 +122,7 @@ defmodule LitcoversWeb.Router do
 
       live "/images", ImageLive.Index, :index
       live "/images/favorites", ImageLive.Index, :favorites
+      live "/images/all", ImageLive.Index, :all
     end
   end
 

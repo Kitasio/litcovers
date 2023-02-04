@@ -63,7 +63,7 @@ defmodule CoverGen.Create do
   end
 
   def new_async(%Image{} = image, root_pid) do
-    # Check if genserver is running
+    # Check if DrippingMachine is running
     if GenServer.whereis(Litcovers.DrippingMachine) != nil do
       send(Litcovers.DrippingMachine, {:drip, :user})
     end

@@ -1,4 +1,5 @@
 defmodule LitcoversWeb.ImageLive.New do
+  alias CoverGen.Helpers
   alias Litcovers.Accounts
   alias CoverGen.Create
   alias Litcovers.Media
@@ -134,6 +135,7 @@ defmodule LitcoversWeb.ImageLive.New do
     case Media.create_image(socket.assigns.current_user, prompt, image_params) do
       {:ok, image} ->
         Create.new_async(image, socket.root_pid)
+        Helpers.delete_image_after(image.id, :timer.hours(24))
 
         socket = socket |> assign(image_id: image.id, request_completed: false, img_url: nil)
 

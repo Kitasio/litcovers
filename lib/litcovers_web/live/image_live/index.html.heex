@@ -5,8 +5,8 @@
 />
 <div x-data="" class="bg-sec grow px-8 py-10">
   <div class="flex gap-10">
-    <.link patch={~p"/#{@locale}/images"}>
-      <span x-bind:class={"'#{@live_action}' == 'index' && 'text-accent-main'"}>
+    <.link patch={~p"/#{@locale}/images/all"}>
+      <span x-bind:class={"'#{@live_action}' == 'all' && 'text-accent-main'"}>
         <%= gettext("All") %>
       </span>
     </.link>
