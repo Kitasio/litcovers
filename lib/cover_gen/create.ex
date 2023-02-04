@@ -1,4 +1,5 @@
 defmodule CoverGen.Create do
+  alias Litcovers.Accounts
   alias Litcovers.Repo
   alias Litcovers.Media
   alias Litcovers.Media.Image
@@ -49,8 +50,7 @@ defmodule CoverGen.Create do
         img_urls ->
           for url <- img_urls do
             image_params = %{url: url, completed: true}
-            {:ok, image} = ai_update_image(image, image_params)
-            broadcast(image.user_id, image.id, :gen_complete)
+            ai_update_image(image, image_params)
           end
       end
     else
@@ -63,33 +63,42 @@ defmodule CoverGen.Create do
   end
 
   def new_async(%Image{} = image, root_pid) do
-    # Check if DrippingMachine is running
-    if GenServer.whereis(Litcovers.DrippingMachine) != nil do
-      send(Litcovers.DrippingMachine, {:drip, :user})
-    end
-
     Task.start(fn ->
+      # Check if DrippingMachine is running
+      if GenServer.whereis(Litcovers.DrippingMachine) != nil do
+        send(Litcovers.DrippingMachine, {:drip, :user})
+      end
+
       caller = self()
 
       {:ok, pid} =
-        Task.start_link(fn ->
+        Task.start(fn ->
           Logger.info("Starting generation, image id: #{image.id}")
           new(image, root_pid)
           send(caller, {:ok, :finished})
         end)
 
-      get_result_or_kill(pid, root_pid, image.id)
+      get_result_or_kill(pid, root_pid, image)
     end)
   end
 
-  defp get_result_or_kill(pid, root_pid, image_id) do
+  defp get_result_or_kill(pid, root_pid, image) do
     receive do
       {:ok, :finished} ->
-        Logger.info("Finished generating, image id: #{image_id}")
+        Logger.info("Finished generating, image id: #{image.id}")
+
+        user = Accounts.get_user!(image.user_id)
+        Accounts.update_is_generating(user, false)
+
+        broadcast(image.user_id, image.id, :gen_complete)
     after
       :timer.minutes(7) ->
         Process.exit(pid, :kill)
-        Logger.error("Timeout generating image, id: #{image_id}")
+        Logger.error("Timeout generating image, id: #{image.id}")
+
+        user = Accounts.get_user!(image.user_id)
+        Accounts.update_is_generating(user, false)
+
         send(root_pid, {:error, :gen_timeout})
     end
   end

@@ -10,6 +10,7 @@ defmodule Litcovers.Accounts.User do
     field :enabled, :boolean, default: true
     field :is_admin, :boolean, default: false
     field :litcoins, :integer, default: 1
+    field :is_generating, :boolean, default: false
 
     has_many :images, Litcovers.Media.Image
 
@@ -61,6 +62,11 @@ defmodule Litcovers.Accounts.User do
   def litcoins_changeset(user, attrs) do
     user
     |> cast(attrs, [:litcoins])
+  end
+
+  def is_generating_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:is_generating])
   end
 
   defp validate_email(changeset, opts) do

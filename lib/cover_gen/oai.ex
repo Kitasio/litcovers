@@ -19,7 +19,7 @@ defmodule CoverGen.OAI do
 
     # Set headers and options
     headers = [Authorization: "Bearer #{oai_token}", "Content-Type": "application/json"]
-    options = [timeout: 50_000, recv_timeout: 50_000]
+    options = [timeout: 10_000, recv_timeout: 10_000]
 
     # Append description to preamble
     prompt = description |> preamble(gender, cover_type)
@@ -36,7 +36,8 @@ defmodule CoverGen.OAI do
         {:ok, ideas}
 
       {:error, reason} ->
-        Logger.error("Open AI gen idea failed, reason: #{reason}")
+        IO.inspect(reason)
+        Logger.error("Open AI gen idea failed")
         {:error, :oai_failed}
     end
   end

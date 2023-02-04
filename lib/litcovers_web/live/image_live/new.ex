@@ -10,30 +10,6 @@ defmodule LitcoversWeb.ImageLive.New do
 
   use LitcoversWeb, :live_view
 
-  def types() do
-    [
-      %{name: :setting, label: gettext("Setting")},
-      %{name: nil, label: nil},
-      %{name: :portrait, label: gettext("Character")}
-    ]
-  end
-
-  def realms() do
-    [
-      %{name: :fantasy, label: gettext("Fantasy - Past")},
-      %{name: :realism, label: gettext("Realism - Present")},
-      %{name: :futurism, label: gettext("Futurism - Future")}
-    ]
-  end
-
-  def sentiments do
-    [
-      %{name: :positive, label: gettext("Warm - Bright")},
-      %{name: :neutral, label: gettext("Natural - Neutral")},
-      %{name: :negative, label: gettext("Brutal - Dark")}
-    ]
-  end
-
   @impl true
   def mount(%{"locale" => locale}, _session, socket) do
     if connected?(socket), do: CoverGen.Create.subscribe(socket.assigns.current_user.id)
@@ -62,18 +38,21 @@ defmodule LitcoversWeb.ImageLive.New do
        placeholder: placeholder_or_empty(Metadata.get_random_placeholder()),
        width: 512,
        height: 768,
-       img_url: nil,
-       image_id: nil,
-       request_completed: false,
-       image: nil,
+       image: %Image{},
        gen_error: nil,
-       litcoins: socket.assigns.current_user.litcoins
+       litcoins: socket.assigns.current_user.litcoins,
+       is_generating: socket.assigns.current_user.is_generating
      )}
   end
 
   @impl true
   def handle_info({:error, :gen_timeout}, socket) do
-    socket = assign(socket, gen_error: "Timeout")
+    socket =
+      assign(socket,
+        gen_error: "Timeout",
+        is_generating: socket.assigns.current_user.is_generating
+      )
+
     {:noreply, socket}
   end
 
@@ -95,12 +74,7 @@ defmodule LitcoversWeb.ImageLive.New do
 
     {:noreply,
      socket
-     |> assign(
-       image: image,
-       img_url: image.url,
-       image_id: image.id,
-       request_completed: true
-     )}
+     |> assign(image: image, is_generating: false)}
   end
 
   # unlocks image spending 1 litcoin to current user
@@ -129,22 +103,29 @@ defmodule LitcoversWeb.ImageLive.New do
   end
 
   def handle_event("save", %{"image" => image_params}, socket) do
-    %{"prompt_id" => prompt_id} = image_params
-    prompt = Metadata.get_prompt!(prompt_id)
+    unless socket.assigns.current_user.is_generating do
+      %{"prompt_id" => prompt_id} = image_params
+      prompt = Metadata.get_prompt!(prompt_id)
 
-    case Media.create_image(socket.assigns.current_user, prompt, image_params) do
-      {:ok, image} ->
-        Create.new_async(image, socket.root_pid)
-        Helpers.delete_image_after(image.id, :timer.hours(24))
+      case Media.create_image(socket.assigns.current_user, prompt, image_params) do
+        {:ok, image} ->
+          Create.new_async(image, socket.root_pid)
+          Accounts.update_is_generating(socket.assigns.current_user, true)
 
-        socket = socket |> assign(image_id: image.id, request_completed: false, img_url: nil)
+          # deletes image after 24 hours only if it hasn't been unlocked
+          Helpers.delete_image_after(image.id, :timer.hours(24))
 
-        {:noreply, socket}
+          socket = socket |> assign(image: image, is_generating: true)
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        IO.inspect(changeset)
-        placeholder = placeholder_or_empty(Metadata.get_random_placeholder())
-        {:noreply, assign(socket, changeset: changeset, placeholder: placeholder)}
+          {:noreply, socket}
+
+        {:error, %Ecto.Changeset{} = changeset} ->
+          IO.inspect(changeset)
+          placeholder = placeholder_or_empty(Metadata.get_random_placeholder())
+          {:noreply, assign(socket, changeset: changeset, placeholder: placeholder)}
+      end
+    else
+      {:noreply, socket}
     end
   end
 
@@ -284,17 +265,11 @@ defmodule LitcoversWeb.ImageLive.New do
     """
   end
 
+  attr :spin, :boolean, default: false
+
   def generate_btn(assigns) do
-    assigns = assign_new(assigns, :image_id, fn -> nil end)
-    assigns = assign_new(assigns, :request_completed, fn -> false end)
-
-    assigns =
-      assign_new(assigns, :spin, fn ->
-        assigns.image_id != nil and assigns.request_completed == false
-      end)
-
     ~H"""
-    <div class="pb-7 pt-12 flex">
+    <div x-data="" class="pb-7 pt-12 flex">
       <button
         type="submit"
         class="btn-small flex items-center justify-center gap-3 py-5 bg-accent-main disabled:bg-dis-btn rounded-full w-full"
@@ -482,5 +457,29 @@ defmodule LitcoversWeb.ImageLive.New do
 
   defp get_stage(id) do
     Enum.find(stages(), fn stage -> stage.id == id end)
+  end
+
+  def types() do
+    [
+      %{name: :setting, label: gettext("Setting")},
+      %{name: nil, label: nil},
+      %{name: :portrait, label: gettext("Character")}
+    ]
+  end
+
+  def realms() do
+    [
+      %{name: :fantasy, label: gettext("Fantasy - Past")},
+      %{name: :realism, label: gettext("Realism - Present")},
+      %{name: :futurism, label: gettext("Futurism - Future")}
+    ]
+  end
+
+  def sentiments do
+    [
+      %{name: :positive, label: gettext("Warm - Bright")},
+      %{name: :neutral, label: gettext("Natural - Neutral")},
+      %{name: :negative, label: gettext("Brutal - Dark")}
+    ]
   end
 end

@@ -156,7 +156,7 @@
             <.input field={{f, :height}} value={@height} type="hidden" />
           </div>
 
-          <.generate_btn image_id={@image_id} request_completed={@request_completed} />
+          <.generate_btn spin={@is_generating} />
         </.form>
       </div>
     <% else %>
@@ -169,28 +169,28 @@
         <span class="text-sm text-center"><%= @gen_error %></span>
       </div>
     <% end %>
-    <%= if @image_id != nil and @request_completed == false do %>
+    <%= if @is_generating do %>
       <.loader aspect_ratio={@aspect_ratio} />
     <% else %>
       <.img
         locale={@locale}      
         aspect_ratio={@aspect_ratio}
-        img_url={@img_url}
-        image_id={@image_id}
+        img_url={@image.url}
+        image_id={@image.id}
       >
         <%= if @image.unlocked do %>
-          <.edit_btn url={~p"/#{@locale}/images/#{@image_id}/edit"} />
+          <.edit_btn url={~p"/#{@locale}/images/#{@image.id}/edit"} />
           <.heart_button
             phx-click={
-              JS.push("toggle-favorite", value: %{image_id: @image_id})
-              |> JS.transition("scale-90", to: "#heart-#{@image_id}")
+              JS.push("toggle-favorite", value: %{image_id: @image.id})
+              |> JS.transition("scale-90", to: "#heart-#{@image.id}")
             }
             favorite={@image.favorite}
-            image_id={@image_id}
+            image_id={@image.id}
           />
-          <.download_btn image_url={"#{@img_url}?ik-attachment=true"} />
+          <.download_btn image_url={"#{@image.url}?ik-attachment=true"} />
         <% else %>
-          <.unlock_img_button phx-click={JS.push("unlock", value: %{image_id: @image_id})} image_id={@image_id} />
+          <.unlock_img_button phx-click={JS.push("unlock", value: %{image_id: @image.id})} image_id={@image.id} />
         <% end %>
       </.img>
     <% end %>

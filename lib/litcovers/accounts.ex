@@ -20,6 +20,12 @@ defmodule Litcovers.Accounts do
     |> Repo.update()
   end
 
+  def update_is_generating(%User{} = user, is_generating) do
+    user
+    |> User.is_generating_changeset(%{is_generating: is_generating})
+    |> Repo.update()
+  end
+
   ## Database getters
 
   @doc """
