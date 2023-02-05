@@ -69,6 +69,12 @@ defmodule LitcoversWeb.ImageLive.New do
   end
 
   @impl true
+  def handle_info({:unknown_error, _image_id}, socket) do
+    socket = assign(socket, gen_error: gettext("Something went wrong"), is_generating: false)
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_info({:gen_complete, image_id}, socket) do
     image = Media.get_image_preload!(image_id)
 
