@@ -46,25 +46,25 @@ defmodule LitcoversWeb.ImageLive.New do
   end
 
   @impl true
-  def handle_info({:error, :gen_timeout}, socket) do
+  def handle_info({:gen_timeout, _image_id}, socket) do
     socket =
       assign(socket,
-        gen_error: "Timeout",
-        is_generating: socket.assigns.current_user.is_generating
+        gen_error: gettext("Timeout"),
+        is_generating: false
       )
 
     {:noreply, socket}
   end
 
   @impl true
-  def handle_info({:error, :oai_failed}, socket) do
-    socket = assign(socket, gen_error: "Idea creation failed")
+  def handle_info({:oai_failed, _image_id}, socket) do
+    socket = assign(socket, gen_error: gettext("Something went wrong"), is_generating: false)
     {:noreply, socket}
   end
 
   @impl true
-  def handle_info({:error, :sd_failed, error}, socket) do
-    socket = assign(socket, gen_error: error)
+  def handle_info({:sd_failed, _image_id}, socket) do
+    socket = assign(socket, gen_error: gettext("Something went wrong"), is_generating: false)
     {:noreply, socket}
   end
 
@@ -109,7 +109,7 @@ defmodule LitcoversWeb.ImageLive.New do
 
       case Media.create_image(socket.assigns.current_user, prompt, image_params) do
         {:ok, image} ->
-          Create.new_async(image, socket.root_pid)
+          Create.new_async(image)
           Accounts.update_is_generating(socket.assigns.current_user, true)
 
           # deletes image after 24 hours only if it hasn't been unlocked

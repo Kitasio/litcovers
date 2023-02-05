@@ -11,7 +11,7 @@ defmodule CoverGen.Create do
 
   require Elixir.Logger
 
-  def new(%Image{} = image, root_pid) do
+  def new(%Image{} = image) do
     with {:ok, ideas_list} <-
            OAI.description_to_cover_idea(
              image.description,
@@ -45,6 +45,7 @@ defmodule CoverGen.Create do
 
       case Spaces.save_to_spaces(image_list) do
         {:error, reason} ->
+          release_user(image.user_id)
           IO.inspect(reason)
 
         img_urls ->
@@ -55,14 +56,21 @@ defmodule CoverGen.Create do
       end
     else
       {:error, :oai_failed} ->
-        send(root_pid, {:error, :oai_failed})
+        release_user(image.user_id)
+        broadcast(image.user_id, image.id, :oai_failed)
 
       {:error, :sd_failed, error} ->
-        send(root_pid, {:error, :sd_failed, error})
+        release_user(image.user_id)
+        IO.inspect(error)
+        broadcast(image.user_id, image.id, :sd_failed)
+
+      _ ->
+        release_user(image.user_id)
+        broadcast(image.user_id, image.id, :unknown_error)
     end
   end
 
-  def new_async(%Image{} = image, root_pid) do
+  def new_async(%Image{} = image) do
     Task.start(fn ->
       # Check if DrippingMachine is running
       if GenServer.whereis(Litcovers.DrippingMachine) != nil do
@@ -74,21 +82,20 @@ defmodule CoverGen.Create do
       {:ok, pid} =
         Task.start(fn ->
           Logger.info("Starting generation, image id: #{image.id}")
-          new(image, root_pid)
+          new(image)
           send(caller, {:ok, :finished})
         end)
 
-      get_result_or_kill(pid, root_pid, image)
+      get_result_or_kill(pid, image)
     end)
   end
 
-  defp get_result_or_kill(pid, root_pid, image) do
+  defp get_result_or_kill(pid, image) do
     receive do
       {:ok, :finished} ->
         Logger.info("Finished generating, image id: #{image.id}")
 
-        user = Accounts.get_user!(image.user_id)
-        Accounts.update_is_generating(user, false)
+        release_user(image.user_id)
 
         broadcast(image.user_id, image.id, :gen_complete)
     after
@@ -96,10 +103,9 @@ defmodule CoverGen.Create do
         Process.exit(pid, :kill)
         Logger.error("Timeout generating image, id: #{image.id}")
 
-        user = Accounts.get_user!(image.user_id)
-        Accounts.update_is_generating(user, false)
+        release_user(image.user_id)
 
-        send(root_pid, {:error, :gen_timeout})
+        broadcast(image.user_id, image.id, :gen_timeout)
     end
   end
 
@@ -114,6 +120,11 @@ defmodule CoverGen.Create do
       idea = String.trim(idea)
       Media.create_idea(image, %{idea: idea})
     end
+  end
+
+  defp release_user(id) do
+    user = Accounts.get_user!(id)
+    Accounts.update_is_generating(user, false)
   end
 
   def subscribe(user_id) do
