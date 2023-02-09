@@ -1,5 +1,4 @@
 defmodule CoverGen.Helpers do
-  alias Litcovers.Media
   require Elixir.Logger
 
   def create_prompt(idea_prompt, style_prompt, gender, :portrait) do
@@ -26,20 +25,5 @@ defmodule CoverGen.Helpers do
       "female" ->
         "woman"
     end
-  end
-
-  def delete_image_after(image_id, time) do
-    # deletes image after one day
-    Task.start(fn ->
-      # waits one day
-      time |> Process.sleep()
-      image = Media.get_image!(image_id)
-
-      unless image.unlocked do
-        Logger.info("deleting image, id: #{image.id}")
-        Media.delete_image(image)
-        CoverGen.Spaces.delete_object(image.url)
-      end
-    end)
   end
 end

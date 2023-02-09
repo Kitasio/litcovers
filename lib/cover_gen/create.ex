@@ -13,7 +13,7 @@ defmodule CoverGen.Create do
 
   def new(%Image{} = image) do
     with _ <- lock_user(image.user_id),
-        {:ok, ideas_list} <-
+         {:ok, ideas_list} <-
            OAI.description_to_cover_idea(
              image.description,
              image.prompt.type,
@@ -54,6 +54,7 @@ defmodule CoverGen.Create do
             image_params = %{url: url, completed: true}
             ai_update_image(image, image_params)
           end
+
           release_user(image.user_id)
           broadcast(image.user_id, image.id, :gen_complete)
       end

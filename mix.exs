@@ -56,7 +56,9 @@ defmodule Litcovers.MixProject do
       {:ex_aws, "~> 2.1"},
       {:ex_aws_s3, "~> 2.0"},
       {:httpoison, "~> 1.8"},
-      {:gen_stage, "~> 1.2"}
+      {:gen_stage, "~> 1.2"},
+      {:timex, "~> 3.7"},
+      {:flow, "~> 1.2.3"}
     ]
   end
 

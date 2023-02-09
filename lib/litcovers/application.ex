@@ -21,7 +21,8 @@ defmodule Litcovers.Application do
       # Start a worker by calling: Litcovers.Worker.start_link(arg)
       # {Litcovers.Worker, arg}
       CoverGen.CoverProducer,
-      CoverGen.CoverConsumerSupervisor
+      CoverGen.CoverConsumerSupervisor,
+      CoverGen.Cleaner.Supervisor
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

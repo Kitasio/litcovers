@@ -117,9 +117,6 @@ defmodule LitcoversWeb.ImageLive.New do
         {:ok, image} ->
           CoverGen.CoverProducer.start_image_gen(image)
 
-          # deletes image after 24 hours only if it hasn't been unlocked
-          Helpers.delete_image_after(image.id, :timer.hours(24))
-
           socket = socket |> assign(image: image, is_generating: true)
 
           {:noreply, socket}

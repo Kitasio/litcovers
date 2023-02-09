@@ -16,6 +16,15 @@ defmodule Litcovers.Media do
     |> Repo.update()
   end
 
+  # shows only images older than 1 day
+  def list_old_images do
+    Image
+    |> order_by_date_insert()
+    |> locked_query()
+    |> Repo.all()
+    |> Enum.filter(fn image -> image.inserted_at < Timex.shift(Timex.now(), days: -1) end)
+  end
+
   @doc """
   Returns the list of images.
 
@@ -78,6 +87,10 @@ defmodule Litcovers.Media do
 
   defp unlocked_query(query) do
     from(r in query, where: r.unlocked == true)
+  end
+
+  defp locked_query(query) do
+    from(r in query, where: r.unlocked == false)
   end
 
   def user_images_amount(%Accounts.User{} = user) do
