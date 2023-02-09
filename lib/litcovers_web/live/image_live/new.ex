@@ -115,8 +115,7 @@ defmodule LitcoversWeb.ImageLive.New do
 
       case Media.create_image(socket.assigns.current_user, prompt, image_params) do
         {:ok, image} ->
-          Create.new_async(image)
-          Accounts.update_is_generating(socket.assigns.current_user, true)
+          CoverGen.CoverProducer.start_image_gen(image)
 
           # deletes image after 24 hours only if it hasn't been unlocked
           Helpers.delete_image_after(image.id, :timer.hours(24))

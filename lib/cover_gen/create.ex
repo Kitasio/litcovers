@@ -12,7 +12,8 @@ defmodule CoverGen.Create do
   require Elixir.Logger
 
   def new(%Image{} = image) do
-    with {:ok, ideas_list} <-
+    with _ <- lock_user(image.user_id),
+        {:ok, ideas_list} <-
            OAI.description_to_cover_idea(
              image.description,
              image.prompt.type,
@@ -53,6 +54,8 @@ defmodule CoverGen.Create do
             image_params = %{url: url, completed: true}
             ai_update_image(image, image_params)
           end
+          release_user(image.user_id)
+          broadcast(image.user_id, image.id, :gen_complete)
       end
     else
       {:error, :oai_failed} ->
@@ -120,6 +123,11 @@ defmodule CoverGen.Create do
       idea = String.trim(idea)
       Media.create_idea(image, %{idea: idea})
     end
+  end
+
+  defp lock_user(id) do
+    user = Accounts.get_user!(id)
+    Accounts.update_is_generating(user, true)
   end
 
   defp release_user(id) do

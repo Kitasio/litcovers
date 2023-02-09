@@ -55,7 +55,8 @@ defmodule Litcovers.MixProject do
       {:set_locale, "~> 0.2.9"},
       {:ex_aws, "~> 2.1"},
       {:ex_aws_s3, "~> 2.0"},
-      {:httpoison, "~> 1.8"}
+      {:httpoison, "~> 1.8"},
+      {:gen_stage, "~> 1.2"}
     ]
   end
 
