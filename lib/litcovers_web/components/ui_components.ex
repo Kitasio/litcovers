@@ -104,6 +104,7 @@ defmodule LitcoversWeb.UiComponents do
           x-show="showImage"
           x-transition.duration.300ms
           x-bind:src="imageUrl"
+          x-on:contextmenu.prevent
           x-on:load="showImage = true"
           alt="Generated picture"
           class="w-full h-full object-cover aspect-cover"
