@@ -247,6 +247,7 @@ defmodule LitcoversWeb.UiComponents do
         type="text"
         errors={[]}
         name="params[author]"
+        phx-debounce="500"
       />
     </div>
     """
@@ -269,6 +270,7 @@ defmodule LitcoversWeb.UiComponents do
         type="text"
         errors={[]}
         name="params[title]"
+        phx-debounce="500"
       />
     </div>
     """
