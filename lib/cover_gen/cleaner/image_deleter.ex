@@ -17,7 +17,7 @@ defmodule CoverGen.Cleaner.ImageDeleter do
     end)
     |> Flow.run()
 
-    Process.sleep(:timer.hours(24))
+    Process.sleep(:timer.hours(1))
     loop()
   end
 
@@ -25,6 +25,7 @@ defmodule CoverGen.Cleaner.ImageDeleter do
     unless image.unlocked do
       Logger.info("deleting image, id: #{image.id}")
       Media.delete_image(image)
+
       if image.url do
         CoverGen.Spaces.delete_object(image.url)
       end
