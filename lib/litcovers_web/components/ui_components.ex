@@ -284,11 +284,13 @@ defmodule LitcoversWeb.UiComponents do
       <Heroicons.chevron_left
         class="w-5 h-5 cursor-pointer hover:scale-105 transition"
         phx-click={"prev-#{@type}-font"}
+        phx-throttle="700"
       />
       <span>T</span>
       <Heroicons.chevron_right
         class="w-5 h-5 cursor-pointer hover:scale-105 transition"
         phx-click={"next-#{@type}-font"}
+        phx-throttle="700"
       />
     </div>
     """
