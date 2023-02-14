@@ -58,7 +58,9 @@ defmodule Litcovers.MixProject do
       {:httpoison, "~> 1.8"},
       {:gen_stage, "~> 1.2"},
       {:timex, "~> 3.7"},
-      {:flow, "~> 1.2.3"}
+      {:flow, "~> 1.2.3"},
+      {:redix, "~> 1.1"},
+      {:castore, ">= 0.0.0"}
     ]
   end
 

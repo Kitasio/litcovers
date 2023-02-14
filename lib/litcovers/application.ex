@@ -22,7 +22,8 @@ defmodule Litcovers.Application do
       # {Litcovers.Worker, arg}
       CoverGen.CoverProducer,
       CoverGen.CoverConsumerSupervisor,
-      CoverGen.Cleaner.Supervisor
+      CoverGen.Cleaner.Supervisor,
+      Litcovers.RedixSupervisor
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

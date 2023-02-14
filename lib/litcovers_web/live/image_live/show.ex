@@ -1,6 +1,7 @@
 defmodule LitcoversWeb.ImageLive.Show do
   use LitcoversWeb, :live_view
   import LitcoversWeb.ImageLive.Index
+  require Logger
 
   alias Litcovers.Metadata
   alias Litcovers.Media
@@ -11,7 +12,7 @@ defmodule LitcoversWeb.ImageLive.Show do
     image_base64 = image.url |> img_url_to_base64()
 
     author_current_font = fonts_list() |> List.first()
-    author_font_base64 = author_current_font |> font_to_base64()
+    author_font_base64 = author_current_font |> redis_get_or_set_font()
 
     {:ok,
      assign(socket,
@@ -99,7 +100,7 @@ defmodule LitcoversWeb.ImageLive.Show do
   @impl true
   def handle_event("next-author-font", _, socket) do
     next_font = socket.assigns.author_current_font |> next_font()
-    next_font_base64 = next_font |> font_to_base64()
+    next_font_base64 = next_font |> redis_get_or_set_font()
 
     socket =
       assign(socket,
@@ -119,7 +120,7 @@ defmodule LitcoversWeb.ImageLive.Show do
   @impl true
   def handle_event("prev-author-font", _, socket) do
     prev_font = socket.assigns.author_current_font |> prev_font()
-    prev_font_base64 = prev_font |> font_to_base64()
+    prev_font_base64 = prev_font |> redis_get_or_set_font()
 
     socket =
       assign(socket,
@@ -139,7 +140,7 @@ defmodule LitcoversWeb.ImageLive.Show do
   @impl true
   def handle_event("next-title-font", _, socket) do
     next_font = socket.assigns.title_current_font |> next_font()
-    next_font_base64 = next_font |> font_to_base64()
+    next_font_base64 = next_font |> redis_get_or_set_font()
 
     socket =
       assign(socket,
@@ -159,7 +160,7 @@ defmodule LitcoversWeb.ImageLive.Show do
   @impl true
   def handle_event("prev-title-font", _, socket) do
     prev_font = socket.assigns.title_current_font |> prev_font()
-    prev_font_base64 = prev_font |> font_to_base64()
+    prev_font_base64 = prev_font |> redis_get_or_set_font()
 
     socket =
       assign(socket,
@@ -194,6 +195,25 @@ defmodule LitcoversWeb.ImageLive.Show do
     |> Path.join()
     |> File.read!()
     |> Base.encode64()
+  end
+
+  def redis_get_or_set_font(font_name) do
+    # check if font stored in redis
+    case Redix.command(:redix, ["GET", font_name]) do
+      {:ok, nil} ->
+        font_base64 = font_name |> font_to_base64()
+        Logger.info("Setting font #{font_name} in redis")
+        Redix.command(:redix, ["SET", font_name, font_base64])
+        font_base64
+
+      {:ok, font_base64} ->
+        Logger.info("Font #{font_name} found in redis")
+        font_base64
+
+      {:error, reason} ->
+        Logger.error("Error getting font #{font_name} from redis: #{inspect(reason)}")
+        font_name |> font_to_base64()
+    end
   end
 
   def img_url_to_base64(url) do
