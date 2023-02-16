@@ -21,8 +21,16 @@ defmodule Litcovers.Media do
     Image
     |> order_by_date_insert()
     |> locked_query()
+    |> old_images_query()
     |> Repo.all()
-    |> Enum.filter(fn image -> image.inserted_at < Timex.shift(Timex.now(), days: -1) end)
+  end
+
+  defp yesterday do
+    NaiveDateTime.add(Timex.now(), -1, :day)
+  end
+
+  defp old_images_query(query) do
+    from(r in query, where: r.inserted_at < ^yesterday())
   end
 
   @doc """
