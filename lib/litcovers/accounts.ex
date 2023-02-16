@@ -26,6 +26,20 @@ defmodule Litcovers.Accounts do
     |> Repo.update()
   end
 
+  defp ten_minutes_ago do
+    NaiveDateTime.add(Timex.now(), -10, :minute)
+  end
+
+  defp stuck_user_query(query) do
+    from(r in query, where: r.is_generating == true and r.updated_at < ^ten_minutes_ago())
+  end
+
+  def list_stuck_users() do
+    User
+    |> stuck_user_query()
+    |> Repo.all()
+  end
+
   ## Database getters
 
   @doc """

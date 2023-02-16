@@ -1,4 +1,4 @@
-defmodule Litcovers.Supervisor do
+defmodule Litcovers.GenericSupervisor do
   use Supervisor
   require Logger
 
@@ -8,10 +8,11 @@ defmodule Litcovers.Supervisor do
 
   @impl true
   def init(_init_arg) do
-    Logger.info("Supervisor init, pid: #{inspect(self())}")
+    Logger.info("Litcovers.Supervisor init, pid: #{inspect(self())}")
 
     children = [
-      {Redix, {System.get_env("REDIS_CONN_URL"), [name: :redix]}}
+      {Redix, {System.get_env("REDIS_CONN_URL"), [name: :redix]}},
+      Litcovers.UserReleaser
     ]
 
     Supervisor.init(children,
