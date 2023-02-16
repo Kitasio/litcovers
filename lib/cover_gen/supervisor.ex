@@ -1,5 +1,5 @@
 defmodule CoverGen.Supervisor do
-  use Supervisor
+  use Supervisor, restart: :transient
   require Logger
 
   def start_link(init_arg) do
