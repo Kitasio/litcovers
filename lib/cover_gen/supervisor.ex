@@ -1,4 +1,4 @@
-defmodule CoverGen.Cleaner.Supervisor do
+defmodule CoverGen.Supervisor do
   use Supervisor
   require Logger
 
@@ -8,10 +8,11 @@ defmodule CoverGen.Cleaner.Supervisor do
 
   @impl true
   def init(_init_arg) do
-    Logger.info("Cleaner.Supervisor init, pid: #{inspect(self())}")
+    Logger.info("CoverGen.Supervisor init, pid: #{inspect(self())}")
 
     children = [
-      CoverGen.Cleaner.ImageDeleter
+      CoverGen.Cleaner.ImageDeleter,
+      CoverGen.DrippingMachine
     ]
 
     Supervisor.init(children,

@@ -22,7 +22,7 @@ defmodule Litcovers.Application do
       # {Litcovers.Worker, arg}
       CoverGen.CoverProducer,
       CoverGen.CoverConsumerSupervisor,
-      CoverGen.Cleaner.Supervisor,
+      CoverGen.Supervisor,
       Litcovers.RedixSupervisor
     ]
 

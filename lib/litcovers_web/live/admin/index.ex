@@ -1,4 +1,4 @@
-defmodule LitcoversWeb.AdminLive.Index do
+defmodule LiLitcoverstcoversWeb.AdminLive.Index do
   use LitcoversWeb, :live_view
   alias Litcovers.Accounts
 
@@ -7,7 +7,7 @@ defmodule LitcoversWeb.AdminLive.Index do
     users = Accounts.list_regular_users()
 
     drip_machine =
-      case GenServer.whereis(Litcovers.DrippingMachine) do
+      case GenServer.whereis(CoverGen.DrippingMachine) do
         nil -> false
         _ -> true
       end
@@ -38,14 +38,14 @@ defmodule LitcoversWeb.AdminLive.Index do
 
   @impl true
   def handle_event("toggle-dripping_machine", %{}, socket) do
-    if GenServer.whereis(Litcovers.DrippingMachine) != nil do
-      Litcovers.DrippingMachine.stop_dripping()
+    if GenServer.whereis(CoverGen.DrippingMachine) != nil do
+      CoverGen.DrippingMachine.stop_dripping()
     else
-      Litcovers.DrippingMachine.start_link()
+      CoverGen.DrippingMachine.start_link(%{})
     end
 
     drip_machine =
-      case GenServer.whereis(Litcovers.DrippingMachine) do
+      case GenServer.whereis(CoverGen.DrippingMachine) do
         nil -> false
         _ -> true
       end
