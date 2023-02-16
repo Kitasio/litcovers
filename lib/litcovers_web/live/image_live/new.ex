@@ -1,7 +1,5 @@
 defmodule LitcoversWeb.ImageLive.New do
-  alias CoverGen.Helpers
   alias Litcovers.Accounts
-  alias CoverGen.Create
   alias Litcovers.Media
   alias Litcovers.Media.Image
   alias Litcovers.Metadata
@@ -367,6 +365,8 @@ defmodule LitcoversWeb.ImageLive.New do
         class="mr-8 aspect-cover overflow-hidden rounded-xl border-2 border-stroke-main hover:border-accent-main transition inline-block min-w-[250px] sm:min-w-fit sm:mr-0"
         x-bind:class={"'#{@value}' == '#{@prompt_id}' && 'border-accent-main'"}
         x-data={"{ showImage: false, imageUrl: '#{@src}' }"}
+        phx-click={next_stage_push_anim(@stage_id)}
+        phx-value-value={assigns.value}
       >
         <img
           x-show="showImage"
@@ -375,8 +375,6 @@ defmodule LitcoversWeb.ImageLive.New do
           x-on:load="showImage = true"
           alt={assigns.label}
           class="w-full h-full object-cover aspect-cover cursor-pointer transition duration-300 ease-out hover:scale-[1.02] hover:saturate-[1.3]"
-          phx-click={next_stage_push_anim(@stage_id)}
-          phx-value-value={assigns.value}
         />
       </div>
       """
@@ -464,7 +462,7 @@ defmodule LitcoversWeb.ImageLive.New do
   def types() do
     [
       %{name: :setting, label: gettext("Setting")},
-      %{name: nil, label: nil},
+      %{name: :couple, label: gettext("Couple")},
       %{name: :portrait, label: gettext("Character")}
     ]
   end
