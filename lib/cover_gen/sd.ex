@@ -7,9 +7,11 @@ defmodule CoverGen.SD do
   defstruct version: "9936c2001faa2194a261c01381f90e65261879985476014a0a37a334593a05eb",
             input: %{
               prompt: "multicolor hyperspace",
+              negative_prompt: "three heads, three faces, fingers, hands, four heads, four faces",
               width: 512,
               height: 768,
-              num_outputs: 1
+              num_outputs: 1,
+              guidance_scale: 10
             }
 
   def get_sd_params(prompt, gender, type, amount, width, height) do
@@ -19,7 +21,9 @@ defmodule CoverGen.SD do
         prompt: prompt,
         width: width,
         height: height,
-        num_outputs: amount
+        num_outputs: amount,
+        guidance_scale: 10,
+        negative_prompt: "three heads, three faces, fingers, hands, four heads, four faces"
       }
     }
   end
@@ -43,7 +47,7 @@ defmodule CoverGen.SD do
   end
 
   defp get_version(_type, "couple") do
-    "139abcbafe063bd8569836fbc97913ff9d0db1308a93e6f9a2a4d7d721008b9c"
+    "41aa15ac9c83035da10c7b4472cabd7638964b1f47f39e8c7d6132d9e1b80e7f"
   end
 
   defp get_version(type, _gender) do
@@ -52,10 +56,10 @@ defmodule CoverGen.SD do
         "8abccf52e7cba9f6e82317253f4a3549082e966db5584e92c808ece132037776"
 
       :portrait ->
-        "139abcbafe063bd8569836fbc97913ff9d0db1308a93e6f9a2a4d7d721008b9c"
+        "41aa15ac9c83035da10c7b4472cabd7638964b1f47f39e8c7d6132d9e1b80e7f"
 
       _ ->
-        "139abcbafe063bd8569836fbc97913ff9d0db1308a93e6f9a2a4d7d721008b9c"
+        "41aa15ac9c83035da10c7b4472cabd7638964b1f47f39e8c7d6132d9e1b80e7f"
     end
   end
 
@@ -92,7 +96,7 @@ defmodule CoverGen.SD do
 
   def dummy_diffuse do
     params = %{
-      version: "139abcbafe063bd8569836fbc97913ff9d0db1308a93e6f9a2a4d7d721008b9c",
+      version: "41aa15ac9c83035da10c7b4472cabd7638964b1f47f39e8c7d6132d9e1b80e7f",
       input: %{
         prompt: "a cjw cat",
         width: 128,

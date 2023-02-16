@@ -9,6 +9,10 @@ defmodule CoverGen.Helpers do
     "#{idea_prompt}, #{style_prompt}"
   end
 
+  def create_prompt(idea_prompt, style_prompt, _gender, :couple) do
+    "a cjw couple closeup, #{idea_prompt}, #{style_prompt}"
+  end
+
   defp random_portrait(gender) do
     [
       "A cjw close up portrait of a #{gender_to_naming(gender)}",

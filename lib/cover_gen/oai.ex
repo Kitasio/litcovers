@@ -42,6 +42,19 @@ defmodule CoverGen.OAI do
     end
   end
 
+  defp preamble(input, _gender, :couple) do
+    "Suggest a 4 book cover ideas, every idea depicts a couple, man and woman on some kind of background, separate ideas with commas
+
+    Description: A student teenage girl moves into a new city and finds her life turned upside-down when she falls in love with a beautiful young vampire.
+    Book cover ideas: Beautiful student girl and handsome pale vampire with a dark grey forest in the background, A vampire man with a red glowing eyes and a pretty woman iside a dark apartment, Passionate woman with a pale skin and dark haired handsome man on a red abstract background, beautiful girl with her eyes closed and her partner hugging her with a dark misty field in the background
+
+    Description: Christian understood that the two things one needs to be successful are power and control. His relationship with Ana perfectly encapsulates the ideology of the story’s portrayal of dominance and control.
+    Book cover ideas: A pretty woman in a red night dress and a man in black suite in a modern room, A strong handome man wearing a white shirt and a woman in the office, strong male protagonist with bright blue eyes hugging a pretty woman with long hair, a woman in silk dress kissing a handsome man
+
+    Description: #{input}
+    Book cover ideas:"
+  end
+
   defp preamble(input, _gender, :setting) do
     "Suggest a 4 book cover ideas, use objects and landscapes to describe it, separate ideas with commas
 
