@@ -35,23 +35,27 @@
           img_url={image.url}
           aspect_ratio={aspect_ratio({image.width, image.height})}
         >
-          <.edit_btn url={~p"/#{@locale}/images/#{image.id}/edit"} />
-          <.heart_button
-            phx-click={
-              JS.push("toggle-favorite", value: %{image_id: image.id})
-              |> JS.transition("scale-90", to: "#heart-#{image.id}")
-            }
-            favorite={image.favorite}
-            image_id={image.id}
-          />
-          <.download_btn image_url={"#{image.url}?ik-attachment=true"} />
-          <.delete_img_button
-            phx-click={
-              JS.push("delete-image", value: %{image_id: image.id})
-              |> JS.transition("scale-90", to: "#delete-#{image.id}")
-            }
-            image_id={image.id}
-          />
+          <%= if image.unlocked do %>
+            <.edit_btn url={~p"/#{@locale}/images/#{image.id}/edit"} />
+            <.heart_button
+              phx-click={
+                JS.push("toggle-favorite", value: %{image_id: image.id})
+                |> JS.transition("scale-90", to: "#heart-#{image.id}")
+              }
+              favorite={image.favorite}
+              image_id={image.id}
+            />
+            <.download_btn image_url={"#{image.url}?ik-attachment=true"} />
+            <.delete_img_button
+              phx-click={
+                JS.push("delete-image", value: %{image_id: image.id})
+                |> JS.transition("scale-90", to: "#delete-#{image.id}")
+              }
+              image_id={image.id}
+            />
+          <% else %>
+            <.unlock_img_button phx-click={JS.push("unlock", value: %{image_id: image.id})} image_id={image.id} />
+          <% end %>
         </.img>
       </div>
     <% end %>

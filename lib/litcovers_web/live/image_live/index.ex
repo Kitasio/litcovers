@@ -2,6 +2,7 @@ defmodule LitcoversWeb.ImageLive.Index do
   use LitcoversWeb, :live_view
 
   alias Litcovers.Media
+  alias Litcovers.Accounts
 
   @impl true
   def mount(%{"locale" => locale}, _session, socket) do
@@ -36,6 +37,21 @@ defmodule LitcoversWeb.ImageLive.Index do
   defp apply_action(socket, :unlocked, _params) do
     socket
     |> assign(images: list_images(socket.assigns.current_user))
+  end
+
+  # unlocks image spending 1 litcoin to current user
+  @impl true
+  def handle_event("unlock", %{"image_id" => image_id}, socket) do
+    litcoins = socket.assigns.current_user.litcoins
+
+    if litcoins > 0 do
+      image = Media.get_image!(image_id)
+      {:ok, _image} = Media.unlock_image(image)
+      {:ok, _user} = Accounts.remove_litcoins(socket.assigns.current_user, 1)
+      {:noreply, apply_action(socket, socket.assigns.live_action, %{})}
+    else
+      {:noreply, socket}
+    end
   end
 
   @impl true
