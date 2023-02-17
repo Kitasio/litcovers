@@ -121,6 +121,7 @@ defmodule LitcoversWeb.Router do
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
 
       live "/images", ImageLive.Index, :index
+      live "/images/unlocked", ImageLive.Index, :unlocked
       live "/images/favorites", ImageLive.Index, :favorites
       live "/images/all", ImageLive.Index, :all
     end

@@ -1,4 +1,4 @@
-defmodule LiLitcoverstcoversWeb.AdminLive.Index do
+defmodule LitcoversWeb.AdminLive.Index do
   use LitcoversWeb, :live_view
   alias Litcovers.Accounts
 

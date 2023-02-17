@@ -15,7 +15,8 @@ defmodule LitcoversWeb.ImageLive.Index do
 
   defp apply_action(socket, :index, _params) do
     if has_images?(socket.assigns.current_user) do
-      socket |> assign(images: list_images(socket.assigns.current_user))
+      socket
+      |> push_navigate(to: ~p"/#{socket.assigns.locale}/images/all")
     else
       socket
       |> push_navigate(to: ~p"/#{socket.assigns.locale}/images/new")
@@ -30,6 +31,11 @@ defmodule LitcoversWeb.ImageLive.Index do
   defp apply_action(socket, :all, _params) do
     socket
     |> assign(images: list_all_images(socket.assigns.current_user))
+  end
+
+  defp apply_action(socket, :unlocked, _params) do
+    socket
+    |> assign(images: list_images(socket.assigns.current_user))
   end
 
   @impl true
@@ -59,7 +65,7 @@ defmodule LitcoversWeb.ImageLive.Index do
   end
 
   def has_images?(user) do
-    Media.user_unlocked_images_amount(user) > 0
+    Media.user_images_amount(user) > 0
   end
 
   defp list_images(user) do

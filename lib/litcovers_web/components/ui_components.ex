@@ -63,19 +63,16 @@ defmodule LitcoversWeb.UiComponents do
       <% end %>
 
       <%= if @images_exist do %>
-        <%= if @request_path == "/#{@locale}/images" do %>
-          <div class="flex items-center gap-2 px-8 py-4 bg-sec -mb-0.5 rounded-tl-lg rounded-tr-lg border-l-2 border-t-2 border-r-2 border-accent-sec">
-            <.link navigate={"/#{@locale}/images"}>
-              <%= gettext("My generations") %>
-            </.link>
-          </div>
-        <% else %>
-          <div class="flex items-center gap-2 px-8 py-4 bg-main -mb-0.5 border-b-2 border-accent-sec">
-            <.link navigate={"/#{@locale}/images"}>
-              <%= gettext("My generations") %>
-            </.link>
-          </div>
-        <% end %>
+        <div 
+          class="flex relative items-center gap-2 px-8 py-4 -mb-0.5 border-accent-sec"
+          x-data=""
+          x-bind:class={"'#{@request_path}' == '/#{@locale}/images' ? 'bg-sec rounded-tl-lg rounded-tr-lg border-l-2 border-t-2 border-r-2' : 'bg-main border-b-2'"} 
+        >
+          <.link navigate={"/#{@locale}/images"}>
+            <%= gettext("My generations") %>
+          </.link>
+          <div class="absolute top-2 right-2 w-2 h-2 bg-accent-main rounded-full" />
+        </div>
       <% end %>
     </div>
     """
