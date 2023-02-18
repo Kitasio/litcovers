@@ -1,17 +1,13 @@
 defmodule CoverGen.DrippingMachine do
-  use GenServer
+  use GenServer, restart: :transient
   require Logger
 
-  def start_link(_arg) do
-    GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
-  end
-
-  def stop_dripping do
-    GenServer.stop(__MODULE__)
+  def start_link(state) do
+    GenServer.start_link(__MODULE__, state, name: __MODULE__)
   end
 
   def init(state) do
-    CoverGen.SD.dummy_diffuse()
+    Logger.info("Dripping machine init")
     state = Map.put(state, :timer_ref, schedule_work())
     {:ok, state}
   end

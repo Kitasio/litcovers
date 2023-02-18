@@ -39,9 +39,10 @@ defmodule LitcoversWeb.AdminLive.Index do
   @impl true
   def handle_event("toggle-dripping_machine", %{}, socket) do
     if GenServer.whereis(CoverGen.DrippingMachine) != nil do
-      CoverGen.DrippingMachine.stop_dripping()
+      CoverGen.Supervisor.terminate_child(CoverGen.DrippingMachine)
+      CoverGen.Supervisor.delete_child(CoverGen.DrippingMachine)
     else
-      CoverGen.DrippingMachine.start_link(%{})
+      CoverGen.Supervisor.start_child({CoverGen.DrippingMachine, %{}})
     end
 
     drip_machine =
