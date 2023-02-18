@@ -1,5 +1,5 @@
 <div class="flex flex-col h-screen lg:grid grid-cols-12">
-  <.navbar images_exist={@has_images} locale={@locale} request_path={~p"/#{@locale}/images/new"} />
+  <.navbar show_pinger={@has_new_images} litcoins={@litcoins} images_exist={@has_images} locale={@locale} request_path={~p"/#{@locale}/images/new"} />
   <div class="lg:col-span-5">
     <!-- <div class="bg-sec px-8 py-5 rounded-tr-xl"> -->
     <!--   <div class="flex items-center gap-8"> -->
@@ -9,9 +9,6 @@
     <!-- </div> -->
     <%= if @lit_ai do %>
       <div class="pt-7 bg-sec flex flex-col justify-between lg:h-full">
-    <div>
-      <%= @litcoins %> litcoins
-    </div>
         <.form
           :let={f}
           class="px-8 bg-sec flex flex-col gap-5"

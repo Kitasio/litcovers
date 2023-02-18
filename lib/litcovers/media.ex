@@ -10,6 +10,24 @@ defmodule Litcovers.Media do
 
   alias Litcovers.Media.Image
 
+  def see_all_user_images(%Accounts.User{} = user) do
+    Image
+    |> user_images_query(user)
+    |> all_unseen_images_query()
+    |> Repo.update_all(set: [seen: true])
+  end
+
+  def has_unseen_images?(%Accounts.User{} = user) do
+    Image
+    |> user_images_query(user)
+    |> all_unseen_images_query()
+    |> Repo.aggregate(:count) > 0
+  end
+
+  defp all_unseen_images_query(query) do
+    from(r in query, where: r.seen == false)
+  end
+
   def unlock_image(%Image{} = image) do
     image
     |> Image.unlocked_changeset(%{unlocked: true})
@@ -48,7 +66,7 @@ defmodule Litcovers.Media do
 
   def list_unlocked_user_images(%Accounts.User{} = user) do
     Image
-    |> user_requests_query(user)
+    |> user_images_query(user)
     |> order_by_date_insert()
     |> completed_query()
     |> unlocked_query()
@@ -57,7 +75,7 @@ defmodule Litcovers.Media do
 
   def list_user_images(%Accounts.User{} = user) do
     Image
-    |> user_requests_query(user)
+    |> user_images_query(user)
     |> order_by_date_insert()
     |> completed_query()
     |> Repo.all()
@@ -65,7 +83,7 @@ defmodule Litcovers.Media do
 
   def list_user_favorite_images(%Accounts.User{} = user) do
     Image
-    |> user_requests_query(user)
+    |> user_images_query(user)
     |> order_by_date_insert()
     |> completed_query()
     |> unlocked_query()
@@ -89,7 +107,7 @@ defmodule Litcovers.Media do
     from(r in query, where: r.favorite == true)
   end
 
-  defp user_requests_query(query, %Accounts.User{id: user_id}) do
+  defp user_images_query(query, %Accounts.User{id: user_id}) do
     from(r in query, where: r.user_id == ^user_id)
   end
 
@@ -103,13 +121,13 @@ defmodule Litcovers.Media do
 
   def user_images_amount(%Accounts.User{} = user) do
     Image
-    |> user_requests_query(user)
+    |> user_images_query(user)
     |> Repo.aggregate(:count)
   end
 
   def user_unlocked_images_amount(%Accounts.User{} = user) do
     Image
-    |> user_requests_query(user)
+    |> user_images_query(user)
     |> unlocked_query()
     |> Repo.aggregate(:count)
   end

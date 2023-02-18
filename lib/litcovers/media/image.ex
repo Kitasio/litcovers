@@ -11,6 +11,7 @@ defmodule Litcovers.Media.Image do
     field :width, :integer
     field :favorite, :boolean, default: false
     field :unlocked, :boolean, default: false
+    field :seen, :boolean, default: false
 
     belongs_to :user, Litcovers.Accounts.User
     belongs_to :prompt, Litcovers.Metadata.Prompt
@@ -30,7 +31,8 @@ defmodule Litcovers.Media.Image do
       :width,
       :height,
       :character_gender,
-      :favorite
+      :favorite,
+      :seen
     ])
     |> validate_required([
       :description,

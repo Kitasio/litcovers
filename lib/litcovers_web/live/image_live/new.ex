@@ -40,7 +40,8 @@ defmodule LitcoversWeb.ImageLive.New do
        gen_error: nil,
        litcoins: socket.assigns.current_user.litcoins,
        is_generating: socket.assigns.current_user.is_generating,
-       has_images: has_images?(socket.assigns.current_user)
+       has_images: has_images?(socket.assigns.current_user),
+       has_new_images: has_new_images?(socket.assigns.current_user)
      )}
   end
 
@@ -79,7 +80,7 @@ defmodule LitcoversWeb.ImageLive.New do
 
     {:noreply,
      socket
-     |> assign(image: image, is_generating: false, has_images: true)}
+     |> assign(image: image, is_generating: false, has_images: true, has_new_images: true)}
   end
 
   # unlocks image spending 1 litcoin to current user

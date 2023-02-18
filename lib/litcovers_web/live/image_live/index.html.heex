@@ -2,6 +2,7 @@
   images_exist={has_images?(@current_user)}
   locale={@locale}
   request_path={~p"/#{@locale}/images"}
+  litcoins={@litcoins}
 />
 <div x-data="" class="bg-sec grow px-8 py-10">
   <div class="flex gap-10">
@@ -54,7 +55,10 @@
               image_id={image.id}
             />
           <% else %>
-            <.unlock_img_button phx-click={JS.push("unlock", value: %{image_id: image.id})} image_id={image.id} />
+            <.unlock_img_button
+              phx-click={JS.push("unlock", value: %{image_id: image.id})}
+              image_id={image.id}
+            />
           <% end %>
         </.img>
       </div>

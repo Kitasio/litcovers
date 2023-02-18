@@ -6,6 +6,8 @@ defmodule LitcoversWeb.UiComponents do
   attr :request_path, :string, required: true
   attr :locale, :string, required: true
   attr :images_exist, :boolean, default: true
+  attr :litcoins, :integer, default: nil
+  attr :show_pinger, :boolean, default: false
 
   def navbar(assigns) do
     ~H"""
@@ -26,9 +28,18 @@ defmodule LitcoversWeb.UiComponents do
         </svg>
       </a>
 
-      <.link_button navigate={"/#{@locale}/images/new"}>
-        <%= gettext("Create cover") %>
-      </.link_button>
+      <div class="flex items-center gap-5">
+        <%= if @litcoins != nil do %>
+          <div class="text-accent-main font-bold border-l-2 rounded-full border-accent-sec px-3 p-1">
+            <%= @litcoins %>
+          </div>
+        <% end %>
+        <div class="hidden sm:inline">
+          <.link_button navigate={"/#{@locale}/images/new"}>
+            <%= gettext("Create cover") %>
+          </.link_button>
+        </div>
+      </div>
     </div>
 
     <div class="col-span-12 flex border-b-2 border-accent-sec">
@@ -63,15 +74,17 @@ defmodule LitcoversWeb.UiComponents do
       <% end %>
 
       <%= if @images_exist do %>
-        <div 
+        <div
           class="flex relative items-center gap-2 px-8 py-4 -mb-0.5 border-accent-sec"
           x-data=""
-          x-bind:class={"'#{@request_path}' == '/#{@locale}/images' ? 'bg-sec rounded-tl-lg rounded-tr-lg border-l-2 border-t-2 border-r-2' : 'bg-main border-b-2'"} 
+          x-bind:class={"'#{@request_path}' == '/#{@locale}/images' ? 'bg-sec rounded-tl-lg rounded-tr-lg border-l-2 border-t-2 border-r-2' : 'bg-main border-b-2'"}
         >
           <.link navigate={"/#{@locale}/images"}>
             <%= gettext("My generations") %>
           </.link>
-          <div class="absolute top-2 right-2 w-2 h-2 bg-accent-main rounded-full" />
+          <%= if @show_pinger do %>
+            <div class="absolute animate-pulse top-2 right-2 w-2 h-2 bg-accent-main rounded-full" />
+          <% end %>
         </div>
       <% end %>
     </div>

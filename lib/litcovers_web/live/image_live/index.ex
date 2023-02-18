@@ -6,7 +6,8 @@ defmodule LitcoversWeb.ImageLive.Index do
 
   @impl true
   def mount(%{"locale" => locale}, _session, socket) do
-    {:ok, assign(socket, locale: locale)}
+    Task.start_link(fn -> Media.see_all_user_images(socket.assigns.current_user) end)
+    {:ok, assign(socket, locale: locale, litcoins: socket.assigns.current_user.litcoins)}
   end
 
   @impl true
@@ -47,7 +48,8 @@ defmodule LitcoversWeb.ImageLive.Index do
     if litcoins > 0 do
       image = Media.get_image!(image_id)
       {:ok, _image} = Media.unlock_image(image)
-      {:ok, _user} = Accounts.remove_litcoins(socket.assigns.current_user, 1)
+      {:ok, user} = Accounts.remove_litcoins(socket.assigns.current_user, 1)
+      socket = assign(socket, litcoins: user.litcoins)
       {:noreply, apply_action(socket, socket.assigns.live_action, %{})}
     else
       {:noreply, socket}
@@ -82,6 +84,10 @@ defmodule LitcoversWeb.ImageLive.Index do
 
   def has_images?(user) do
     Media.user_images_amount(user) > 0
+  end
+
+  def has_new_images?(user) do
+    Media.has_unseen_images?(user)
   end
 
   defp list_images(user) do
