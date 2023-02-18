@@ -1,5 +1,5 @@
 defmodule LitcoversWeb.UiComponents do
-  use Phoenix.Component
+  use Phoenix.Component, global_prefixes: ~w(x-)
   import LitcoversWeb.Gettext
   import LitcoversWeb.CoreComponents
 
@@ -96,6 +96,7 @@ defmodule LitcoversWeb.UiComponents do
   attr :locale, :string, default: "en"
   attr :id, :string, default: "mainImage"
   attr :aspect_ratio, :string, default: "cover"
+  attr :class, :string, default: nil
 
   slot :inner_block
 
@@ -117,7 +118,10 @@ defmodule LitcoversWeb.UiComponents do
           x-on:contextmenu.prevent
           x-on:load="showImage = true"
           alt="Generated picture"
-          class="w-full h-full object-cover aspect-cover"
+          class={[
+            "w-full h-full object-cover aspect-cover",
+            @class
+          ]}
         />
         <div
           x-show="showToolbar"

@@ -28,13 +28,21 @@
     class="mt-7 grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-10 lg:gap-20"
   >
     <%= for image <- @images do %>
-      <div>
+      <div x-data="" class="relative">
+        <%= if !image.unlocked do %>
+          <Heroicons.clock class="absolute z-20 top-4 right-4 w-6 h-6 text-orange-300" />
+        <% end %>
         <.img
           id={"image-#{image.id}"}
           locale={@locale}
           image_id={image.id}
           img_url={image.url}
           aspect_ratio={aspect_ratio({image.width, image.height})}
+          class={
+            if !image.unlocked do
+                "opacity-50"
+            end
+          }
         >
           <%= if image.unlocked do %>
             <.edit_btn url={~p"/#{@locale}/images/#{image.id}/edit"} />
