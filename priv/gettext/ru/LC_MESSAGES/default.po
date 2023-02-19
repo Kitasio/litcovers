@@ -130,7 +130,7 @@ msgstr "Теплое - Светлое"
 #: lib/litcovers_web/components/ui_components.ex:328
 #, elixir-autogen, elixir-format, fuzzy
 msgid "Title"
-msgstr "2. Название"
+msgstr "Название"
 
 #: lib/litcovers_web/components/ui_components.ex:60
 #: lib/litcovers_web/components/ui_components.ex:74

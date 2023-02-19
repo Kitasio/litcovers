@@ -8,6 +8,7 @@ defmodule LitcoversWeb.ImageLive.Show do
 
   @impl true
   def mount(%{"locale" => locale, "id" => id}, _session, socket) do
+    Gettext.put_locale(locale)
     image = Media.get_image!(id)
     image_base64 = image.url |> img_url_to_base64()
 
