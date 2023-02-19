@@ -11,6 +11,7 @@ defmodule LitcoversWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user
+    plug LitcoversWeb.Plugs.GetReferer
 
     plug SetLocale,
       gettext: LitcoversWeb.Gettext,
@@ -30,7 +31,7 @@ defmodule LitcoversWeb.Router do
   scope "/:locale", LitcoversWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    live "/", PageLive.Index, :index
 
     live "/prompts", PromptLive.Index, :index
     live "/prompts/new", PromptLive.Index, :new
