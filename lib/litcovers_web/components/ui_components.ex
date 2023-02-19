@@ -30,8 +30,11 @@ defmodule LitcoversWeb.UiComponents do
 
       <div class="flex items-center gap-5">
         <%= if @litcoins != nil do %>
-          <div class="text-accent-main font-bold border-l-2 rounded-full border-accent-sec px-3 p-1">
+          <div class="group relative text-accent-main font-bold border-l-2 rounded-full border-accent-sec px-3 p-1">
             <%= @litcoins %>
+            <.tooltip class="mt-1" position="left">
+              <span class="text-xs font-normal text-slate-200"><%= gettext("Litcoins") %></span>
+            </.tooltip>
           </div>
         <% end %>
         <div class="hidden sm:inline">
@@ -105,7 +108,7 @@ defmodule LitcoversWeb.UiComponents do
       ~H"""
       <div
         x-data={"{ showImage: false, showToolbar: false, imageUrl: '#{@img_url}' }"}
-        class={"relative group bg-sec max-w-lg overflow-hidden rounded-lg aspect-#{@aspect_ratio} transition-all duration-300 mx-auto"}
+        class={"relative bg-sec max-w-lg overflow-hidden rounded-lg aspect-#{@aspect_ratio} transition-all duration-300 mx-auto"}
         x-on:mouseenter="showToolbar = true"
         x-on:mouseleave="showToolbar = false"
         id={"img-box-#{@image_id}"}
@@ -139,13 +142,40 @@ defmodule LitcoversWeb.UiComponents do
     end
   end
 
+  attr :position, :string, default: "top"
+  attr :class, :string, default: nil
+
+  slot :inner_block
+
+  def tooltip(%{position: "top"} = assigns) do
+    ~H"""
+    <div class={["hidden group-hover:flex absolute p-3 w-32 -top-2 -left-1 -translate-y-full -translate-x-10 bg-stroke-sec bg-opacity-70 rounded-xl", @class]}>
+      <span class="text-center text-xs w-full"><%= render_slot(@inner_block) %></span>
+    </div>
+    """
+  end
+
+  def tooltip(%{position: "left"} = assigns) do
+    ~H"""
+    <div class={["hidden group-hover:flex absolute p-3 w-32 top-0 -left-2 -translate-y-1/4 -translate-x-full bg-stroke-sec bg-opacity-70 rounded-xl", @class]}>
+      <span class="text-center text-xs w-full"><%= render_slot(@inner_block) %></span>
+    </div>
+    """
+  end
+
   attr :image_id, :string, default: nil
   attr :favorite, :boolean, default: false
   attr :rest, :global
+  attr :tooltip_text, :string, default: nil
 
   def heart_button(assigns) do
     ~H"""
-    <button id={"heart-#{@image_id}"} class="transition duration-150 ease-out" {@rest}>
+    <button id={"heart-#{@image_id}"} class="group relative transition duration-150 ease-out" {@rest}>
+      <%= if @tooltip_text do %>
+        <.tooltip>
+          <%= @tooltip_text %>
+        </.tooltip>
+      <% end %>
       <div class="bg-sec/50 p-2.5 rounded-full">
         <%= if @favorite do %>
           <Heroicons.heart solid class="fill-accent-main w-6 h-6 transition-all" />
@@ -159,10 +189,16 @@ defmodule LitcoversWeb.UiComponents do
 
   attr :image_id, :string, required: true
   attr :rest, :global
+  attr :tooltip_text, :string, default: nil
 
   def unlock_img_button(assigns) do
     ~H"""
-    <button id={"unlock-#{@image_id}"} class="transition duration-150 ease-out" {@rest}>
+    <button id={"unlock-#{@image_id}"} class="group relative transition duration-150 ease-out" {@rest}>
+      <%= if @tooltip_text do %>
+        <.tooltip>
+          <%= @tooltip_text %>
+        </.tooltip>
+      <% end %>
       <div class="bg-sec/50 p-2.5 rounded-full">
         <Heroicons.lock_open class="w-6 h-6 transition-all" />
       </div>
@@ -172,10 +208,16 @@ defmodule LitcoversWeb.UiComponents do
 
   attr :image_id, :string, required: true
   attr :rest, :global
+  attr :tooltip_text, :string, default: nil
 
   def delete_img_button(assigns) do
     ~H"""
-    <button id={"delete-#{@image_id}"} class="transition duration-150 ease-out" {@rest}>
+    <button id={"delete-#{@image_id}"} class="group relative transition duration-150 ease-out" {@rest}>
+      <%= if @tooltip_text do %>
+        <.tooltip>
+          <%= @tooltip_text %>
+        </.tooltip>
+      <% end %>
       <div class="bg-sec/50 p-2.5 rounded-full">
         <Heroicons.trash class="w-6 h-6 transition-all" />
       </div>
@@ -185,10 +227,16 @@ defmodule LitcoversWeb.UiComponents do
 
   attr :image_url, :string, required: true
   attr :download, :string, default: "litcovers_image.png"
+  attr :tooltip_text, :string, default: nil
 
   def download_btn(assigns) do
     ~H"""
-    <a target="_blank" download={@download} href={@image_url}>
+    <a class="group relative" target="_blank" download={@download} href={@image_url}>
+      <%= if @tooltip_text do %>
+        <.tooltip>
+          <%= @tooltip_text %>
+        </.tooltip>
+      <% end %>
       <div class="bg-sec/50 p-2.5 rounded-full" class="bg-sec/50 p-2.5 rounded-full">
         <Heroicons.arrow_down_on_square class="w-6 h-6 transition-all" />
       </div>
@@ -197,10 +245,16 @@ defmodule LitcoversWeb.UiComponents do
   end
 
   attr :url, :string, required: true
+  attr :tooltip_text, :string, default: nil
 
   def edit_btn(assigns) do
     ~H"""
-    <.link href={@url}>
+    <.link class="group relative" href={@url}>
+      <%= if @tooltip_text do %>
+        <.tooltip>
+          <%= @tooltip_text %>
+        </.tooltip>
+      <% end %>
       <div class="bg-sec/50 p-2.5 rounded-full" class="bg-sec/50 p-2.5 rounded-full">
         <Heroicons.pencil_square class="w-6 h-6 transition-all" />
       </div>

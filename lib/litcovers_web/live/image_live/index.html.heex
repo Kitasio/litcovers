@@ -30,7 +30,14 @@
     <%= for image <- @images do %>
       <div x-data="" class="relative">
         <%= if !image.unlocked do %>
-          <Heroicons.clock class="absolute z-20 top-4 right-4 w-6 h-6 text-orange-300" />
+          <div class="absolute top-5 right-5 z-20">
+            <div class="relative group">
+              <Heroicons.clock class="w-6 h-6 text-orange-300" />
+              <.tooltip position="left">
+                <%= gettext("Temporary image, dissapears after 24 hours") %>
+              </.tooltip>
+            </div>
+          </div>
         <% end %>
         <.img
           id={"image-#{image.id}"}
@@ -45,7 +52,10 @@
           }
         >
           <%= if image.unlocked do %>
-            <.edit_btn url={~p"/#{@locale}/images/#{image.id}/edit"} />
+            <.edit_btn 
+              url={~p"/#{@locale}/images/#{image.id}/edit"} 
+              tooltip_text={gettext("Edit image")}
+            />
             <.heart_button
               phx-click={
                 JS.push("toggle-favorite", value: %{image_id: image.id})
@@ -53,19 +63,25 @@
               }
               favorite={image.favorite}
               image_id={image.id}
+              tooltip_text={gettext("Add to favorites")}
             />
-            <.download_btn image_url={"#{image.url}?ik-attachment=true"} />
+            <.download_btn 
+              image_url={"#{image.url}?ik-attachment=true"} 
+              tooltip_text={gettext("Download image")}
+            />
             <.delete_img_button
               phx-click={
                 JS.push("delete-image", value: %{image_id: image.id})
                 |> JS.transition("scale-90", to: "#delete-#{image.id}")
               }
               image_id={image.id}
+              tooltip_text={gettext("Delete image")}
             />
           <% else %>
             <.unlock_img_button
               phx-click={JS.push("unlock", value: %{image_id: image.id})}
               image_id={image.id}
+              tooltip_text={gettext("Unlock image")}
             />
           <% end %>
         </.img>
