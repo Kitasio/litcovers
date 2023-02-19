@@ -5,7 +5,7 @@
   litcoins={@litcoins}
 />
 <div x-data="" class="bg-sec grow px-8 py-10">
-  <div class="flex gap-10">
+  <div class="flex gap-10 text-sm">
     <.link patch={~p"/#{@locale}/images/all"}>
       <span x-bind:class={"'#{@live_action}' == 'all' && 'text-accent-main'"}>
         <%= gettext("All") %>
@@ -34,7 +34,7 @@
             <div class="relative group">
               <Heroicons.clock class="w-6 h-6 text-orange-300" />
               <.tooltip position="left">
-                <%= gettext("Temporary image, dissapears after 24 hours") %>
+                <%= gettext("Locked image, dissapears after 24 hours") %>
               </.tooltip>
             </div>
           </div>

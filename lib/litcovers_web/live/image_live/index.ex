@@ -6,6 +6,7 @@ defmodule LitcoversWeb.ImageLive.Index do
 
   @impl true
   def mount(%{"locale" => locale}, _session, socket) do
+    Gettext.put_locale(locale)
     Task.start_link(fn -> Media.see_all_user_images(socket.assigns.current_user) end)
     {:ok, assign(socket, locale: locale, litcoins: socket.assigns.current_user.litcoins)}
   end
