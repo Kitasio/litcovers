@@ -100,7 +100,7 @@ defmodule LitcoversWeb.UiComponents do
   attr :img_url, :string, default: nil
   attr :image_id, :string, default: nil
   attr :locale, :string, default: "en"
-  attr :id, :string, required: true
+  attr :id, :string, default: "mainImage"
   attr :aspect_ratio, :string, default: "cover"
   attr :class, :string, default: nil
 
