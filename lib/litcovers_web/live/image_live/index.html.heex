@@ -7,17 +7,17 @@
 />
 <div x-data="" class="bg-sec grow px-8 py-10">
   <div class="flex gap-10 text-sm">
-    <.link patch={~p"/#{@locale}/images/all"}>
+    <.link navigate={~p"/#{@locale}/images/all"}>
       <span x-bind:class={"'#{@live_action}' == 'all' && 'text-accent-main'"}>
         <%= gettext("All") %>
       </span>
     </.link>
-    <.link patch={~p"/#{@locale}/images/unlocked"}>
+    <.link navigate={~p"/#{@locale}/images/unlocked"}>
       <span x-bind:class={"'#{@live_action}' == 'unlocked' && 'text-accent-main'"}>
         <%= gettext("Unlocked") %>
       </span>
     </.link>
-    <.link patch={~p"/#{@locale}/images/favorites"}>
+    <.link navigate={~p"/#{@locale}/images/favorites"}>
       <span x-bind:class={"'#{@live_action}' == 'favorites' && 'text-accent-main'"}>
         <%= gettext("Favorites") %>
       </span>
@@ -25,11 +25,11 @@
   </div>
   <div
     id="user-images"
-    phx-update="replace"
+    phx-update="append"
     class="mt-7 grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-10 lg:gap-20"
   >
     <%= for image <- @images do %>
-      <div x-data="" class="relative">
+      <div id={"img-#{image.id}-box"} x-data="" class="relative">
         <%= if !image.unlocked do %>
           <div class="absolute top-5 right-5 z-20">
             <div class="relative group">
@@ -41,20 +41,20 @@
           </div>
         <% end %>
         <.img
-          id={"image-#{image.id}"}
+          id={"#{image.id}-img"}
           locale={@locale}
           image_id={image.id}
           img_url={image.url}
           aspect_ratio={aspect_ratio({image.width, image.height})}
           class={
             if !image.unlocked do
-                "opacity-50"
+              "opacity-50"
             end
           }
         >
           <%= if image.unlocked do %>
-            <.edit_btn 
-              url={~p"/#{@locale}/images/#{image.id}/edit"} 
+            <.edit_btn
+              url={~p"/#{@locale}/images/#{image.id}/edit"}
               tooltip_text={gettext("Edit image")}
             />
             <.heart_button
@@ -66,14 +66,15 @@
               image_id={image.id}
               tooltip_text={gettext("Add to favorites")}
             />
-            <.download_btn 
-              image_url={"#{image.url}?ik-attachment=true"} 
+            <.download_btn
+              image_url={"#{image.url}?ik-attachment=true"}
               tooltip_text={gettext("Download image")}
             />
             <.delete_img_button
               phx-click={
                 JS.push("delete-image", value: %{image_id: image.id})
                 |> JS.transition("scale-90", to: "#delete-#{image.id}")
+                |> hide("#img-#{image.id}-box")
               }
               image_id={image.id}
               tooltip_text={gettext("Delete image")}
@@ -89,4 +90,5 @@
       </div>
     <% end %>
   </div>
+  <div id="infinite-scroll-marker" phx-hook="InfiniteScroll" data-page={@page}></div>
 </div>

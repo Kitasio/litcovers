@@ -1,12 +1,9 @@
 defmodule LitcoversWeb.PageLive.Index do
   use LitcoversWeb, :live_view
-  require Logger
 
   @impl true
-  def mount(%{"locale" => locale}, session, socket) do
+  def mount(%{"locale" => locale}, _session, socket) do
     Gettext.put_locale(locale)
-    IO.inspect(session)
-    Logger.info("session: #{inspect(session)}")
     {:ok, assign(socket, locale: locale)}
   end
 

@@ -100,7 +100,7 @@ defmodule LitcoversWeb.UiComponents do
   attr :img_url, :string, default: nil
   attr :image_id, :string, default: nil
   attr :locale, :string, default: "en"
-  attr :id, :string, default: "mainImage"
+  attr :id, :string, required: true
   attr :aspect_ratio, :string, default: "cover"
   attr :class, :string, default: nil
 
@@ -152,7 +152,10 @@ defmodule LitcoversWeb.UiComponents do
 
   def tooltip(%{position: "top"} = assigns) do
     ~H"""
-    <div class={["hidden group-hover:flex absolute p-3 w-32 -top-2 -left-1 -translate-y-full -translate-x-10 bg-stroke-sec bg-opacity-70 rounded-xl", @class]}>
+    <div class={[
+      "hidden group-hover:flex absolute p-3 w-32 -top-2 -left-1 -translate-y-full -translate-x-10 bg-stroke-sec bg-opacity-70 rounded-xl",
+      @class
+    ]}>
       <span class="text-center text-xs w-full"><%= render_slot(@inner_block) %></span>
     </div>
     """
@@ -160,7 +163,10 @@ defmodule LitcoversWeb.UiComponents do
 
   def tooltip(%{position: "left"} = assigns) do
     ~H"""
-    <div class={["hidden group-hover:flex absolute p-3 w-32 top-0 -left-2 -translate-y-1/4 -translate-x-full bg-stroke-sec bg-opacity-70 rounded-xl", @class]}>
+    <div class={[
+      "hidden group-hover:flex absolute p-3 w-32 top-0 -left-2 -translate-y-1/4 -translate-x-full bg-stroke-sec bg-opacity-70 rounded-xl",
+      @class
+    ]}>
       <span class="text-center text-xs w-full"><%= render_slot(@inner_block) %></span>
     </div>
     """

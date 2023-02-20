@@ -1,6 +1,7 @@
 defmodule LitcoversWeb.ImageLive.Index do
   use LitcoversWeb, :live_view
 
+  alias Phoenix.LiveView.JS
   alias Litcovers.Media
   alias Litcovers.Accounts
 
@@ -8,7 +9,19 @@ defmodule LitcoversWeb.ImageLive.Index do
   def mount(%{"locale" => locale}, _session, socket) do
     Gettext.put_locale(locale)
     Task.start_link(fn -> Media.see_all_user_images(socket.assigns.current_user) end)
-    {:ok, assign(socket, locale: locale, litcoins: socket.assigns.current_user.litcoins)}
+
+    socket =
+      assign(socket, locale: locale, page: 0, litcoins: socket.assigns.current_user.litcoins)
+
+    # on initial load it'll return false,
+    # then true on the next.
+    if connected?(socket) do
+      get_images(socket)
+    else
+      socket
+    end
+
+    {:ok, socket, temporary_assigns: [images: []]}
   end
 
   @impl true
@@ -41,6 +54,11 @@ defmodule LitcoversWeb.ImageLive.Index do
     |> assign(images: list_images(socket.assigns.current_user))
   end
 
+  @impl true
+  def handle_event("load-more", _, %{assigns: assigns} = socket) do
+    {:noreply, assign(socket, page: assigns.page + 1) |> get_images()}
+  end
+
   # unlocks image spending 1 litcoin to current user
   @impl true
   def handle_event("unlock", %{"image_id" => image_id}, socket) do
@@ -48,10 +66,11 @@ defmodule LitcoversWeb.ImageLive.Index do
 
     if litcoins > 0 do
       image = Media.get_image!(image_id)
-      {:ok, _image} = Media.unlock_image(image)
+      {:ok, image} = Media.unlock_image(image)
       {:ok, user} = Accounts.remove_litcoins(socket.assigns.current_user, 1)
       socket = assign(socket, litcoins: user.litcoins)
-      {:noreply, apply_action(socket, socket.assigns.live_action, %{})}
+      send(self(), {:update_image, image})
+      {:noreply, socket}
     else
       {:noreply, socket}
     end
@@ -65,9 +84,9 @@ defmodule LitcoversWeb.ImageLive.Index do
       CoverGen.Spaces.delete_object(image.url)
     end)
 
-    {:ok, _} = Media.delete_image(image)
+    {:ok, _image} = Media.delete_image(image)
 
-    {:noreply, apply_action(socket, socket.assigns.live_action, %{})}
+    {:noreply, socket}
   end
 
   @impl true
@@ -75,12 +94,40 @@ defmodule LitcoversWeb.ImageLive.Index do
     image = Media.get_image!(image_id)
 
     case Media.update_image(image, %{favorite: !image.favorite}) do
-      {:ok, _image} ->
-        {:noreply, apply_action(socket, socket.assigns.live_action, %{})}
+      {:ok, image} ->
+        send(self(), {:update_image, image})
+        {:noreply, socket}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :changeset, changeset)}
     end
+  end
+
+  @impl true
+  def handle_info({:update_image, image}, socket) do
+    IO.puts("running update image")
+    {:noreply, update(socket, :images, fn images -> [image | images] end)}
+  end
+
+  defp get_images(%{assigns: %{page: page}} = socket) do
+    socket = assign(socket, page: page)
+    case socket.assigns.live_action do
+      :all ->
+        assign(socket, images: Media.list_user_images(socket.assigns.current_user, 8, page * 8))
+
+      :unlocked ->
+        assign(socket, images: Media.list_unlocked_user_images(socket.assigns.current_user, 8, page * 8))
+
+      :favorites ->
+        assign(socket, images: Media.list_user_favorite_images(socket.assigns.current_user, 8, page * 8))
+    end
+  end
+
+  def hide_deleted_image(js \\ %JS{}, id) do
+    IO.puts("hiding deleted image #{id}")
+    js
+    |> hide("##{id}-img")
+    |> JS.add_class("w-1/2", to: "body")
   end
 
   def has_images?(user) do
@@ -92,15 +139,15 @@ defmodule LitcoversWeb.ImageLive.Index do
   end
 
   defp list_images(user) do
-    Media.list_unlocked_user_images(user)
+    Media.list_unlocked_user_images(user, 8, 0)
   end
 
   defp list_all_images(user) do
-    Media.list_user_images(user)
+    Media.list_user_images(user, 8, 0)
   end
 
   defp list_favorite_images(user) do
-    Media.list_user_favorite_images(user)
+    Media.list_user_favorite_images(user, 8, 0)
   end
 
   def aspect_ratio({512, 512}), do: "square"

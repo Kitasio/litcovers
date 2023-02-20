@@ -61,7 +61,23 @@ defmodule Litcovers.Media do
 
   """
   def list_images do
-    Repo.all(Image)
+    Image
+    |> Repo.all()
+  end
+
+  def list_images(offset) do
+    Image
+    |> limit_query(2)
+    |> offset_query(offset)
+    |> Repo.all()
+  end
+
+  defp offset_query(query, offset) do
+    from(r in query, offset: ^offset)
+  end
+
+  defp limit_query(query, limit) do
+    from(r in query, limit: ^limit)
   end
 
   def list_unlocked_user_images(%Accounts.User{} = user) do
@@ -73,11 +89,32 @@ defmodule Litcovers.Media do
     |> Repo.all()
   end
 
+  def list_unlocked_user_images(%Accounts.User{} = user, limit, offset) do
+    Image
+    |> user_images_query(user)
+    |> order_by_date_insert()
+    |> completed_query()
+    |> unlocked_query()
+    |> limit_query(limit)
+    |> offset_query(offset)
+    |> Repo.all()
+  end
+
   def list_user_images(%Accounts.User{} = user) do
     Image
     |> user_images_query(user)
     |> order_by_date_insert()
     |> completed_query()
+    |> Repo.all()
+  end
+
+  def list_user_images(%Accounts.User{} = user, limit, offset) do
+    Image
+    |> user_images_query(user)
+    |> order_by_date_insert()
+    |> completed_query()
+    |> limit_query(limit)
+    |> offset_query(offset)
     |> Repo.all()
   end
 
@@ -88,6 +125,18 @@ defmodule Litcovers.Media do
     |> completed_query()
     |> unlocked_query()
     |> favorite_query()
+    |> Repo.all()
+  end
+
+  def list_user_favorite_images(%Accounts.User{} = user, limit, offset) do
+    Image
+    |> user_images_query(user)
+    |> order_by_date_insert()
+    |> completed_query()
+    |> unlocked_query()
+    |> favorite_query()
+    |> limit_query(limit)
+    |> offset_query(offset)
     |> Repo.all()
   end
 
