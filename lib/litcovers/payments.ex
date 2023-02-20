@@ -7,6 +7,7 @@ defmodule Litcovers.Payments do
   alias Litcovers.Repo
 
   alias Litcovers.Payments.Transaction
+  alias Litcovers.Accounts.User
 
   @doc """
   Returns the list of transactions.
@@ -49,9 +50,10 @@ defmodule Litcovers.Payments do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_transaction(attrs \\ %{}) do
+  def create_transaction(%User{} = user, attrs \\ %{}) do
     %Transaction{}
     |> Transaction.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:user, user)
     |> Repo.insert()
   end
 

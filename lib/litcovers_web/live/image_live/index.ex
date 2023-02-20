@@ -111,20 +111,26 @@ defmodule LitcoversWeb.ImageLive.Index do
 
   defp get_images(%{assigns: %{page: page}} = socket) do
     socket = assign(socket, page: page)
+
     case socket.assigns.live_action do
       :all ->
         assign(socket, images: Media.list_user_images(socket.assigns.current_user, 8, page * 8))
 
       :unlocked ->
-        assign(socket, images: Media.list_unlocked_user_images(socket.assigns.current_user, 8, page * 8))
+        assign(socket,
+          images: Media.list_unlocked_user_images(socket.assigns.current_user, 8, page * 8)
+        )
 
       :favorites ->
-        assign(socket, images: Media.list_user_favorite_images(socket.assigns.current_user, 8, page * 8))
+        assign(socket,
+          images: Media.list_user_favorite_images(socket.assigns.current_user, 8, page * 8)
+        )
     end
   end
 
   def hide_deleted_image(js \\ %JS{}, id) do
     IO.puts("hiding deleted image #{id}")
+
     js
     |> hide("##{id}-img")
     |> JS.add_class("w-1/2", to: "body")

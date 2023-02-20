@@ -21,7 +21,12 @@ defmodule Litcovers.PaymentsTest do
     end
 
     test "create_transaction/1 with valid data creates a transaction" do
-      valid_attrs = %{amount: 42, currency: "some currency", description: "some description", payment_service: "some payment_service"}
+      valid_attrs = %{
+        amount: 42,
+        currency: "some currency",
+        description: "some description",
+        payment_service: "some payment_service"
+      }
 
       assert {:ok, %Transaction{} = transaction} = Payments.create_transaction(valid_attrs)
       assert transaction.amount == 42
@@ -36,9 +41,17 @@ defmodule Litcovers.PaymentsTest do
 
     test "update_transaction/2 with valid data updates the transaction" do
       transaction = transaction_fixture()
-      update_attrs = %{amount: 43, currency: "some updated currency", description: "some updated description", payment_service: "some updated payment_service"}
 
-      assert {:ok, %Transaction{} = transaction} = Payments.update_transaction(transaction, update_attrs)
+      update_attrs = %{
+        amount: 43,
+        currency: "some updated currency",
+        description: "some updated description",
+        payment_service: "some updated payment_service"
+      }
+
+      assert {:ok, %Transaction{} = transaction} =
+               Payments.update_transaction(transaction, update_attrs)
+
       assert transaction.amount == 43
       assert transaction.currency == "some updated currency"
       assert transaction.description == "some updated description"
@@ -47,7 +60,10 @@ defmodule Litcovers.PaymentsTest do
 
     test "update_transaction/2 with invalid data returns error changeset" do
       transaction = transaction_fixture()
-      assert {:error, %Ecto.Changeset{}} = Payments.update_transaction(transaction, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Payments.update_transaction(transaction, @invalid_attrs)
+
       assert transaction == Payments.get_transaction!(transaction.id)
     end
 
