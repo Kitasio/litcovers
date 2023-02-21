@@ -2,11 +2,10 @@ defmodule LitcoversWeb.TransactionLive.Index do
   use LitcoversWeb, :live_view
   alias Litcovers.Payments
   alias Litcovers.Payments.Yookassa
-  # alias Litcovers.Accounts.User
 
   def mount(%{"locale" => locale}, _session, socket) do
     Gettext.put_locale(locale)
-    {:ok, assign(socket, :transactions, Payments.list_transactions())}
+    {:ok, socket}
   end
 
   def handle_event("make-payment", %{}, socket) do

@@ -12,7 +12,8 @@ defmodule Litcovers.GenericSupervisor do
 
     children = [
       {Redix, {System.get_env("REDIS_CONN_URL"), [name: :redix]}},
-      Litcovers.UserReleaser
+      Litcovers.UserReleaser,
+      Litcovers.Payments.TransactionChecker
     ]
 
     Supervisor.init(children,
