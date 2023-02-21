@@ -48,4 +48,22 @@ defmodule Litcovers.Payments.Yookassa.Request do
         {:error, reason}
     end
   end
+
+  def get_payment_status(tnx_id, shop_id, secret_key) do
+    endpoint = "https://api.yookassa.ru/v3/payments/#{tnx_id}"
+
+    headers = [
+      Authorization: "Basic " <> Base.encode64("#{shop_id}:#{secret_key}")
+    ]
+
+    case HTTPoison.get(endpoint, headers) do
+      {:ok, %HTTPoison.Response{body: res_body}} ->
+        body = Jason.decode!(res_body)
+        {:ok, body}
+
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        Logger.error("Yookassa error: #{inspect(reason)}")
+        {:error, reason}
+    end
+  end
 end

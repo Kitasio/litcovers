@@ -9,6 +9,18 @@ defmodule Litcovers.Payments do
   alias Litcovers.Payments.Transaction
   alias Litcovers.Accounts.User
 
+  def list_pending_transactions do
+    Transaction
+    |> pending_transaction_query()
+    |> Repo.all()
+  end
+
+  # pending transaction query
+  defp pending_transaction_query(query) do
+    from t in query,
+      where: t.status == :pending
+  end
+
   @doc """
   Returns the list of transactions.
 
