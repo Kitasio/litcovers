@@ -4,7 +4,7 @@ defmodule Litcovers.Payments.Yookassa.Request do
 
   @derive Jason.Encoder
   defstruct amount: %{
-              value: "100.00",
+              value: "390.00",
               currency: "RUB"
             },
             capture: true,
@@ -25,7 +25,7 @@ defmodule Litcovers.Payments.Yookassa.Request do
 
     yookassa_params = %Yookassa.Request{
       amount: %{
-        value: "100.00",
+        value: "390.00",
         currency: "RUB"
       },
       capture: true,
