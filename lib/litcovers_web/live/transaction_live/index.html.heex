@@ -1,14 +1,16 @@
 <div class="container mx-auto px-4 py-8">
   <h1 class="text-2xl font-bold mb-4">Select a Payment Tariff</h1>
 
-    <div class="grid grid-cols-3 gap-14">
-      <%= for opt <- @pay_options do %>
-        <div class="p-5 flex flex-col justify-between w-full h-80 bg-sec">
-          <div class="flex gap-3">
-            <p><%= opt.label %></p> | <p><%= opt.litcoins %> + <%= opt.bonus %> litcoins</p>
-          </div>
-          <.button phx-click="make-payment" phx-value-amount={opt.value}>Pay</.button>
+  <div class="grid grid-cols-3 gap-14">
+    <%= for opt <- @pay_options do %>
+      <div class="p-5 flex flex-col justify-between w-full h-80 bg-sec">
+        <div class="flex gap-3">
+          <p><%= opt.label %></p>
+          |
+          <p><%= opt.litcoins %> + <%= opt.bonus %> litcoins</p>
         </div>
-      <% end %>
-    </div>
+        <.button phx-click="make-payment" phx-value-amount={opt.value}>Pay</.button>
+      </div>
+    <% end %>
+  </div>
 </div>

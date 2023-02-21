@@ -25,35 +25,41 @@ defmodule Litcovers.Payments.TransactionChecker do
   end
 
   defp check_transaction(transaction) do
-      {:ok, body} =
-        Yookassa.Request.get_payment_status(transaction.tnx_id)
+    case Yookassa.Request.get_payment_status(transaction.tnx_id) do
+      {:ok, body} ->
+        %{"status" => status, "paid" => paid} = body
+        handle_status(transaction, status, paid)
 
-      %{"status" => status, "paid" => paid} = body
+      {:error, reason} ->
+        Logger.error("Yookassa error: #{inspect(reason)}")
+    end
+  end
 
-      case status do
-        "succeeded" ->
-          Logger.info("Transaction #{transaction.id} succeeded")
-          {:ok, _tnx} = Payments.update_transaction(transaction, %{status: status, paid: paid})
-          # calculate litcoins based on transaction amount
-          litcoins = Yookassa.Helpers.calculate_litcoins(transaction.amount)
-          # add litcoins to user
-          user = Accounts.get_user!(transaction.user_id)
-          {:ok, value} = Accounts.add_litcoins(user, litcoins)
-          Logger.info("User #{user.id} now has #{inspect(value)} litcoins")
+  defp handle_status(transaction, status, paid) do
+    case status do
+      "succeeded" ->
+        Logger.info("Transaction #{transaction.id} succeeded")
+        {:ok, _tnx} = Payments.update_transaction(transaction, %{status: status, paid: paid})
+        # calculate litcoins based on transaction amount
+        litcoins = Yookassa.Helpers.calculate_litcoins(transaction.amount)
+        # add litcoins to user
+        user = Accounts.get_user!(transaction.user_id)
+        {:ok, value} = Accounts.add_litcoins(user, litcoins)
+        Logger.info("User #{user.id} now has #{inspect(value)} litcoins")
 
-        "canceled" ->
-          Logger.info("Transaction #{transaction.id} canceled")
-          Payments.update_transaction(transaction, %{status: status})
+      "canceled" ->
+        Logger.info("Transaction #{transaction.id} canceled")
+        Payments.update_transaction(transaction, %{status: status})
 
-        "waiting_for_capture" ->
-          Logger.info("Transaction #{transaction.id} waiting_for_capture")
-          Payments.update_transaction(transaction, %{status: status})
+      "waiting_for_capture" ->
+        Logger.info("Transaction #{transaction.id} waiting_for_capture")
+        Payments.update_transaction(transaction, %{status: status})
 
-        "pending" ->
-          Logger.info("Transaction #{transaction.id} is still pending")
+      "pending" ->
+        Logger.info("Transaction #{transaction.id} is still pending")
 
-        unknown ->
-          Logger.warn("Transaction #{transaction.id} has #{unknown} status")
-      end
+      unknown ->
+        Logger.warn("Transaction #{transaction.id} has #{unknown} status")
+    end
   end
 end

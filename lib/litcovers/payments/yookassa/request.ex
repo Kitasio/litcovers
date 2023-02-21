@@ -34,7 +34,7 @@ defmodule Litcovers.Payments.Yookassa.Request do
       capture: true,
       confirmation: %{
         type: "redirect",
-        return_url: "http://localhost:4000/ru/images/new"
+        return_url: "https://litc.fly.dev/ru/images/new"
       },
       description: "Buying litcoins"
     }
