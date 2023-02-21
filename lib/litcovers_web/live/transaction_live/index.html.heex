@@ -1,46 +1,14 @@
 <div class="container mx-auto px-4 py-8">
   <h1 class="text-2xl font-bold mb-4">Select a Payment Tariff</h1>
 
-  <form class="bg-sec rounded-lg shadow-md p-8">
-    <div class="flex items-center mb-4">
-      <input
-        type="radio"
-        name="tariff"
-        id="tariff1"
-        value="5.99"
-        class="form-radio h-5 w-5 text-gray-600"
-      />
-      <label for="tariff1" class="ml-2 text-gray-700">Tariff 1 - $5.99/month</label>
+    <div class="grid grid-cols-3 gap-14">
+      <%= for opt <- @pay_options do %>
+        <div class="p-5 flex flex-col justify-between w-full h-80 bg-sec">
+          <div class="flex gap-3">
+            <p><%= opt.label %></p> | <p><%= opt.litcoins %> + <%= opt.bonus %> litcoins</p>
+          </div>
+          <.button phx-click="make-payment" phx-value-amount={opt.value}>Pay</.button>
+        </div>
+      <% end %>
     </div>
-
-    <div class="flex items-center mb-4">
-      <input
-        type="radio"
-        name="tariff"
-        id="tariff2"
-        value="9.99"
-        class="form-radio h-5 w-5 text-gray-600"
-      />
-      <label for="tariff2" class="ml-2 text-gray-700">Tariff 2 - $9.99/month</label>
-    </div>
-
-    <div class="flex items-center mb-4">
-      <input
-        type="radio"
-        name="tariff"
-        id="tariff3"
-        value="15.99"
-        class="form-radio h-5 w-5 text-gray-600"
-      />
-      <label for="tariff3" class="ml-2 text-gray-700">Tariff 3 - $15.99/month</label>
-    </div>
-
-    <button
-      type="submit"
-      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    >
-      Select Tariff
-    </button>
-  </form>
-  <button phx-click="make-payment">Payment</button>
 </div>

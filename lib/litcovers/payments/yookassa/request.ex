@@ -2,6 +2,9 @@ defmodule Litcovers.Payments.Yookassa.Request do
   alias Litcovers.Payments.Yookassa
   require Logger
 
+  @test_shop_id "986370"
+  @test_secret_key "test_LE2NhUWa-qGZv5mNU8dqSDp99dcQ2hfkjj9QAaeBiEY"
+
   @derive Jason.Encoder
   defstruct amount: %{
               value: "390.00",
@@ -14,18 +17,18 @@ defmodule Litcovers.Payments.Yookassa.Request do
             },
             description: "Buying litcoins"
 
-  def payment(shop_id, secret_key) do
+  def payment(amount) do
     endpoint = "https://api.yookassa.ru/v3/payments"
 
     headers = [
-      Authorization: "Basic " <> Base.encode64("#{shop_id}:#{secret_key}"),
+      Authorization: "Basic " <> Base.encode64("#{@test_shop_id}:#{@test_secret_key}"),
       "Content-Type": "application/json",
       "Idempotence-Key": Ecto.UUID.generate()
     ]
 
     yookassa_params = %Yookassa.Request{
       amount: %{
-        value: "390.00",
+        value: amount,
         currency: "RUB"
       },
       capture: true,
@@ -49,11 +52,11 @@ defmodule Litcovers.Payments.Yookassa.Request do
     end
   end
 
-  def get_payment_status(tnx_id, shop_id, secret_key) do
+  def get_payment_status(tnx_id) do
     endpoint = "https://api.yookassa.ru/v3/payments/#{tnx_id}"
 
     headers = [
-      Authorization: "Basic " <> Base.encode64("#{shop_id}:#{secret_key}")
+      Authorization: "Basic " <> Base.encode64("#{@test_shop_id}:#{@test_secret_key}")
     ]
 
     case HTTPoison.get(endpoint, headers) do

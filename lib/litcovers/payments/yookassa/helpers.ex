@@ -23,6 +23,7 @@ defmodule Litcovers.Payments.Yookassa.Helpers do
 
   def calculate_litcoins(amount) when is_integer(amount) do
     price = 390
+
     cond do
       amount >= 5850 ->
         div(amount, price) + 10
