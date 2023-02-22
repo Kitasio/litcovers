@@ -7,7 +7,6 @@ defmodule LitcoversWeb.UiComponents do
   attr :locale, :string, required: true
   attr :current_user, :map, default: nil
   attr :images_exist, :boolean, default: true
-  attr :litcoins, :integer, default: nil
   attr :show_pinger, :boolean, default: false
 
   def navbar(assigns) do
@@ -30,13 +29,15 @@ defmodule LitcoversWeb.UiComponents do
       </a>
 
       <div class="flex items-center gap-5">
-        <%= if @litcoins != nil do %>
-          <div class="group relative text-accent-main font-bold border-l-2 rounded-full border-accent-sec px-3 p-1">
-            <%= @litcoins %>
-            <.tooltip class="mt-1" position="left">
-              <span class="text-xs font-normal text-slate-200"><%= gettext("Litcoins") %></span>
-            </.tooltip>
-          </div>
+        <%= if @current_user do %>
+          <.link navigate={"/#{@locale}/payment_options"}>
+            <div class="group relative text-accent-main font-bold border-l-2 rounded-full border-accent-sec px-3 p-1">
+              <%= @current_user.litcoins %>
+              <.tooltip class="mt-1" position="left">
+                <span class="text-xs font-normal text-slate-200"><%= gettext("Litcoins") %></span>
+              </.tooltip>
+            </div>
+          </.link>
         <% end %>
         <div class="hidden sm:inline">
           <.link_button navigate={"/#{@locale}/images/new"}>

@@ -1,8 +1,9 @@
 defmodule Litcovers.Payments.TransactionChecker do
+  alias Litcovers.Accounts
   alias Litcovers.Payments.Yookassa
   alias Litcovers.Payments
-  alias Litcovers.Accounts
   require Logger
+
   use Task, restart: :transient
 
   def start_link(_arg) do
@@ -13,7 +14,19 @@ defmodule Litcovers.Payments.TransactionChecker do
     Logger.info("TransactionChecker working")
 
     for transaction <- pending_transactions() do
-      check_transaction(transaction)
+      case Yookassa.Helpers.check_transaction(transaction) do
+        {:ok, {:succeeded, litcoins}} ->
+          # add litcoins to user
+          user = Accounts.get_user!(transaction.user_id)
+          {:ok, user} = Accounts.add_litcoins(user, litcoins)
+          Logger.info("User #{user.id} now has #{user.litcoins} litcoins")
+
+        {:error, reason} ->
+          Logger.error("TransactionChecker: transaction #{transaction.id} check error: #{inspect(reason)}")
+
+        status ->
+          Logger.info("TransactionChecker: transaction #{transaction.id} status: #{inspect(status)}")
+      end
     end
 
     :timer.minutes(1) |> Process.sleep()
@@ -22,44 +35,5 @@ defmodule Litcovers.Payments.TransactionChecker do
 
   defp pending_transactions do
     Payments.list_pending_transactions()
-  end
-
-  defp check_transaction(transaction) do
-    case Yookassa.Request.get_payment_status(transaction.tnx_id) do
-      {:ok, body} ->
-        %{"status" => status, "paid" => paid} = body
-        handle_status(transaction, status, paid)
-
-      {:error, reason} ->
-        Logger.error("Yookassa error: #{inspect(reason)}")
-    end
-  end
-
-  defp handle_status(transaction, status, paid) do
-    case status do
-      "succeeded" ->
-        Logger.info("Transaction #{transaction.id} succeeded")
-        {:ok, _tnx} = Payments.update_transaction(transaction, %{status: status, paid: paid})
-        # calculate litcoins based on transaction amount
-        litcoins = Yookassa.Helpers.calculate_litcoins(transaction.amount)
-        # add litcoins to user
-        user = Accounts.get_user!(transaction.user_id)
-        {:ok, value} = Accounts.add_litcoins(user, litcoins)
-        Logger.info("User #{user.id} now has #{inspect(value)} litcoins")
-
-      "canceled" ->
-        Logger.info("Transaction #{transaction.id} canceled")
-        Payments.update_transaction(transaction, %{status: status})
-
-      "waiting_for_capture" ->
-        Logger.info("Transaction #{transaction.id} waiting_for_capture")
-        Payments.update_transaction(transaction, %{status: status})
-
-      "pending" ->
-        Logger.info("Transaction #{transaction.id} is still pending")
-
-      unknown ->
-        Logger.warn("Transaction #{transaction.id} has #{unknown} status")
-    end
   end
 end

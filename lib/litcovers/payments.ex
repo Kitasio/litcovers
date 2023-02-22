@@ -15,6 +15,19 @@ defmodule Litcovers.Payments do
     |> Repo.all()
   end
 
+  def user_pending_transactions(%User{} = user) do
+    Transaction
+    |> user_transaction_query(user)
+    |> pending_transaction_query()
+    |> Repo.all()
+  end
+
+  # user transaction query
+  defp user_transaction_query(query, %User{} = user) do
+    from t in query,
+      where: t.user_id == ^user.id
+  end
+
   # pending transaction query
   defp pending_transaction_query(query) do
     from t in query,

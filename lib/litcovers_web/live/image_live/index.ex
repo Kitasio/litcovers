@@ -11,7 +11,7 @@ defmodule LitcoversWeb.ImageLive.Index do
     Task.start_link(fn -> Media.see_all_user_images(socket.assigns.current_user) end)
 
     socket =
-      assign(socket, locale: locale, page: 0, litcoins: socket.assigns.current_user.litcoins)
+      assign(socket, locale: locale, page: 0)
 
     # on initial load it'll return false,
     # then true on the next.
@@ -68,7 +68,7 @@ defmodule LitcoversWeb.ImageLive.Index do
       image = Media.get_image!(image_id)
       {:ok, image} = Media.unlock_image(image)
       {:ok, user} = Accounts.remove_litcoins(socket.assigns.current_user, 1)
-      socket = assign(socket, litcoins: user.litcoins)
+      socket = assign(socket, current_user: user)
       send(self(), {:update_image, image})
       {:noreply, socket}
     else

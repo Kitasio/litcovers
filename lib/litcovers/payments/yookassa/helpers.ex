@@ -1,4 +1,9 @@
 defmodule Litcovers.Payments.Yookassa.Helpers do
+  alias Litcovers.Payments
+  alias Litcovers.Accounts
+  alias Litcovers.Payments.Yookassa
+  require Logger
+
   def transaction_from_yookassa(body) do
     %{
       "amount" => %{
@@ -42,6 +47,47 @@ defmodule Litcovers.Payments.Yookassa.Helpers do
 
       true ->
         div(amount, price)
+    end
+  end
+
+  def check_transaction(transaction) do
+    case Yookassa.Request.get_payment_status(transaction.tnx_id) do
+      {:ok, body} ->
+        %{"status" => status, "paid" => paid} = body
+        status = status_handler(transaction, status, paid)
+        {:ok, status}
+
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
+  def status_handler(transaction, status, paid) do
+    case status do
+      "succeeded" ->
+        Logger.info("Transaction #{transaction.id} succeeded")
+        {:ok, _tnx} = Payments.update_transaction(transaction, %{status: status, paid: paid})
+        # calculate litcoins based on transaction amount
+        litcoins = calculate_litcoins(transaction.amount)
+        {:succeeded, litcoins}
+
+      "canceled" ->
+        Logger.info("Transaction #{transaction.id} canceled")
+        Payments.update_transaction(transaction, %{status: status})
+        :canceled
+
+      "waiting_for_capture" ->
+        Logger.info("Transaction #{transaction.id} waiting_for_capture")
+        Payments.update_transaction(transaction, %{status: status})
+        :waiting_for_capture
+
+      "pending" ->
+        Logger.info("Transaction #{transaction.id} is still pending")
+        :pending
+
+      unknown ->
+        Logger.warn("Transaction #{transaction.id} has #{unknown} status")
+        :unknown
     end
   end
 end

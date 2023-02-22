@@ -1,4 +1,6 @@
 defmodule LitcoversWeb.ImageLive.New do
+  alias Litcovers.Payments.Yookassa
+  alias Litcovers.Payments
   alias Litcovers.Accounts
   alias Litcovers.Media
   alias Litcovers.Media.Image
@@ -12,6 +14,8 @@ defmodule LitcoversWeb.ImageLive.New do
   def mount(%{"locale" => locale}, _session, socket) do
     if connected?(socket), do: CoverGen.Create.subscribe(socket.assigns.current_user.id)
     Gettext.put_locale(locale)
+
+    check_new_payments(socket, self())
 
     style_prompts = Metadata.list_all_where(:fantasy, :positive, :setting)
     prompt = style_prompts |> List.first()
@@ -39,7 +43,6 @@ defmodule LitcoversWeb.ImageLive.New do
        height: 768,
        image: %Image{},
        gen_error: nil,
-       litcoins: socket.assigns.current_user.litcoins,
        is_generating: socket.assigns.current_user.is_generating,
        has_images: has_images?(socket.assigns.current_user),
        has_new_images: has_new_images?(socket.assigns.current_user)
@@ -84,6 +87,11 @@ defmodule LitcoversWeb.ImageLive.New do
      |> assign(image: image, is_generating: false, has_images: true, has_new_images: true)}
   end
 
+  @impl true
+  def handle_info({:update_user, user}, socket) do
+    {:noreply, assign(socket, current_user: user)}
+  end
+
   # unlocks image spending 1 litcoin to current user
   @impl true
   def handle_event("unlock", %{"image_id" => image_id}, socket) do
@@ -93,7 +101,7 @@ defmodule LitcoversWeb.ImageLive.New do
       image = Media.get_image!(image_id)
       {:ok, image} = Media.unlock_image(image)
       {:ok, user} = Accounts.remove_litcoins(socket.assigns.current_user, 1)
-      {:noreply, assign(socket, litcoins: user.litcoins, image: image)}
+      {:noreply, assign(socket, image: image, current_user: user)}
     else
       {:noreply, socket}
     end
@@ -226,6 +234,26 @@ defmodule LitcoversWeb.ImageLive.New do
       4 ->
         {:noreply, socket}
     end
+  end
+
+  defp check_new_payments(socket, caller) do
+    Task.start_link(fn ->
+      transactions = Payments.user_pending_transactions(socket.assigns.current_user)
+      for transaction <- transactions do
+        case Yookassa.Helpers.check_transaction(transaction) do
+          {:ok, {:succeeded, litcoins}} ->
+            Logger.info("Adding #{litcoins} litcoins to user #{socket.assigns.current_user.id}")
+            {:ok, user} = Accounts.add_litcoins(socket.assigns.current_user, litcoins)
+            send(caller, {:update_user, user})
+
+          {:error, reason} ->
+            Logger.error("TransactionChecker: transaction #{transaction.id} check error: #{inspect(reason)}")
+
+          status ->
+            Logger.info("TransactionChecker: transaction #{transaction.id} status: #{inspect(status)}")
+        end
+      end
+    end)
   end
 
   defp get_width_and_height("cover") do
