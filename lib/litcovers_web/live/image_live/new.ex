@@ -103,7 +103,7 @@ defmodule LitcoversWeb.ImageLive.New do
       {:ok, user} = Accounts.remove_litcoins(socket.assigns.current_user, 1)
       {:noreply, assign(socket, image: image, current_user: user)}
     else
-      {:noreply, socket}
+      {:noreply, redirect(socket, to: "/#{socket.assigns.locale}/payment_options")}
     end
   end
 

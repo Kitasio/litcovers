@@ -72,7 +72,7 @@ defmodule LitcoversWeb.ImageLive.Index do
       send(self(), {:update_image, image})
       {:noreply, socket}
     else
-      {:noreply, socket}
+      {:noreply, redirect(socket, to: "/#{socket.assigns.locale}/payment_options")}
     end
   end
 
