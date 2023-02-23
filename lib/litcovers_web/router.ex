@@ -30,6 +30,7 @@ defmodule LitcoversWeb.Router do
     pipe_through [:browser, :require_authenticated_admin]
 
     live_dashboard "/dashboard", metrics: LitcoversWeb.Telemetry
+    forward "/mailbox", Plug.Swoosh.MailboxPreview
   end
 
   scope "/", LitcoversWeb do
@@ -39,7 +40,7 @@ defmodule LitcoversWeb.Router do
   end
 
   scope "/:locale", LitcoversWeb do
-    pipe_through [:browser, :set_locale, :redirect_if_user_is_authenticated]
+    pipe_through [:browser, :set_locale]
 
     live "/", PageLive.Index, :index
   end
@@ -106,16 +107,23 @@ defmodule LitcoversWeb.Router do
   end
 
   scope "/:locale", LitcoversWeb do
-    pipe_through [:browser, :set_locale, :require_authenticated_user, :enabled_user]
+    pipe_through [:browser, :set_locale, :require_authenticated_user, :require_confirmed_user, :enabled_user]
 
     live_session :enabled_user,
       on_mount: [{LitcoversWeb.UserAuth, :enabled_user}] do
       live "/images/new", ImageLive.New
+
+      live "/images", ImageLive.Index, :index
+      live "/images/unlocked", ImageLive.Index, :unlocked
+      live "/images/favorites", ImageLive.Index, :favorites
+      live "/images/all", ImageLive.Index, :all
+
+      live "/payment_options", TransactionLive.Index, :index
     end
   end
 
   scope "/:locale", LitcoversWeb do
-    pipe_through [:browser, :set_locale, :require_authenticated_user, :enabled_user]
+    pipe_through [:browser, :set_locale, :require_authenticated_user, :require_confirmed_user, :enabled_user]
 
     live_session :unlocked_image,
       on_mount: [{LitcoversWeb.UserAuth, :unlocked_image}] do
@@ -130,13 +138,6 @@ defmodule LitcoversWeb.Router do
       on_mount: [{LitcoversWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
-
-      live "/images", ImageLive.Index, :index
-      live "/images/unlocked", ImageLive.Index, :unlocked
-      live "/images/favorites", ImageLive.Index, :favorites
-      live "/images/all", ImageLive.Index, :all
-
-      live "/payment_options", TransactionLive.Index, :index
     end
   end
 

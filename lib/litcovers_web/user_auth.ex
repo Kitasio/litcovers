@@ -253,6 +253,17 @@ defmodule LitcoversWeb.UserAuth do
   """
   def require_authenticated_user(conn, _opts) do
     if conn.assigns[:current_user] do
+      conn
+    else
+      conn
+      |> maybe_store_return_to()
+      |> redirect(to: ~p"/#{conn.assigns.locale}/users/log_in")
+      |> halt()
+    end
+  end
+
+  def require_confirmed_user(conn, _opts) do
+    if conn.assigns[:current_user] do
       if conn.assigns[:current_user].confirmed_at do
         conn
       else
@@ -267,8 +278,9 @@ defmodule LitcoversWeb.UserAuth do
       end
     else
       conn
+      |> put_flash(:error, gettext("You must log in to access this page."))
       |> maybe_store_return_to()
-      |> redirect(to: ~p"/#{conn.assigns.locale}/users/log_in")
+      |> redirect(to: "/#{conn.assigns.locale}/users/log_in")
       |> halt()
     end
   end
