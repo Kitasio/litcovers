@@ -3,43 +3,47 @@ defmodule LitcoversWeb.UserConfirmationInstructionsLive do
 
   alias Litcovers.Accounts
 
-  def render(assigns) do
-    ~H"""
-    <.header>Resend confirmation instructions</.header>
-
-    <.simple_form :let={f} for={:user} id="resend_confirmation_form" phx-submit="send_instructions">
-      <.input field={{f, :email}} type="email" label="Email" required />
-      <:actions>
-        <.button phx-disable-with="Sending...">Resend confirmation instructions</.button>
-      </:actions>
-    </.simple_form>
-
-    <p>
-      <.link href={~p"/users/register"}>Register</.link>
-      |
-      <.link href={~p"/users/log_in"}>Log in</.link>
-    </p>
-    """
-  end
-
-  def mount(_params, _session, socket) do
-    {:ok, socket}
+  def mount(%{"locale" => locale}, _session, socket) do
+    Gettext.put_locale(locale)
+    {:ok, assign(socket, locale: locale)}
   end
 
   def handle_event("send_instructions", %{"user" => %{"email" => email}}, socket) do
     if user = Accounts.get_user_by_email(email) do
       Accounts.deliver_user_confirmation_instructions(
         user,
-        &url(~p"/users/confirm/#{&1}")
+        &url(~p"/#{socket.assigns.locale}/users/confirm/#{&1}")
       )
     end
 
     info =
-      "If your email is in our system and it has not been confirmed yet, you will receive an email with instructions shortly."
+      gettext("If your email is in our system and it has not been confirmed yet, you will receive an email with instructions shortly.")
 
     {:noreply,
      socket
      |> put_flash(:info, info)
      |> redirect(to: ~p"/")}
+  end
+
+  def render(assigns) do
+    ~H"""
+    <.navbar locale={@locale} request_path={"/#{@locale}/users/confirm"} />
+    <div class="p-10 sm:my-5 lg:my-20 mx-auto max-w-md rounded-lg sm:border-2 border-stroke-main">
+      <.header>Resend confirmation instructions</.header>
+
+      <.simple_form :let={f} for={:user} id="resend_confirmation_form" phx-submit="send_instructions">
+        <.input field={{f, :email}} type="email" label="Email" required />
+        <:actions>
+          <.button phx-disable-with="Sending..." class="w-full">Resend confirmation instructions</.button>
+        </:actions>
+      </.simple_form>
+
+      <p class="mt-5 text-center">
+        <.link href={~p"/#{@locale}/users/register"}>Register</.link>
+        |
+        <.link href={~p"/#{@locale}/users/log_in"}>Log in</.link>
+      </p>
+    </div>
+    """
   end
 end
