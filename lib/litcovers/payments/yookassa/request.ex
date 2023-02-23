@@ -13,7 +13,7 @@ defmodule Litcovers.Payments.Yookassa.Request do
             capture: true,
             confirmation: %{
               type: "redirect",
-              return_url: "https://litcovers.com/images/new"
+              return_url: "https://litcovers.com/ru/images/new"
             },
             description: "Buying litcoins"
 
@@ -44,7 +44,7 @@ defmodule Litcovers.Payments.Yookassa.Request do
       capture: true,
       confirmation: %{
         type: "redirect",
-        return_url: "https://litc.fly.dev/ru/images/new"
+        return_url: "https://litcovers.com/ru/images/new"
       },
       description: "Buying litcoins"
     }
@@ -66,7 +66,7 @@ defmodule Litcovers.Payments.Yookassa.Request do
     endpoint = "https://api.yookassa.ru/v3/payments/#{tnx_id}"
 
     headers = [
-      Authorization: "Basic " <> Base.encode64("#{@test_shop_id}:#{@test_secret_key}")
+      Authorization: auth_header(),
     ]
 
     case HTTPoison.get(endpoint, headers) do
