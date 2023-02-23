@@ -34,7 +34,7 @@ defmodule LitcoversWeb.UserConfirmationInstructionsLive do
       <.simple_form :let={f} for={:user} id="resend_confirmation_form" phx-submit="send_instructions">
         <.input field={{f, :email}} type="email" label={gettext("Email")} required />
         <:actions>
-          <.button phx-disable-with={gettext("Sending...")} class="w-full"><% gettext("Send") %></.button>
+          <.button phx-disable-with={gettext("Sending...")} class="w-full"><%= gettext("Send") %></.button>
         </:actions>
       </.simple_form>
 
