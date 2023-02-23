@@ -289,7 +289,7 @@ defmodule LitcoversWeb.UserAuth do
       conn
       |> put_flash(:error, gettext("Your account is not active."))
       |> maybe_store_return_to()
-      |> redirect(to: "/")
+      |> redirect(to: "/#{conn.assigns.locale}/users/settings")
       |> halt()
     end
   end
@@ -306,5 +306,5 @@ defmodule LitcoversWeb.UserAuth do
 
   defp maybe_store_return_to(conn), do: conn
 
-  defp signed_in_path(conn), do: ~p"/#{conn.assigns.locale}"
+  defp signed_in_path(conn), do: ~p"/#{conn.assigns.locale}/images/new"
 end
