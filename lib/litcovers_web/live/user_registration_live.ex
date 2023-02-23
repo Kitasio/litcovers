@@ -5,6 +5,7 @@ defmodule LitcoversWeb.UserRegistrationLive do
   alias Litcovers.Accounts.User
 
   def mount(%{"locale" => locale}, _session, socket) do
+    Gettext.put_locale(locale)
     changeset = Accounts.change_user_registration(%User{})
     socket = assign(socket, changeset: changeset, trigger_submit: false, locale: locale)
     {:ok, socket, temporary_assigns: [changeset: nil]}

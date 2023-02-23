@@ -2,6 +2,7 @@ defmodule LitcoversWeb.UserLoginLive do
   use LitcoversWeb, :live_view
 
   def mount(%{"locale" => locale}, _session, socket) do
+    Gettext.put_locale(locale)
     email = live_flash(socket.assigns.flash, :email)
     {:ok, assign(socket, email: email, locale: locale), temporary_assigns: [email: nil]}
   end
