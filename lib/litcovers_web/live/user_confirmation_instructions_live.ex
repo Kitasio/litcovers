@@ -29,19 +29,19 @@ defmodule LitcoversWeb.UserConfirmationInstructionsLive do
     ~H"""
     <.navbar locale={@locale} request_path={"/#{@locale}/users/confirm"} />
     <div class="p-10 sm:my-5 lg:my-20 mx-auto max-w-md rounded-lg sm:border-2 border-stroke-main">
-      <.header>Resend confirmation instructions</.header>
+      <.header><%= gettext("Resend confirmation instructions") %></.header>
 
       <.simple_form :let={f} for={:user} id="resend_confirmation_form" phx-submit="send_instructions">
-        <.input field={{f, :email}} type="email" label="Email" required />
+        <.input field={{f, :email}} type="email" label={gettext("Email")} required />
         <:actions>
-          <.button phx-disable-with="Sending..." class="w-full">Resend confirmation instructions</.button>
+          <.button phx-disable-with={gettext("Sending...")} class="w-full"><% gettext("Send") %></.button>
         </:actions>
       </.simple_form>
 
       <p class="mt-5 text-center">
-        <.link href={~p"/#{@locale}/users/register"}>Register</.link>
+        <.link href={~p"/#{@locale}/users/register"}><%= gettext("Register") %></.link>
         |
-        <.link href={~p"/#{@locale}/users/log_in"}>Log in</.link>
+        <.link href={~p"/#{@locale}/users/log_in"}><%= gettext("Log in") %></.link>
       </p>
     </div>
     """

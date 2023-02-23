@@ -5,7 +5,7 @@ defmodule LitcoversWeb.UserSessionController do
   alias LitcoversWeb.UserAuth
 
   def create(conn, %{"_action" => "registered"} = params) do
-    create(conn, params, "Account created successfully!")
+    create(conn, params, gettext("We sent you an email to confirm your account. Please check your inbox."))
   end
 
   def create(conn, %{"_action" => "password_updated"} = params) do

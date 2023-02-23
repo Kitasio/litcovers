@@ -5,26 +5,26 @@ defmodule LitcoversWeb.UserConfirmationLive do
 
   def render(%{live_action: :edit} = assigns) do
     ~H"""
-    <div class="mx-auto max-w-sm">
-      <.header class="text-center">Confirm Account</.header>
-
+    <.navbar locale={@locale} request_path={"/#{@locale}/users/confirm"} />
+    <div class="p-10 pt-2 sm:my-5 lg:my-20 mx-auto max-w-md rounded-lg sm:border-2 border-stroke-main">
       <.simple_form :let={f} for={:user} id="confirmation_form" phx-submit="confirm_account">
         <.input field={{f, :token}} type="hidden" value={@token} />
         <:actions>
-          <.button phx-disable-with="Confirming..." class="w-full">Confirm my account</.button>
+          <.button phx-disable-with={gettext("Confirming...")} class="w-full"><%= gettext("Confirm my account") %></.button>
         </:actions>
       </.simple_form>
 
       <p class="text-center mt-4">
-        <.link href={~p"/#{@locale}/users/register"}>Register</.link>
+        <.link href={~p"/#{@locale}/users/register"}><%= gettext("Register") %></.link>
         |
-        <.link href={~p"/#{@locale}/users/log_in"}>Log in</.link>
+        <.link href={~p"/#{@locale}/users/log_in"}><%= gettext("Log in") %></.link>
       </p>
     </div>
     """
   end
 
   def mount(params, _session, socket) do
+    Gettext.put_locale(params["locale"])
     {:ok, assign(socket, token: params["token"], locale: params["locale"]),
      temporary_assigns: [token: nil]}
   end
@@ -36,7 +36,7 @@ defmodule LitcoversWeb.UserConfirmationLive do
       {:ok, _} ->
         {:noreply,
          socket
-         |> put_flash(:info, "User confirmed successfully.")
+         |> put_flash(:info, gettext("User confirmed successfully."))
          |> redirect(to: ~p"/#{socket.assigns.locale}/")}
 
       :error ->
@@ -51,7 +51,7 @@ defmodule LitcoversWeb.UserConfirmationLive do
           %{} ->
             {:noreply,
              socket
-             |> put_flash(:error, "User confirmation link is invalid or it has expired.")
+             |> put_flash(:error, gettext("User confirmation link is invalid or it has expired."))
              |> redirect(to: ~p"/#{socket.assigns.locale}/")}
         end
     end
