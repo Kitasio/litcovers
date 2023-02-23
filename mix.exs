@@ -60,7 +60,8 @@ defmodule Litcovers.MixProject do
       {:timex, "~> 3.7"},
       {:flow, "~> 1.2.3"},
       {:redix, "~> 1.1"},
-      {:castore, ">= 0.0.0"}
+      {:castore, ">= 0.0.0"},
+      {:hackney, "~> 1.18"}
     ]
   end
 
