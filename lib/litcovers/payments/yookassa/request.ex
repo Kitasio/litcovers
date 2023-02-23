@@ -17,11 +17,21 @@ defmodule Litcovers.Payments.Yookassa.Request do
             },
             description: "Buying litcoins"
 
+  defp auth_header do
+    if System.get_env("MIX_ENV") == "prod" do
+      shop_id = Application.get_env(:litcovers, :yookassa_shop_id)
+      secret_key = Application.get_env(:litcovers, :yookassa_secret_key)
+      "Basic " <> Base.encode64("#{shop_id}:#{secret_key}")
+    else
+      "Basic " <> Base.encode64("#{@test_shop_id}:#{@test_secret_key}")
+    end
+  end
+
   def payment(amount) do
     endpoint = "https://api.yookassa.ru/v3/payments"
 
     headers = [
-      Authorization: "Basic " <> Base.encode64("#{@test_shop_id}:#{@test_secret_key}"),
+      Authorization: auth_header(),
       "Content-Type": "application/json",
       "Idempotence-Key": Ecto.UUID.generate()
     ]
