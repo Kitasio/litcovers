@@ -38,14 +38,20 @@ defmodule LitcoversWeb.UiComponents do
               </.tooltip>
             </div>
           </.link>
-        <% end %>
-        <div class="hidden sm:inline">
-          <.link navigate={"/#{@locale}/images/new"}>
+          <div class="hidden sm:inline">
+            <.link navigate={"/#{@locale}/images/new"}>
+              <.button>
+                <%= gettext("Create cover") %>
+              </.button>
+            </.link>
+          </div>
+        <% else %>
+          <.link navigate={"/#{@locale}/users/log_in"}>
             <.button>
-              <%= gettext("Create cover") %>
+              <%= gettext("Login") %>
             </.button>
           </.link>
-        </div>
+        <% end %>
       </div>
     </div>
 
