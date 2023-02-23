@@ -39,23 +39,9 @@ defmodule LitcoversWeb.Router do
   end
 
   scope "/:locale", LitcoversWeb do
-    pipe_through [:browser, :set_locale]
+    pipe_through [:browser, :set_locale, :redirect_if_user_is_authenticated]
 
     live "/", PageLive.Index, :index
-
-    live "/prompts", PromptLive.Index, :index
-    live "/prompts/new", PromptLive.Index, :new
-    live "/prompts/:id/edit", PromptLive.Index, :edit
-
-    live "/prompts/:id", PromptLive.Show, :show
-    live "/prompts/:id/show/edit", PromptLive.Show, :edit
-
-    live "/placeholders", PlaceholderLive.Index, :index
-    live "/placeholders/new", PlaceholderLive.Index, :new
-    live "/placeholders/:id/edit", PlaceholderLive.Index, :edit
-
-    live "/placeholders/:id", PlaceholderLive.Show, :show
-    live "/placeholders/:id/show/edit", PlaceholderLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.
@@ -88,6 +74,20 @@ defmodule LitcoversWeb.Router do
     live_session :is_admin, on_mount: [{LitcoversWeb.UserAuth, :is_admin}] do
       live "/admin", AdminLive.Index, :index
       live "/admin/images/:id", AdminLive.Image
+
+      live "/prompts", PromptLive.Index, :index
+      live "/prompts/new", PromptLive.Index, :new
+      live "/prompts/:id/edit", PromptLive.Index, :edit
+
+      live "/prompts/:id", PromptLive.Show, :show
+      live "/prompts/:id/show/edit", PromptLive.Show, :edit
+
+      live "/placeholders", PlaceholderLive.Index, :index
+      live "/placeholders/new", PlaceholderLive.Index, :new
+      live "/placeholders/:id/edit", PlaceholderLive.Index, :edit
+
+      live "/placeholders/:id", PlaceholderLive.Show, :show
+      live "/placeholders/:id/show/edit", PlaceholderLive.Show, :edit
     end
   end
 
