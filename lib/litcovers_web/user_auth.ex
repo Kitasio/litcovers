@@ -253,7 +253,18 @@ defmodule LitcoversWeb.UserAuth do
   """
   def require_authenticated_user(conn, _opts) do
     if conn.assigns[:current_user] do
-      conn
+      if conn.assigns[:current_user].confirmed_at do
+        conn
+      else
+        conn
+        |> put_flash(
+          :error,
+          gettext("You need to confirm your account before continuing.")
+        )
+        |> maybe_store_return_to()
+        |> redirect(to: "/#{conn.assigns.locale}/users/confirm")
+        |> halt()
+      end
     else
       conn
       |> maybe_store_return_to()
