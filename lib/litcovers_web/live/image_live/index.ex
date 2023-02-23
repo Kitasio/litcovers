@@ -125,6 +125,8 @@ defmodule LitcoversWeb.ImageLive.Index do
         assign(socket,
           images: Media.list_user_favorite_images(socket.assigns.current_user, 8, page * 8)
         )
+      _ ->
+        socket
     end
   end
 
