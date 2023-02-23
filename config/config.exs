@@ -61,9 +61,7 @@ config :phoenix, :json_library, Jason
 
 config :litcovers,
   imagekit_url: "https://ik.imagekit.io/soulgenesis",
-  bucket: "sapimedia",
-  yookassa_secret_key: System.get_env("YOOKASSA_SECRET_KEY"),
-  yookassa_shop_id: System.get_env("YOOKASSA_SHOP_ID")
+  bucket: "sapimedia"
 
 config :ex_aws,
   debug_requests: true,
