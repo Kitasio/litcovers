@@ -8,18 +8,19 @@ defmodule LitcoversWeb.UserLoginLive do
 
   def render(assigns) do
     ~H"""
-    <div class="mx-auto max-w-sm">
+    <.navbar locale={@locale} request_path={"/#{@locale}/users/log_in"} />
+    <div class="p-10 my-10 lg:my-20 mx-auto max-w-md rounded-lg border-2 border-stroke-main">
       <.header class="text-center">
-        Sign in to account
+        <%= gettext("Sign in to account") %>
         <:subtitle>
-          Don't have an account?
+          <%= gettext("Don't have an account?") %>
           <.link
             navigate={~p"/#{@locale}/users/register"}
-            class="font-semibold text-brand hover:underline"
+            class="font-semibold text-accent-main hover:underline"
           >
-            Sign up
+            <%= gettext("Sign up") %>
           </.link>
-          for an account now.
+          <%= gettext("for an account now.") %>
         </:subtitle>
       </.header>
 
@@ -31,18 +32,18 @@ defmodule LitcoversWeb.UserLoginLive do
         as={:user}
         phx-update="ignore"
       >
-        <.input field={{f, :email}} type="email" label="Email" required />
-        <.input field={{f, :password}} type="password" label="Password" required />
+        <.input field={{f, :email}} type="email" label={gettext("Email")} required />
+        <.input field={{f, :password}} type="password" label={gettext("Password")} required />
 
         <:actions :let={f}>
-          <.input field={{f, :remember_me}} type="checkbox" label="Keep me logged in" />
+          <.input field={{f, :remember_me}} type="checkbox" label={gettext("Remember me")} />
           <.link href={~p"/#{@locale}/users/reset_password"} class="text-sm font-semibold">
-            Forgot your password?
+            <%= gettext("Forgot your password?") %>
           </.link>
         </:actions>
         <:actions>
           <.button phx-disable-with="Signing in..." class="w-full">
-            Sign in <span aria-hidden="true">→</span>
+            <%= gettext("Sign in") %> <span aria-hidden="true">→</span>
           </.button>
         </:actions>
       </.simple_form>
