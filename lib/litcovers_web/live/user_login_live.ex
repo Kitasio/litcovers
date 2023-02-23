@@ -9,7 +9,7 @@ defmodule LitcoversWeb.UserLoginLive do
   def render(assigns) do
     ~H"""
     <.navbar locale={@locale} request_path={"/#{@locale}/users/log_in"} />
-    <div class="p-10 my-10 lg:my-20 mx-auto max-w-md rounded-lg border-2 border-stroke-main">
+    <div class="p-10 sm:my-5 lg:my-20 mx-auto max-w-md rounded-lg sm:border-2 border-stroke-main">
       <.header class="text-center">
         <%= gettext("Sign in to account") %>
         <:subtitle>
@@ -42,7 +42,7 @@ defmodule LitcoversWeb.UserLoginLive do
           </.link>
         </:actions>
         <:actions>
-          <.button phx-disable-with="Signing in..." class="w-full">
+          <.button phx-disable-with={gettext("Signing in...")} class="w-full">
             <%= gettext("Sign in") %> <span aria-hidden="true">→</span>
           </.button>
         </:actions>

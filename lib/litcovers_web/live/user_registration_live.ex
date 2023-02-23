@@ -4,49 +4,6 @@ defmodule LitcoversWeb.UserRegistrationLive do
   alias Litcovers.Accounts
   alias Litcovers.Accounts.User
 
-  def render(assigns) do
-    ~H"""
-    <div class="mx-auto max-w-sm">
-      <.header class="text-center">
-        Register for an account
-        <:subtitle>
-          Already registered?
-          <.link
-            navigate={~p"/#{@locale}/users/log_in"}
-            class="font-semibold text-brand hover:underline"
-          >
-            Sign in
-          </.link>
-          to your account now.
-        </:subtitle>
-      </.header>
-
-      <.simple_form
-        :let={f}
-        id="registration_form"
-        for={@changeset}
-        phx-submit="save"
-        phx-change="validate"
-        phx-trigger-action={@trigger_submit}
-        action={~p"/#{@locale}/users/log_in?_action=registered"}
-        method="post"
-        as={:user}
-      >
-        <.error :if={@changeset.action == :insert}>
-          Oops, something went wrong! Please check the errors below.
-        </.error>
-
-        <.input field={{f, :email}} type="email" label="Email" required />
-        <.input field={{f, :password}} type="password" label="Password" required />
-
-        <:actions>
-          <.button phx-disable-with="Creating account..." class="w-full">Create an account</.button>
-        </:actions>
-      </.simple_form>
-    </div>
-    """
-  end
-
   def mount(%{"locale" => locale}, _session, socket) do
     changeset = Accounts.change_user_registration(%User{})
     socket = assign(socket, changeset: changeset, trigger_submit: false, locale: locale)
@@ -73,5 +30,49 @@ defmodule LitcoversWeb.UserRegistrationLive do
   def handle_event("validate", %{"user" => user_params}, socket) do
     changeset = Accounts.change_user_registration(%User{}, user_params)
     {:noreply, assign(socket, changeset: Map.put(changeset, :action, :validate))}
+  end
+
+  def render(assigns) do
+    ~H"""
+    <.navbar locale={@locale} request_path={"/#{@locale}/users/register"} />
+    <div class="p-10 sm:my-5 lg:my-20 mx-auto max-w-md rounded-lg sm:border-2 border-stroke-main">
+      <.header class="text-center">
+        <%= gettext("Register for an account") %>
+        <:subtitle>
+          <%= gettext("Already registered?") %>
+          <.link
+            navigate={~p"/#{@locale}/users/log_in"}
+            class="font-semibold text-accent-main hover:underline"
+          >
+            <%= gettext("Sign in") %>
+          </.link>
+          <%= gettext("to your account now.") %>
+        </:subtitle>
+      </.header>
+
+      <.simple_form
+        :let={f}
+        id="registration_form"
+        for={@changeset}
+        phx-submit="save"
+        phx-change="validate"
+        phx-trigger-action={@trigger_submit}
+        action={~p"/#{@locale}/users/log_in?_action=registered"}
+        method="post"
+        as={:user}
+      >
+        <.error :if={@changeset.action == :insert}>
+          <%= gettext("Oops, something went wrong! Please check the errors below.") %>
+        </.error>
+
+        <.input field={{f, :email}} type="email" label={gettext("Email")}required />
+        <.input field={{f, :password}} type="password" label={gettext("Password")} required />
+
+        <:actions>
+          <.button phx-disable-with={gettext("Creating account...")} class="w-full"><%= gettext("Create an account") %></.button>
+        </:actions>
+      </.simple_form>
+    </div>
+    """
   end
 end
