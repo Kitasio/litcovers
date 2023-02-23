@@ -230,7 +230,7 @@ defmodule LitcoversWeb.CoreComponents do
       type={@type}
       class={[
         "phx-submit-loading:opacity-75 py-2.5 px-4 bg-accent-main hover:bg-hover rounded-full",
-        "text-sm font-semibold leading-6 text-white active:text-white/80 transition disabled:bg-dis-btn",
+        "text-sm lg:text-base leading-6 text-white active:text-white/80 transition disabled:bg-dis-btn",
         @class
       ]}
       {@rest}

@@ -17,9 +17,11 @@
           <%= gettext("A few simple steps, little bit of magic, and wonderful results") %>
         </p>
         <div class="mt-2 md:mt-4">
-          <.link_button navigate={"/#{@locale}/images/new"}>
-            <%= gettext("Try it") %>
-          </.link_button>
+          <.link navigate={"/#{@locale}/images/new"}>
+            <.button>
+              <%= gettext("Try it") %>
+            </.button>
+          </.link>
         </div>
       </div>
     </div>
@@ -78,7 +80,11 @@
     <div class="mt-20 flex flex-col justify-center items-center gap-5 w-full lg:mt-[40rem]">
       <h2 class="text-2xl font-bold"><%= gettext("Your cover awaits!") %></h2>
       <div class="mt-2 md:mt-4">
-        <.link_button navigate={"/#{@locale}/images/new"}><%= gettext("Try it") %></.link_button>
+        <.link navigate={"/#{@locale}/images/new"}>
+          <.button>
+            <%= gettext("Try it") %>
+          </.button>
+        </.link>
       </div>
     </div>
 

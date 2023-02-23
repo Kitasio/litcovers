@@ -40,9 +40,11 @@ defmodule LitcoversWeb.UiComponents do
           </.link>
         <% end %>
         <div class="hidden sm:inline">
-          <.link_button navigate={"/#{@locale}/images/new"}>
-            <%= gettext("Create cover") %>
-          </.link_button>
+          <.link navigate={"/#{@locale}/images/new"}>
+            <.button>
+              <%= gettext("Create cover") %>
+            </.button>
+          </.link>
         </div>
       </div>
     </div>
