@@ -83,7 +83,7 @@
     </div>
   </div>
   <div class="px-8 lg:col-start-6 lg:col-end-13 lg:py-auto">
-    <div 
+    <div
       x-data={"{ 
         showImage: false, 
         showToolbar: false, 
@@ -92,7 +92,7 @@
       class="my-20 sticky top-20"
     >
       <div
-        class={"relative bg-sec max-w-lg overflow-hidden rounded-lg aspect-cover transition-all duration-300 mx-auto"}
+        class="relative bg-sec max-w-lg overflow-hidden rounded-lg aspect-cover transition-all duration-300 mx-auto"
         x-on:mouseenter="showToolbar = true"
         x-on:mouseleave="showToolbar = false"
         id={"img-box-#{@image.id}"}
@@ -115,7 +115,12 @@
           x-transition.duration.200ms
           class="p-5 absolute gap-5 flex justify-center z-20 bottom-0 left-0 w-full"
         >
-          <button class="group relative bg-sec/50 p-2.5 rounded-full" id="create-cover-btn" phx-hook="CreateCover" x-on:click={"$dispatch('save-to-spaces', { img: $refs.mainImage.src })"}>
+          <button
+            class="group relative bg-sec/50 p-2.5 rounded-full"
+            id="create-cover-btn"
+            phx-hook="CreateCover"
+            x-on:click="$dispatch('save-to-spaces', { img: $refs.mainImage.src })"
+          >
             <.tooltip>
               <%= gettext("Save cover") %>
             </.tooltip>

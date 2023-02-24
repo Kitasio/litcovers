@@ -11,8 +11,7 @@ defmodule LitcoversWeb.ImageLive.Index do
     Gettext.put_locale(locale)
     Task.start_link(fn -> Media.see_all_user_images(socket.assigns.current_user) end)
 
-    socket =
-      assign(socket, locale: locale, page: 0)
+    socket = assign(socket, locale: locale, page: 0)
 
     # on initial load it'll return false,
     # then true on the next.
@@ -126,6 +125,7 @@ defmodule LitcoversWeb.ImageLive.Index do
         assign(socket,
           images: Media.list_user_favorite_images(socket.assigns.current_user, 8, page * 8)
         )
+
       _ ->
         socket
     end

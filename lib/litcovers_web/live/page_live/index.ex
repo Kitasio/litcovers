@@ -5,11 +5,12 @@ defmodule LitcoversWeb.PageLive.Index do
   @impl true
   def mount(%{"locale" => locale}, session, socket) do
     Gettext.put_locale(locale)
-    
-    current_user = case Map.fetch(session, "user_token") do
-      {:ok, token} -> Accounts.get_user_by_session_token(token)
-      :error -> nil
-    end
+
+    current_user =
+      case Map.fetch(session, "user_token") do
+        {:ok, token} -> Accounts.get_user_by_session_token(token)
+        :error -> nil
+      end
 
     {:ok, assign(socket, locale: locale, current_user: current_user)}
   end

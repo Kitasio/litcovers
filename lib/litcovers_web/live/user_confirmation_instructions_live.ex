@@ -17,7 +17,9 @@ defmodule LitcoversWeb.UserConfirmationInstructionsLive do
     end
 
     info =
-      gettext("If your email is in our system and it has not been confirmed yet, you will receive an email with instructions shortly.")
+      gettext(
+        "If your email is in our system and it has not been confirmed yet, you will receive an email with instructions shortly."
+      )
 
     {:noreply,
      socket
@@ -34,7 +36,9 @@ defmodule LitcoversWeb.UserConfirmationInstructionsLive do
       <.simple_form :let={f} for={:user} id="resend_confirmation_form" phx-submit="send_instructions">
         <.input field={{f, :email}} type="email" label={gettext("Email")} required />
         <:actions>
-          <.button phx-disable-with={gettext("Sending...")} class="w-full"><%= gettext("Send") %></.button>
+          <.button phx-disable-with={gettext("Sending...")} class="w-full">
+            <%= gettext("Send") %>
+          </.button>
         </:actions>
       </.simple_form>
 

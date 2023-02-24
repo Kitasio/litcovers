@@ -22,10 +22,14 @@ defmodule Litcovers.Payments.TransactionChecker do
           Logger.info("User #{user.id} now has #{user.litcoins} litcoins")
 
         {:error, reason} ->
-          Logger.error("TransactionChecker: transaction #{transaction.id} check error: #{inspect(reason)}")
+          Logger.error(
+            "TransactionChecker: transaction #{transaction.id} check error: #{inspect(reason)}"
+          )
 
         status ->
-          Logger.info("TransactionChecker: transaction #{transaction.id} status: #{inspect(status)}")
+          Logger.info(
+            "TransactionChecker: transaction #{transaction.id} status: #{inspect(status)}"
+          )
       end
     end
 

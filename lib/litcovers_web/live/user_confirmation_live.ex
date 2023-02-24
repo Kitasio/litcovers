@@ -10,7 +10,9 @@ defmodule LitcoversWeb.UserConfirmationLive do
       <.simple_form :let={f} for={:user} id="confirmation_form" phx-submit="confirm_account">
         <.input field={{f, :token}} type="hidden" value={@token} />
         <:actions>
-          <.button phx-disable-with={gettext("Confirming...")} class="w-full"><%= gettext("Confirm my account") %></.button>
+          <.button phx-disable-with={gettext("Confirming...")} class="w-full">
+            <%= gettext("Confirm my account") %>
+          </.button>
         </:actions>
       </.simple_form>
 
@@ -25,6 +27,7 @@ defmodule LitcoversWeb.UserConfirmationLive do
 
   def mount(params, _session, socket) do
     Gettext.put_locale(params["locale"])
+
     {:ok, assign(socket, token: params["token"], locale: params["locale"]),
      temporary_assigns: [token: nil]}
   end

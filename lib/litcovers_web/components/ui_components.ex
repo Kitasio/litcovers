@@ -128,7 +128,12 @@ defmodule LitcoversWeb.UiComponents do
             @class
           ]}
         />
-        <.link navigate={"/#{@locale}/images/#{@image_id}/edit"} :if={@unlocked} class="w-full h-full absolute top-0 z-10"></.link>
+        <.link
+          :if={@unlocked}
+          navigate={"/#{@locale}/images/#{@image_id}/edit"}
+          class="w-full h-full absolute top-0 z-10"
+        >
+        </.link>
         <div :if={!@unlocked} class="w-full h-full absolute top-0 z-10" />
         <div
           x-show="showToolbar"

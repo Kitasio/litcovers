@@ -5,7 +5,7 @@ defmodule Litcovers.Media.Cover do
   schema "covers" do
     field :seen, :boolean, default: false
     field :url, :string
-    
+
     belongs_to :image, Litcovers.Media.Image
     belongs_to :user, Litcovers.Accounts.User
 

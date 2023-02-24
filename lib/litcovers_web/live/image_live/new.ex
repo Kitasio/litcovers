@@ -239,6 +239,7 @@ defmodule LitcoversWeb.ImageLive.New do
   defp check_new_payments(socket, caller) do
     Task.start_link(fn ->
       transactions = Payments.user_pending_transactions(socket.assigns.current_user)
+
       for transaction <- transactions do
         case Yookassa.Helpers.check_transaction(transaction) do
           {:ok, {:succeeded, litcoins}} ->
@@ -247,10 +248,14 @@ defmodule LitcoversWeb.ImageLive.New do
             send(caller, {:update_user, user})
 
           {:error, reason} ->
-            Logger.error("TransactionChecker: transaction #{transaction.id} check error: #{inspect(reason)}")
+            Logger.error(
+              "TransactionChecker: transaction #{transaction.id} check error: #{inspect(reason)}"
+            )
 
           status ->
-            Logger.info("TransactionChecker: transaction #{transaction.id} status: #{inspect(status)}")
+            Logger.info(
+              "TransactionChecker: transaction #{transaction.id} status: #{inspect(status)}"
+            )
         end
       end
     end)

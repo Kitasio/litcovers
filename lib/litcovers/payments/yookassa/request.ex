@@ -66,7 +66,7 @@ defmodule Litcovers.Payments.Yookassa.Request do
     endpoint = "https://api.yookassa.ru/v3/payments/#{tnx_id}"
 
     headers = [
-      Authorization: auth_header(),
+      Authorization: auth_header()
     ]
 
     case HTTPoison.get(endpoint, headers) do

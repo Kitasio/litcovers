@@ -79,8 +79,25 @@ defmodule LitcoversWeb.ImageLive.Show do
       |> Base.decode64!()
 
     img_url = CoverGen.Spaces.save_bytes(image_bytes)
+    params = %{url: img_url}
 
-    {:noreply, socket}
+    case Media.create_cover(socket.assigns.image, socket.assigns.current_user, params) do
+      {:ok, _cover} ->
+        socket =
+          socket
+          |> put_flash(:info, gettext("Your cover is saved"))
+          |> push_navigate(to: ~p"/#{socket.assigns.locale}/images/#{socket.assigns.image.id}/edit")
+
+        {:noreply, socket}
+
+      {:error, _changeset} ->
+        socket =
+          socket
+          |> put_flash(:error, gettext("Error saving your cover"))
+          |> push_navigate(to: ~p"/#{socket.assigns.locale}/images")
+
+        {:noreply, socket}
+    end
   end
 
   @impl true

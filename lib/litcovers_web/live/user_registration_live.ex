@@ -66,11 +66,13 @@ defmodule LitcoversWeb.UserRegistrationLive do
           <%= gettext("Oops, something went wrong! Please check the errors below.") %>
         </.error>
 
-        <.input field={{f, :email}} type="email" label={gettext("Email")}required />
+        <.input field={{f, :email}} type="email" label={gettext("Email")} required />
         <.input field={{f, :password}} type="password" label={gettext("Password")} required />
 
         <:actions>
-          <.button phx-disable-with={gettext("Creating account...")} class="w-full"><%= gettext("Create an account") %></.button>
+          <.button phx-disable-with={gettext("Creating account...")} class="w-full">
+            <%= gettext("Create an account") %>
+          </.button>
         </:actions>
       </.simple_form>
     </div>
