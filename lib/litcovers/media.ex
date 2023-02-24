@@ -9,6 +9,21 @@ defmodule Litcovers.Media do
   alias Litcovers.Repo
 
   alias Litcovers.Media.Image
+  alias Litcovers.Media.Cover
+
+  def see_all_user_covers(%Accounts.User{} = user) do
+    Cover
+    |> user_images_query(user)
+    |> all_unseen_images_query()
+    |> Repo.update_all(set: [seen: true])
+  end
+
+  def has_unseen_covers?(%Accounts.User{} = user) do
+    Cover
+    |> user_images_query(user)
+    |> all_unseen_images_query()
+    |> Repo.aggregate(:count) > 0
+  end
 
   def see_all_user_images(%Accounts.User{} = user) do
     Image
