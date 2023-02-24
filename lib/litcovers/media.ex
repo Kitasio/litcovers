@@ -123,6 +123,22 @@ defmodule Litcovers.Media do
     |> Repo.all()
   end
 
+  def list_user_covers(%Accounts.User{} = user) do
+    Cover
+    |> user_images_query(user)
+    |> order_by_date_insert()
+    |> Repo.all()
+  end
+
+  def list_user_covers(%Accounts.User{} = user, limit, offset) do
+    Cover
+    |> user_images_query(user)
+    |> order_by_date_insert()
+    |> limit_query(limit)
+    |> offset_query(offset)
+    |> Repo.all()
+  end
+
   def list_user_images(%Accounts.User{} = user, limit, offset) do
     Image
     |> user_images_query(user)
@@ -431,9 +447,11 @@ defmodule Litcovers.Media do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_cover(attrs \\ %{}) do
+  def create_cover(%Image{} = image, %Accounts.User{} = user, attrs \\ %{}) do
     %Cover{}
     |> Cover.changeset(attrs)
+    |> Ecto.Changeset.put_assoc(:image, image)
+    |> Ecto.Changeset.put_assoc(:user, user)
     |> Repo.insert()
   end
 
