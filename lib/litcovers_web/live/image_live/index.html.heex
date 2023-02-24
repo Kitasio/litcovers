@@ -43,7 +43,7 @@
           id={"#{image.id}-img"}
           locale={@locale}
           image_id={image.id}
-          img_url={image.url}
+          img_url={insert_image_watermark(image)}
           unlocked={image.unlocked}
           aspect_ratio={aspect_ratio({image.width, image.height})}
           class={

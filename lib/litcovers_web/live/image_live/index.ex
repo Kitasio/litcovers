@@ -3,6 +3,7 @@ defmodule LitcoversWeb.ImageLive.Index do
 
   alias Phoenix.LiveView.JS
   alias Litcovers.Media
+  alias Litcovers.Media.Image
   alias Litcovers.Accounts
 
   @impl true
@@ -171,4 +172,25 @@ defmodule LitcoversWeb.ImageLive.Index do
     }
 
   def placeholder_or_empty(placeholder), do: placeholder
+
+  def insert_image_watermark(%Image{unlocked: false} = image) do
+    uri = image.url |> URI.parse()
+    %URI{host: host, path: path} = uri
+
+    {filename, list} = path |> String.split("/") |> List.pop_at(-1)
+    bucket = list |> List.last()
+    transformation = "tr:oi-litmark.png"
+
+    case host do
+      "ik.imagekit.io" ->
+        Path.join(["https://", host, bucket, transformation, filename])
+
+      _ ->
+        image.url
+    end
+  end
+
+  def insert_image_watermark(%Image{unlocked: true} = image) do
+    image.url
+  end
 end
