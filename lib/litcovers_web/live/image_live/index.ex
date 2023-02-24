@@ -173,6 +173,8 @@ defmodule LitcoversWeb.ImageLive.Index do
 
   def placeholder_or_empty(placeholder), do: placeholder
 
+  def insert_image_watermark(%Image{url: nil}), do: nil
+
   def insert_image_watermark(%Image{unlocked: false} = image) do
     uri = image.url |> URI.parse()
     %URI{host: host, path: path} = uri
