@@ -1,0 +1,31 @@
+<.navbar
+  images_exist={Media.has_covers?(@current_user)}
+  locale={@locale}
+  request_path={~p"/#{@locale}/covers"}
+  current_user={@current_user}
+/>
+<div x-data="" class="bg-sec grow px-8 py-10">
+  <div
+    id="user-images"
+    phx-update="append"
+    class="mt-7 grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-10 lg:gap-20"
+  >
+    <%= for image <- @images do %>
+      <div id={"img-#{image.id}-box"} x-data="" class="relative">
+        <.img
+          id={"#{image.id}-img"}
+          locale={@locale}
+          image_id={image.id}
+          img_url={image.url}
+          unlocked={false}
+        >
+          <.download_btn
+            image_url={"#{image.url}?ik-attachment=true"}
+            tooltip_text={gettext("Download")}
+          />
+        </.img>
+      </div>
+    <% end %>
+  </div>
+  <div id="infinite-scroll-marker" phx-hook="InfiniteScroll" data-page={@page}></div>
+</div>
