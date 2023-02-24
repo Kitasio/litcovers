@@ -17,6 +17,7 @@ defmodule Litcovers.Media.Image do
     belongs_to :prompt, Litcovers.Metadata.Prompt
 
     has_many :ideas, Litcovers.Media.Idea, on_delete: :delete_all
+    has_many :covers, Litcovers.Media.Cover, on_delete: :delete_all
 
     timestamps()
   end

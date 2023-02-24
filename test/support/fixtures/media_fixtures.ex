@@ -37,4 +37,19 @@ defmodule Litcovers.MediaFixtures do
 
     idea
   end
+
+  @doc """
+  Generate a cover.
+  """
+  def cover_fixture(attrs \\ %{}) do
+    {:ok, cover} =
+      attrs
+      |> Enum.into(%{
+        seen: true,
+        url: "some url"
+      })
+      |> Litcovers.Media.create_cover()
+
+    cover
+  end
 end
