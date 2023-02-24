@@ -7,6 +7,7 @@ defmodule Litcovers.Media.Cover do
     field :url, :string
     
     belongs_to :image, Litcovers.Media.Image
+    belongs_to :user, Litcovers.Accounts.User
 
     timestamps()
   end

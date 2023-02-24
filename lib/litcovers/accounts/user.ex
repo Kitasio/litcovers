@@ -13,6 +13,7 @@ defmodule Litcovers.Accounts.User do
     field :is_generating, :boolean, default: false
 
     has_many :images, Litcovers.Media.Image
+    has_many :covers, Litcovers.Media.Cover
 
     timestamps()
   end
