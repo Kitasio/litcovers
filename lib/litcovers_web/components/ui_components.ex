@@ -101,6 +101,7 @@ defmodule LitcoversWeb.UiComponents do
   attr :id, :string, default: "mainImage"
   attr :aspect_ratio, :string, default: "cover"
   attr :class, :string, default: nil
+  attr :unlocked, :boolean, default: false
 
   slot :inner_block
 
@@ -127,6 +128,8 @@ defmodule LitcoversWeb.UiComponents do
             @class
           ]}
         />
+        <.link navigate={"/#{@locale}/images/#{@image_id}/edit"} :if={@unlocked} class="w-full h-full absolute top-0 z-10"></.link>
+        <div :if={!@unlocked} class="w-full h-full absolute top-0 z-10" />
         <div
           x-show="showToolbar"
           x-transition.duration.200ms

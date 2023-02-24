@@ -44,6 +44,7 @@
           locale={@locale}
           image_id={image.id}
           img_url={image.url}
+          unlocked={image.unlocked}
           aspect_ratio={aspect_ratio({image.width, image.height})}
           class={
             if !image.unlocked do
