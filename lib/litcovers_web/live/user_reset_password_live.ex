@@ -5,8 +5,9 @@ defmodule LitcoversWeb.UserResetPasswordLive do
 
   def render(assigns) do
     ~H"""
-    <div class="mx-auto max-w-sm">
-      <.header class="text-center">Reset Password</.header>
+    <.navbar locale={@locale} request_path={"/#{@locale}/users/reset_password"} />
+    <div class="p-10 pt-2 sm:my-5 lg:my-20 mx-auto w-full max-w-md rounded-lg sm:border-2 border-stroke-main">
+      <.header class="text-center pt-5"><%= gettext("Reset Password") %></.header>
 
       <.simple_form
         :let={f}
@@ -16,31 +17,34 @@ defmodule LitcoversWeb.UserResetPasswordLive do
         phx-change="validate"
       >
         <.error :if={@changeset.action == :insert}>
-          Oops, something went wrong! Please check the errors below.
+          <%= gettext("Oops, something went wrong! Please check the errors below.") %>
         </.error>
 
-        <.input field={{f, :password}} type="password" label="New password" required />
+        <.input field={{f, :password}} type="password" label={gettext("New password")} required />
         <.input
           field={{f, :password_confirmation}}
           type="password"
-          label="Confirm new password"
+          label={gettext("Confirm new password")}
           required
         />
         <:actions>
-          <.button phx-disable-with="Resetting..." class="w-full">Reset Password</.button>
+          <.button phx-disable-with={gettext("Resetting...")} class="w-full"><%= gettext("Reset Password") %></.button>
         </:actions>
       </.simple_form>
 
       <p class="text-center mt-4">
-        <.link href={~p"/users/register"}>Register</.link>
+        <.link href={~p"/#{@locale}/users/register"}><%= gettext("Register") %></.link>
         |
-        <.link href={~p"/users/log_in"}>Log in</.link>
+        <.link href={~p"/#{@locale}/users/log_in"}><%= gettext("Log in") %></.link>
       </p>
     </div>
     """
   end
 
   def mount(params, _session, socket) do
+    locale = params["locale"]
+    Gettext.put_locale(locale)
+    socket = assign(socket, locale: locale)
     socket = assign_user_and_token(socket, params)
 
     socket =
@@ -62,8 +66,8 @@ defmodule LitcoversWeb.UserResetPasswordLive do
       {:ok, _} ->
         {:noreply,
          socket
-         |> put_flash(:info, "Password reset successfully.")
-         |> redirect(to: ~p"/users/log_in")}
+         |> put_flash(:info, gettext("Password reset successfully."))
+         |> redirect(to: ~p"/#{socket.assigns.locale}/users/log_in")}
 
       {:error, changeset} ->
         {:noreply, assign(socket, :changeset, Map.put(changeset, :action, :insert))}
@@ -80,7 +84,7 @@ defmodule LitcoversWeb.UserResetPasswordLive do
       assign(socket, user: user, token: token)
     else
       socket
-      |> put_flash(:error, "Reset password link is invalid or it has expired.")
+      |> put_flash(:error, gettext("Reset password link is invalid or it has expired."))
       |> redirect(to: ~p"/")
     end
   end

@@ -5,43 +5,45 @@ defmodule LitcoversWeb.UserForgotPasswordLive do
 
   def render(assigns) do
     ~H"""
-    <div class="mx-auto max-w-sm">
-      <.header class="text-center">
-        Forgot your password?
-        <:subtitle>We'll send a password reset link to your inbox</:subtitle>
+    <.navbar locale={@locale} request_path={"/#{@locale}/users/reset_password"} />
+    <div class="p-10 pt-2 sm:my-5 lg:my-20 mx-auto max-w-md rounded-lg sm:border-2 border-stroke-main">
+      <.header class="text-center mt-5">
+        <%= gettext("Forgot your password?") %>
+        <:subtitle><%= gettext("We'll send a password reset link to your inbox") %></:subtitle>
       </.header>
 
       <.simple_form :let={f} id="reset_password_form" for={:user} phx-submit="send_email">
         <.input field={{f, :email}} type="email" placeholder="Email" required />
         <:actions>
-          <.button phx-disable-with="Sending..." class="w-full">
-            Send password reset instructions
+          <.button phx-disable-with={gettext("Sending...")} class="w-full">
+            <%= gettext("Send password reset instructions") %>
           </.button>
         </:actions>
       </.simple_form>
       <p class="text-center mt-4">
-        <.link href={~p"/users/register"}>Register</.link>
+        <.link href={~p"/#{@locale}/users/register"}><%= gettext("Register") %></.link>
         |
-        <.link href={~p"/users/log_in"}>Log in</.link>
+        <.link href={~p"/#{@locale}/users/log_in"}><%= gettext("Log in") %></.link>
       </p>
     </div>
     """
   end
 
-  def mount(_params, _session, socket) do
-    {:ok, socket}
+  def mount(%{"locale" => locale}, _session, socket) do
+    Gettext.put_locale(locale)
+    {:ok, assign(socket, locale: locale)}
   end
 
   def handle_event("send_email", %{"user" => %{"email" => email}}, socket) do
     if user = Accounts.get_user_by_email(email) do
       Accounts.deliver_user_reset_password_instructions(
         user,
-        &url(~p"/users/reset_password/#{&1}")
+        &url(~p"/#{socket.assigns.locale}/users/reset_password/#{&1}")
       )
     end
 
     info =
-      "If your email is in our system, you will receive instructions to reset your password shortly."
+      gettext("If your email is in our system, you will receive instructions to reset your password shortly.")
 
     {:noreply,
      socket
