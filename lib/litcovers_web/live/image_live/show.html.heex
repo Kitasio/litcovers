@@ -83,12 +83,46 @@
     </div>
   </div>
   <div class="px-8 lg:col-start-6 lg:col-end-13 lg:py-auto">
-    <div class="my-20 sticky top-20">
-      <.img
-        id="mainImage"
-        img_url={"data:image/png;charset=utf-8;base64,#{@image_base64}"}
-        aspect_ratio={aspect_ratio({@image.width, @image.height})}
-      />
+    <div 
+      x-data={"{ 
+        showImage: false, 
+        showToolbar: false, 
+        imageUrl: 'data:image/png;charset=utf-8;base64,#{@image_base64}'
+      }"}
+      class="my-20 sticky top-20"
+    >
+      <div
+        class={"relative bg-sec max-w-lg overflow-hidden rounded-lg aspect-cover transition-all duration-300 mx-auto"}
+        x-on:mouseenter="showToolbar = true"
+        x-on:mouseleave="showToolbar = false"
+        id={"img-box-#{@image.id}"}
+      >
+        <img
+          x-ref="mainImage"
+          id="mainImage"
+          x-show="showImage"
+          x-transition.duration.300ms
+          x-bind:src="imageUrl"
+          x-on:contextmenu.prevent
+          x-on:load="showImage = true"
+          alt="Generated picture"
+          class={[
+            "w-full h-full object-cover aspect-cover"
+          ]}
+        />
+        <div
+          x-show="showToolbar"
+          x-transition.duration.200ms
+          class="p-5 absolute gap-5 flex justify-center z-20 bottom-0 left-0 w-full"
+        >
+          <button class="group relative bg-sec/50 p-2.5 rounded-full" id="create-cover-btn" phx-hook="CreateCover" x-on:click={"$dispatch('save-to-spaces', { img: $refs.mainImage.src })"}>
+            <.tooltip>
+              <%= gettext("Save cover") %>
+            </.tooltip>
+            <Heroicons.bookmark class="w-6 h-6" />
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

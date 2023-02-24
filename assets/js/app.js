@@ -29,8 +29,8 @@ Alpine.start()
 let Hooks = {}
 Hooks.CreateCover = {
   mounted() {
-    this.el.addEventListener("create-cover", event => {
-      this.pushEvent('create-cover', event.detail)
+    this.el.addEventListener("save-to-spaces", event => {
+      this.pushEvent('save-to-spaces', event.detail)
     })
   }
 }

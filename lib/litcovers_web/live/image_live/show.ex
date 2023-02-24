@@ -71,6 +71,19 @@ defmodule LitcoversWeb.ImageLive.Show do
   end
 
   @impl true
+  def handle_event("save-to-spaces", %{"img" => img}, socket) do
+    image_bytes =
+      img
+      |> String.split(",")
+      |> List.last()
+      |> Base.decode64!()
+
+    img_url = CoverGen.Spaces.save_bytes(image_bytes)
+
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_event("create-cover", %{"params" => params}, socket) do
     params = update_params(params, socket)
     socket = assign(socket, params: params)
