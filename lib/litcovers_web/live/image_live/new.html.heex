@@ -1,5 +1,5 @@
 <div class="flex flex-col h-screen lg:grid grid-cols-12">
-  <.navbar current_user={@current_user} show_pinger={@has_new_images} images_exist={@has_images} locale={@locale} request_path={~p"/#{@locale}/images/new"} />
+  <.navbar current_user={@current_user} show_pinger={@has_new_images} covers_exist={Media.has_covers?(@current_user)} images_exist={@has_images} locale={@locale} request_path={~p"/#{@locale}/images/new"} />
   <div class="lg:col-span-5">
     <!-- <div class="bg-sec px-8 py-5 rounded-tr-xl"> -->
     <!--   <div class="flex items-center gap-8"> -->

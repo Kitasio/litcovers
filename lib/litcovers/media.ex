@@ -31,6 +31,12 @@ defmodule Litcovers.Media do
     |> Repo.aggregate(:count) > 0
   end
 
+  def has_images?(%Accounts.User{} = user) do
+    Image
+    |> user_images_query(user)
+    |> Repo.aggregate(:count) > 0
+  end
+
   def see_all_user_images(%Accounts.User{} = user) do
     Image
     |> user_images_query(user)

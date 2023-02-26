@@ -7,7 +7,9 @@ defmodule LitcoversWeb.UiComponents do
   attr :locale, :string, required: true
   attr :current_user, :map, default: nil
   attr :images_exist, :boolean, default: true
+  attr :covers_exist, :boolean, default: false
   attr :show_pinger, :boolean, default: false
+  attr :show_cover_pinger, :boolean, default: false
 
   def navbar(assigns) do
     ~H"""
@@ -46,50 +48,46 @@ defmodule LitcoversWeb.UiComponents do
 
     <%= if @current_user != nil and @request_path != "/" do %>
       <div class="col-span-12 flex border-b-2 border-accent-sec">
-        <%= if @request_path == "/#{@locale}/images/new" do %>
-          <div class="flex items-center gap-2 px-8 py-4 bg-sec -mb-0.5 rounded-tr-lg border-t-2 border-r-2 border-accent-sec">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none">
-              <path
-                stroke="#fff"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M11.083 1.75H2.917c-.645 0-1.167.522-1.167 1.167v8.166c0 .645.522 1.167 1.167 1.167h8.166c.645 0 1.167-.522 1.167-1.167V2.917c0-.645-.522-1.167-1.167-1.167ZM7 4.667v4.666M4.667 7h4.667"
-              />
-            </svg>
-            <.link navigate={"/#{@locale}/images/new"}>
-              <%= gettext("Create") %>
-            </.link>
-          </div>
-        <% else %>
-          <div class="flex items-center gap-2 px-8 py-4 bg-main -mb-0.5 border-b-2 border-accent-sec">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none">
-              <path
-                stroke="#fff"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M11.083 1.75H2.917c-.645 0-1.167.522-1.167 1.167v8.166c0 .645.522 1.167 1.167 1.167h8.166c.645 0 1.167-.522 1.167-1.167V2.917c0-.645-.522-1.167-1.167-1.167ZM7 4.667v4.666M4.667 7h4.667"
-              />
-            </svg>
-            <.link navigate={"/#{@locale}/images/new"}>
-              <%= gettext("Create") %>
-            </.link>
-          </div>
-        <% end %>
+        <div 
+          x-data=""
+          class="flex items-center bg-main -mb-0.5 border-accent-sec"
+          x-bind:class={"'#{@request_path}' == '/#{@locale}/images/new' ? 'bg-sec rounded-tr-lg border-t-2 border-r-2' : 'bg-main border-b-2'"}
+        >
+          <.link navigate={"/#{@locale}/images/new"} class="flex items-center gap-2 w-full px-8 py-4">
+            <Heroicons.plus solid class="w-3 h-3 text-slate-200" />
+            <span x-bind:class={"'#{@request_path}' == '/#{@locale}/images/new' ? '' : 'hidden sm:inline'"}><%= gettext("Create") %></span>
+          </.link>
+        </div>
 
-        <%= if @images_exist do %>
-          <div
-            class="flex relative items-center gap-2 px-8 py-4 -mb-0.5 border-accent-sec"
-            x-data=""
-            x-bind:class={"'#{@request_path}' == '/#{@locale}/images' ? 'bg-sec rounded-tl-lg rounded-tr-lg border-l-2 border-t-2 border-r-2' : 'bg-main border-b-2'"}
-          >
-            <.link navigate={"/#{@locale}/images"}>
-              <%= gettext("My generations") %>
-            </.link>
-            <%= if @show_pinger do %>
-              <div class="absolute animate-pulse top-2 right-2 w-2 h-2 bg-accent-main rounded-full" />
-            <% end %>
-          </div>
-        <% end %>
+        <div
+          :if={@images_exist}
+          class="relative flex items-center -mb-0.5 border-accent-sec"
+          x-data=""
+          x-bind:class={"'#{@request_path}' == '/#{@locale}/images' ? 'bg-sec rounded-tl-lg rounded-tr-lg border-l-2 border-t-2 border-r-2' : 'bg-main border-b-2'"}
+        >
+          <.link navigate={"/#{@locale}/images"} class="flex items-center gap-2 w-full px-8 py-4">
+            <Heroicons.square_3_stack_3d class="w-3 h-3 text-slate-200" />
+            <span x-bind:class={"'#{@request_path}' == '/#{@locale}/images' ? '' : 'hidden sm:inline'"}><%= gettext("My generations") %></span>
+          </.link>
+          <%= if @show_pinger do %>
+            <div class="absolute animate-pulse top-2 right-2 w-2 h-2 bg-accent-main rounded-full" />
+          <% end %>
+        </div>
+
+        <div
+          :if={@covers_exist}
+          class="relative flex items-center -mb-0.5 border-accent-sec"
+          x-data=""
+          x-bind:class={"'#{@request_path}' == '/#{@locale}/covers' ? 'bg-sec rounded-tl-lg rounded-tr-lg border-l-2 border-t-2 border-r-2' : 'bg-main border-b-2'"}
+        >
+          <.link navigate={"/#{@locale}/covers"} class="flex items-center gap-2 w-full px-8 py-4">
+            <Heroicons.book_open class="w-3 h-3 text-slate-200" />
+            <span x-bind:class={"'#{@request_path}' == '/#{@locale}/covers' ? '' : 'hidden sm:inline'"}><%= gettext("My covers") %></span>
+          </.link>
+          <%= if @show_cover_pinger do %>
+            <div class="absolute animate-pulse top-2 right-2 w-2 h-2 bg-accent-main rounded-full" />
+          <% end %>
+        </div>
       </div>
     <% end %>
     """
