@@ -71,7 +71,7 @@ defmodule LitcoversWeb.ImageLive.Index do
       socket = assign(socket, current_user: user)
       socket = push_event(socket, "update-litcoins", %{id: "litcoins"})
       send(self(), {:update_image, image})
-      {:noreply, socket}
+      {:noreply, redirect(socket, to: "/#{socket.assigns.locale}/images/#{image_id}/edit")}
     else
       {:noreply, redirect(socket, to: "/#{socket.assigns.locale}/payment_options")}
     end

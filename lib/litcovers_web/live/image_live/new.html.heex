@@ -180,7 +180,13 @@
       <.img
         locale={@locale}      
         aspect_ratio={@aspect_ratio}
-        img_url={insert_image_watermark(@image)}
+        img_url={
+          if @image.unlocked do
+            @image.url
+          else
+            insert_image_watermark(@image)
+          end
+        }
         image_id={@image.id}
         unlocked={@image.unlocked}
       >
