@@ -25,6 +25,15 @@
             image_url={"#{image.url}?ik-attachment=true"}
             tooltip_text={gettext("Download")}
           />
+          <.delete_img_button
+            phx-click={
+              JS.push("delete-cover", value: %{image_id: image.id})
+              |> JS.transition("scale-90", to: "#delete-#{image.id}")
+              |> hide("#img-#{image.id}-box")
+            }
+            image_id={image.id}
+            tooltip_text={gettext("Delete cover")}
+          />
         </.img>
       </div>
     <% end %>

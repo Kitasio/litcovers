@@ -27,6 +27,19 @@ defmodule LitcoversWeb.CoverLive.Index do
   end
 
   @impl true
+  def handle_event("delete-cover", %{"image_id" => id}, socket) do
+    image = Media.get_cover!(id)
+
+    Task.start(fn ->
+      CoverGen.Spaces.delete_object(image.url)
+    end)
+
+    {:ok, _image} = Media.delete_cover(image)
+
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_params(params, _url, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
