@@ -11,6 +11,7 @@ defmodule LitcoversWeb.UiComponents do
   attr :covers_exist, :boolean, default: false
   attr :show_pinger, :boolean, default: false
   attr :show_cover_pinger, :boolean, default: false
+  attr :show_bottom_links, :boolean, default: true
 
   def navbar(assigns) do
     ~H"""
@@ -53,7 +54,7 @@ defmodule LitcoversWeb.UiComponents do
       </div>
     </div>
 
-    <%= if @current_user != nil and @request_path != "/" do %>
+    <%= if @current_user != nil and @show_bottom_links do %>
       <div class="col-span-12 flex border-b-2 border-accent-sec">
         <div 
           x-data=""

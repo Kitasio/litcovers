@@ -1,13 +1,35 @@
-<div class="container mx-auto px-4 py-8">
-  <h1 class="text-2xl font-bold mb-4">Select a Payment Tariff</h1>
+<.navbar 
+  locale={@locale} 
+  request_path={"/#{@locale}/payment_options"} 
+  current_user={@current_user}
+  show_bottom_links={false}
+/>
+<div class="mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-4"><%= gettext("Packages") %></h1>
 
-  <div class="grid grid-cols-3 gap-14">
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-7 lg:gap-14">
     <%= for opt <- @pay_options do %>
-      <div class="p-5 flex flex-col justify-between w-full h-80 bg-sec">
-        <div class="flex gap-3">
-          <p><%= opt.label %></p>
-          |
-          <p><%= opt.litcoins %> + <%= opt.bonus %> litcoins</p>
+      <div class="p-7 rounded-xl flex flex-col justify-between w-full h-80 bg-sec">
+        <div>
+          <h1 class="text-2xl xl:text-3xl font-semibold"><%= opt.name %></h1>
+          <div class="mt-3 flex items-center gap-3">
+            <div class="flex items-center gap-2">
+              <p class="text-5xl xl:text-6xl font-extrabold tracking-tighter">
+                <%= opt.litcoins %> 
+              </p>
+              <p class="pb-1.5 xl:pb-3 text-5xl xl:text-6xl font-extrabold text-accent-main">+</p>
+              <p class="text-5xl xl:text-6xl font-extrabold text-accent-main"><%= opt.bonus %></p>
+            </div>
+            <p class="text-slate-400 text-xs xl:text-sm"><%= gettext("Package of ") <> "#{opt.litcoins + opt.bonus}" %><br><%= gettext("covers") %></p>
+          </div>
+          <div class="mt-2 flex items-center gap-5">
+            <p class="text-2xl xl:text-4xl font-medium"><%= gettext("For") %> <%= opt.label %></p>
+            <div class="flex text-slate-400 items-center gap-1">
+              <p :if={@locale == "ru"}>На</p>
+              <p class="text-accent-main"><%= 390 * opt.bonus %>₽</p>
+              <p><%= gettext("cheeper") %></p>
+            </div>
+          </div>
         </div>
         <.button phx-click="make-payment" phx-value-amount={opt.value}>Pay</.button>
       </div>
