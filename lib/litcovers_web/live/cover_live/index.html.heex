@@ -1,6 +1,7 @@
 <.navbar
   covers_exist={Media.has_covers?(@current_user)}
   images_exist={Media.has_images?(@current_user)}
+  show_pinger={Media.has_unseen_images?(@current_user)}
   locale={@locale}
   request_path={~p"/#{@locale}/covers"}
   current_user={@current_user}
