@@ -2,6 +2,7 @@ defmodule LitcoversWeb.UiComponents do
   use Phoenix.Component, global_prefixes: ~w(x-)
   import LitcoversWeb.Gettext
   import LitcoversWeb.CoreComponents
+  alias Phoenix.LiveView.JS
 
   attr :request_path, :string, required: true
   attr :locale, :string, required: true
@@ -20,7 +21,13 @@ defmodule LitcoversWeb.UiComponents do
         <%= if @current_user do %>
           <.link navigate={"/#{@locale}/payment_options"}>
             <div class="group relative text-accent-main font-bold border-l-2 rounded-full border-accent-sec px-3 p-1">
-              <%= @current_user.litcoins %>
+              <span 
+                class="transition-all inline-block"
+                data-update-litcoins={JS.transition({"ease-out duration-300", "opacity-50 -translate-y-1/3", "opacity-100"})} 
+                id="litcoins" 
+              >
+                  <%= @current_user.litcoins %>
+              </span>
               <.tooltip class="mt-1" position="left">
                 <span class="text-xs font-normal text-slate-200"><%= gettext("Litcoins") %></span>
               </.tooltip>

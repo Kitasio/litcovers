@@ -27,6 +27,13 @@ window.Alpine = Alpine
 Alpine.start()
 
 let Hooks = {}
+Hooks.UpdateLitcoins = {
+  mounted() {
+    this.el.addEventListener("update-litcoins", event => {
+      this.pushEvent('update-litcoins', event.detail)
+    })
+  }
+}
 Hooks.CreateCover = {
   mounted() {
     this.el.addEventListener("save-to-spaces", event => {
@@ -80,6 +87,13 @@ let liveSocket = new LiveSocket("/live", Socket, {
         window.Alpine.clone(from, to)
       }
     }
+  }
+})
+
+window.addEventListener("phx:update-litcoins", (e) => {
+  let el = document.getElementById(e.detail.id)
+  if(el) {
+    liveSocket.execJS(el, el.getAttribute("data-update-litcoins"))
   }
 })
 

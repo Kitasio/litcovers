@@ -89,6 +89,7 @@ defmodule LitcoversWeb.ImageLive.New do
 
   @impl true
   def handle_info({:update_user, user}, socket) do
+    socket = push_event(socket, "update-litcoins", %{id: "litcoins"})
     {:noreply, assign(socket, current_user: user)}
   end
 
@@ -101,6 +102,7 @@ defmodule LitcoversWeb.ImageLive.New do
       image = Media.get_image!(image_id)
       {:ok, image} = Media.unlock_image(image)
       {:ok, user} = Accounts.remove_litcoins(socket.assigns.current_user, 1)
+      socket = push_event(socket, "update-litcoins", %{id: "litcoins"})
       {:noreply, assign(socket, image: image, current_user: user)}
     else
       {:noreply, redirect(socket, to: "/#{socket.assigns.locale}/payment_options")}

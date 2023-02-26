@@ -69,6 +69,7 @@ defmodule LitcoversWeb.ImageLive.Index do
       {:ok, image} = Media.unlock_image(image)
       {:ok, user} = Accounts.remove_litcoins(socket.assigns.current_user, 1)
       socket = assign(socket, current_user: user)
+      socket = push_event(socket, "update-litcoins", %{id: "litcoins"})
       send(self(), {:update_image, image})
       {:noreply, socket}
     else
