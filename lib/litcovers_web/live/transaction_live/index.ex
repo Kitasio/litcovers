@@ -20,12 +20,12 @@ defmodule LitcoversWeb.TransactionLive.Index do
 
   def pay_options(_locale) do
     [
-      %{value: "390.00", label: "390 рублей", litcoins: 1, bonus: 0},
-      %{value: "1170.00", label: "1170 рублей", litcoins: 3, bonus: 1},
-      %{value: "1950.00", label: "1950 рублей", litcoins: 5, bonus: 2},
-      %{value: "3510.00", label: "3510 рублей", litcoins: 9, bonus: 3},
-      %{value: "4680.00", label: "4680 рублей", litcoins: 12, bonus: 5},
-      %{value: "5850.00", label: "5850 рублей", litcoins: 15, bonus: 10}
+      %{name: gettext("Lonely pixel"), value: "390.00", label: "390 рублей", litcoins: 1, bonus: 0},
+      %{name: gettext("Creative duo"), value: "780.00", label: "780 рублей", litcoins: 2, bonus: 1},
+      %{name: gettext("Novice collector"), value: "1950.00", label: "1950 рублей", litcoins: 5, bonus: 2},
+      %{name: gettext("Paint Party"), value: "3900.00", label: "3900 рублей", litcoins: 10, bonus: 3},
+      %{name: gettext("Masterpiece creator"), value: "5850.00", label: "5850 рублей", litcoins: 15, bonus: 5},
+      %{name: gettext("Legendary Gallery"), value: "7800.00", label: "7800 рублей", litcoins: 20, bonus: 10}
     ]
   end
 end

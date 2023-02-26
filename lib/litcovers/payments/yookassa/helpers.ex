@@ -30,19 +30,19 @@ defmodule Litcovers.Payments.Yookassa.Helpers do
     price = 390
 
     cond do
-      amount >= 5850 ->
+      amount >= 7800 ->
         div(amount, price) + 10
 
-      amount >= 4680 ->
+      amount >= 5850 ->
         div(amount, price) + 5
 
-      amount >= 3510 ->
+      amount >= 3900 ->
         div(amount, price) + 3
 
       amount >= 1950 ->
         div(amount, price) + 2
 
-      amount >= 1170 ->
+      amount >= 780 ->
         div(amount, price) + 1
 
       true ->
