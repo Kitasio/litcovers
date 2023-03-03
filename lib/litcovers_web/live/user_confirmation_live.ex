@@ -6,7 +6,7 @@ defmodule LitcoversWeb.UserConfirmationLive do
   def render(%{live_action: :edit} = assigns) do
     ~H"""
     <.navbar locale={@locale} request_path={"/#{@locale}/users/confirm"} />
-    <div class="p-10 pt-2 sm:my-5 lg:my-20 mx-auto max-w-md rounded-lg sm:border-2 border-stroke-main">
+    <div class="p-10 pt-2 sm:my-5 lg:my-20 mx-auto max-w-md">
       <.simple_form :let={f} for={:user} id="confirmation_form" phx-submit="confirm_account">
         <.input field={{f, :token}} type="hidden" value={@token} />
         <:actions>
@@ -15,12 +15,6 @@ defmodule LitcoversWeb.UserConfirmationLive do
           </.button>
         </:actions>
       </.simple_form>
-
-      <p class="text-center mt-4">
-        <.link href={~p"/#{@locale}/users/register"}><%= gettext("Register") %></.link>
-        |
-        <.link href={~p"/#{@locale}/users/log_in"}><%= gettext("Log in") %></.link>
-      </p>
     </div>
     """
   end

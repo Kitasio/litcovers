@@ -268,10 +268,6 @@ defmodule LitcoversWeb.UserAuth do
         conn
       else
         conn
-        |> put_flash(
-          :error,
-          gettext("You need to confirm your account before continuing.")
-        )
         |> maybe_store_return_to()
         |> redirect(to: "/#{conn.assigns.locale}/users/confirm")
         |> halt()
@@ -329,5 +325,5 @@ defmodule LitcoversWeb.UserAuth do
 
   defp maybe_store_return_to(conn), do: conn
 
-  defp signed_in_path(conn), do: ~p"/#{conn.assigns.locale}"
+  defp signed_in_path(conn), do: ~p"/#{conn.assigns.locale}/images/new"
 end

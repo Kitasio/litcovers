@@ -5,72 +5,89 @@ defmodule LitcoversWeb.UserSettingsLive do
 
   def render(assigns) do
     ~H"""
-    <.header>Change Email</.header>
+    <.navbar 
+      locale={@locale} 
+      request_path={"/#{@locale}/users/settings"}
+      current_user={@current_user}
+      show_bottom_links={false}
+    />
 
-    <.simple_form
-      :let={f}
-      id="email_form"
-      for={@email_changeset}
-      phx-submit="update_email"
-      phx-change="validate_email"
+    <div 
+      x-data={"{
+        changeEmail: false,
+        changePassword: false
+      }"}
+      class="px-7 w-96 max-w-md mx-auto"
     >
-      <.error :if={@email_changeset.action == :insert}>
-        Oops, something went wrong! Please check the errors below.
-      </.error>
+      <.simple_form
+        :let={f}
+        id="email_form"
+        for={@email_changeset}
+        phx-submit="update_email"
+        phx-change="validate_email"
+      >
+        <.error :if={@email_changeset.action == :insert}>
+          Oops, something went wrong! Please check the errors below.
+        </.error>
 
-      <.input field={{f, :email}} type="email" label="Email" required />
+        <.input field={{f, :email}} class="bg-transparent" type="email" label="Email" required />
 
-      <.input
-        field={{f, :current_password}}
-        name="current_password"
-        id="current_password_for_email"
-        type="password"
-        label="Current password"
-        value={@email_form_current_password}
-        required
-      />
-      <:actions>
-        <.button phx-disable-with="Changing...">Change Email</.button>
-      </:actions>
-    </.simple_form>
+        <.input
+          field={{f, :current_password}}
+          name="current_password"
+          id="current_password_for_email"
+          type="password"
+          label="Current password"
+          value={@email_form_current_password}
+          required
+        />
+        <:actions>
+          <.button phx-disable-with="Changing...">Change Email</.button>
+        </:actions>
+      </.simple_form>
 
-    <.header>Change Password</.header>
+      <.header class="mt-5">Change Password</.header>
 
-    <.simple_form
-      :let={f}
-      id="password_form"
-      for={@password_changeset}
-      action={~p"/users/log_in?_action=password_updated"}
-      method="post"
-      phx-change="validate_password"
-      phx-submit="update_password"
-      phx-trigger-action={@trigger_submit}
-    >
-      <.error :if={@password_changeset.action == :insert}>
-        Oops, something went wrong! Please check the errors below.
-      </.error>
+      <.simple_form
+        :let={f}
+        id="password_form"
+        for={@password_changeset}
+        action={~p"/#{@locale}/users/log_in?_action=password_updated"}
+        method="post"
+        phx-change="validate_password"
+        phx-submit="update_password"
+        phx-trigger-action={@trigger_submit}
+      >
+        <.error :if={@password_changeset.action == :insert}>
+          Oops, something went wrong! Please check the errors below.
+        </.error>
 
-      <.input field={{f, :email}} type="hidden" value={@current_email} />
+        <.input field={{f, :email}} type="hidden" value={@current_email} />
 
-      <.input field={{f, :password}} type="password" label="New password" required />
-      <.input field={{f, :password_confirmation}} type="password" label="Confirm new password" />
-      <.input
-        field={{f, :current_password}}
-        name="current_password"
-        type="password"
-        label="Current password"
-        id="current_password_for_password"
-        value={@current_password}
-        required
-      />
-      <:actions>
-        <.button phx-disable-with="Changing...">Change Password</.button>
-      </:actions>
-    </.simple_form>
+        <.input field={{f, :password}} type="password" label="New password" required />
+        <.input field={{f, :password_confirmation}} type="password" label="Confirm new password" />
+        <.input
+          field={{f, :current_password}}
+          name="current_password"
+          type="password"
+          label="Current password"
+          id="current_password_for_password"
+          value={@current_password}
+          required
+        />
+        <:actions>
+          <.button phx-disable-with="Changing...">Change Password</.button>
+        </:actions>
+      </.simple_form>
+      <div class="mt-5">
+        <.link href={~p"/#{@locale}/users/log_out"} method="delete">Log out</.link>
+      </div>
+    </div>
     """
   end
 
   def mount(%{"token" => token, "locale" => locale}, _session, socket) do
+    Gettext.put_locale(locale)
     socket =
       case Accounts.update_user_email(socket.assigns.current_user, token) do
         :ok ->
@@ -80,10 +97,11 @@ defmodule LitcoversWeb.UserSettingsLive do
           put_flash(socket, :error, "Email change link is invalid or it has expired.")
       end
 
-    {:ok, push_navigate(socket, to: ~p"/#{locale}/users/settings")}
+    {:ok, push_navigate(socket, to: ~p"/#{socket.assigns.locale}/users/settings")}
   end
 
   def mount(%{"locale" => locale}, _session, socket) do
+    Gettext.put_locale(locale)
     user = socket.assigns.current_user
 
     socket =
@@ -121,7 +139,7 @@ defmodule LitcoversWeb.UserSettingsLive do
         Accounts.deliver_user_update_email_instructions(
           applied_user,
           user.email,
-          &url(~p"/users/settings/confirm_email/#{&1}")
+          &url(~p"/#{socket.assigns.locale}/users/settings/confirm_email/#{&1}")
         )
 
         info = "A link to confirm your email change has been sent to the new address."

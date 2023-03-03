@@ -29,8 +29,18 @@ defmodule LitcoversWeb.UserConfirmationInstructionsLive do
 
   def render(assigns) do
     ~H"""
-    <.navbar locale={@locale} request_path={"/#{@locale}/users/confirm"} />
-    <div class="p-10 sm:my-5 lg:my-20 mx-auto max-w-md rounded-lg sm:border-2 border-stroke-main">
+    <.navbar
+      locale={@locale}
+      current_user={@current_user}
+      show_bottom_links={false}
+      request_path={"/#{@locale}/users/confirm"}
+    />
+    <div class="mt-10 p-7 max-w-2xl mx-auto">
+      <h1 class="text-2xl md:text-4xl font-semibold text-center">
+        <%= gettext("We sent confirmation instructions to your email address") %>
+      </h1>
+    </div>
+    <div class="p-10 my-5 lg:my-20 mx-auto max-w-md rounded-lg sm:border-2 border-stroke-main">
       <.header><%= gettext("Resend confirmation instructions") %></.header>
 
       <.simple_form :let={f} for={:user} id="resend_confirmation_form" phx-submit="send_instructions">

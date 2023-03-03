@@ -86,7 +86,9 @@ defmodule LitcoversWeb.ImageLive.Show do
         socket =
           socket
           |> put_flash(:info, gettext("Your cover is saved"))
-          |> push_navigate(to: ~p"/#{socket.assigns.locale}/images/#{socket.assigns.image.id}/edit")
+          |> push_navigate(
+            to: ~p"/#{socket.assigns.locale}/images/#{socket.assigns.image.id}/edit"
+          )
 
         {:noreply, socket}
 
