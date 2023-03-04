@@ -26,6 +26,33 @@ defmodule Litcovers.Accounts do
     |> Repo.update()
   end
 
+  def update_relaxed_mode(%User{} = user, params) do
+    user
+    |> User.relaxed_mode_changeset(params)
+    |> Repo.update()
+  end
+
+  def inc_recent_generations(%User{} = user) do
+    user
+    |> User.relaxed_mode_changeset(%{recent_generations: user.recent_generations + 1})
+    |> Repo.update()
+  end
+
+  def reset_recent_generations(%User{} = user) do
+    user
+    |> User.relaxed_mode_changeset(%{recent_generations: 0})
+    |> Repo.update()
+  end
+
+  def relax_user_for(%User{} = user, time) do
+    user
+    |> User.relaxed_mode_changeset(%{
+      relaxed_mode_till: NaiveDateTime.add(Timex.now(), +time, :minute),
+      relaxed_mode: true
+    })
+    |> Repo.update()
+  end
+
   defp ten_minutes_ago do
     NaiveDateTime.add(Timex.now(), -10, :minute)
   end

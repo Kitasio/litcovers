@@ -22,6 +22,7 @@ import { Socket } from "phoenix"
 import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 import Alpine from "../vendor/alpinejs"
+import { timer as createTimer } from "./timer.js"
 
 window.Alpine = Alpine
 Alpine.start()
@@ -95,6 +96,18 @@ window.addEventListener("phx:update-litcoins", (e) => {
   if(el) {
     liveSocket.execJS(el, el.getAttribute("data-update-litcoins"))
   }
+})
+
+window.addEventListener("phx:init-relaxed-mode-timer", (e) => {
+    let el = document.getElementById(e.detail.id)
+    const relaxedTill = e.detail.relaxed_till
+    if(el && relaxedTill >= 0) {
+        let timer = createTimer(new Date().setMilliseconds(new Date().getMilliseconds() + relaxedTill))
+        setInterval(() => {
+            timer.setRemaining();
+            el.innerText = `${timer.time().minutes}:${timer.time().seconds}`
+        }, 1000);
+    }
 })
 
 // Show progress bar on live navigation and form submits

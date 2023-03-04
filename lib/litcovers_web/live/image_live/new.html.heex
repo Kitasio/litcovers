@@ -161,7 +161,7 @@
             <.input field={{f, :height}} value={@height} type="hidden" />
           </div>
 
-          <.generate_btn spin={@is_generating} />
+          <.generate_btn spin={@is_generating} user_id={@current_user.id} relaxed_mode={@current_user.relaxed_mode} />
         </.form>
       </div>
     <% else %>

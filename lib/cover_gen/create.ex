@@ -55,8 +55,14 @@ defmodule CoverGen.Create do
             ai_update_image(image, image_params)
           end
 
-          release_user(image.user_id)
-          broadcast(image.user_id, image.id, :gen_complete)
+          {:ok, user} = release_user(image.user_id)
+          {:ok, user} = Accounts.inc_recent_generations(user)
+
+          if user.recent_generations >= user.litcoins * 10 + 10 do
+            broadcast(image.user_id, image.id, :relaxed_mode)
+          else
+            broadcast(image.user_id, image.id, :gen_complete)
+          end
       end
     else
       {:error, :oai_failed} ->
@@ -71,45 +77,6 @@ defmodule CoverGen.Create do
       _ ->
         release_user(image.user_id)
         broadcast(image.user_id, image.id, :unknown_error)
-    end
-  end
-
-  def new_async(%Image{} = image) do
-    Task.start(fn ->
-      # Check if DrippingMachine is running
-      if GenServer.whereis(Litcovers.DrippingMachine) != nil do
-        send(Litcovers.DrippingMachine, {:drip, :user})
-      end
-
-      caller = self()
-
-      {:ok, pid} =
-        Task.start(fn ->
-          Logger.info("Starting generation, image id: #{image.id}")
-          new(image)
-          send(caller, {:ok, :finished})
-        end)
-
-      get_result_or_kill(pid, image)
-    end)
-  end
-
-  defp get_result_or_kill(pid, image) do
-    receive do
-      {:ok, :finished} ->
-        Logger.info("Finished generating, image id: #{image.id}")
-
-        release_user(image.user_id)
-
-        broadcast(image.user_id, image.id, :gen_complete)
-    after
-      :timer.minutes(7) ->
-        Process.exit(pid, :kill)
-        Logger.error("Timeout generating image, id: #{image.id}")
-
-        release_user(image.user_id)
-
-        broadcast(image.user_id, image.id, :gen_timeout)
     end
   end
 

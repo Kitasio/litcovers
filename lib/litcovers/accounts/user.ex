@@ -13,6 +13,7 @@ defmodule Litcovers.Accounts.User do
     field :is_generating, :boolean, default: false
     field :relaxed_mode, :boolean, default: false
     field :recent_generations, :integer, default: 0
+    field :relaxed_mode_till, :naive_datetime
 
     has_many :images, Litcovers.Media.Image
     has_many :covers, Litcovers.Media.Cover
@@ -74,7 +75,7 @@ defmodule Litcovers.Accounts.User do
 
   def relaxed_mode_changeset(user, attrs) do
     user
-    |> cast(attrs, [:relaxed_mode, :recent_generations])
+    |> cast(attrs, [:relaxed_mode, :recent_generations, :relaxed_mode_till])
   end
 
   defp validate_email(changeset, opts) do

@@ -22,12 +22,16 @@ defmodule LitcoversWeb.UiComponents do
         <%= if @current_user do %>
           <.link navigate={"/#{@locale}/payment_options"}>
             <div class="group relative text-accent-main font-bold border-l-2 rounded-full border-accent-sec px-3 p-1">
-              <span 
+              <span
                 class="transition-all inline-block"
-                data-update-litcoins={JS.transition({"ease-out duration-300", "opacity-50 -translate-y-1/3", "opacity-100"})} 
-                id="litcoins" 
+                data-update-litcoins={
+                  JS.transition(
+                    {"ease-out duration-300", "opacity-50 -translate-y-1/3", "opacity-100"}
+                  )
+                }
+                id={"litcoins-of-user-#{@current_user.id}"}
               >
-                  <%= @current_user.litcoins %>
+                <%= @current_user.litcoins %>
               </span>
               <.tooltip class="mt-1" position="left">
                 <span class="text-xs font-normal text-slate-200"><%= gettext("Litcoins") %></span>
@@ -56,14 +60,16 @@ defmodule LitcoversWeb.UiComponents do
 
     <%= if @current_user != nil and @show_bottom_links do %>
       <div class="col-span-12 flex border-b-2 border-accent-sec">
-        <div 
+        <div
           x-data=""
           class="flex items-center bg-main -mb-0.5 border-accent-sec"
           x-bind:class={"'#{@request_path}' == '/#{@locale}/images/new' ? 'bg-sec rounded-tr-lg border-t-2 border-r-2' : 'bg-main border-b-2'"}
         >
           <.link navigate={"/#{@locale}/images/new"} class="flex items-center gap-2 w-full px-8 py-4">
             <Heroicons.plus solid class="w-3 h-3 text-slate-200" />
-            <span x-bind:class={"'#{@request_path}' == '/#{@locale}/images/new' ? '' : 'hidden sm:inline'"}><%= gettext("Create") %></span>
+            <span x-bind:class={"'#{@request_path}' == '/#{@locale}/images/new' ? '' : 'hidden sm:inline'"}>
+              <%= gettext("Create") %>
+            </span>
           </.link>
         </div>
 
@@ -75,7 +81,9 @@ defmodule LitcoversWeb.UiComponents do
         >
           <.link navigate={"/#{@locale}/images"} class="flex items-center gap-2 w-full px-8 py-4">
             <Heroicons.square_3_stack_3d class="w-3 h-3 text-slate-200" />
-            <span x-bind:class={"'#{@request_path}' == '/#{@locale}/images' ? '' : 'hidden sm:inline'"}><%= gettext("My generations") %></span>
+            <span x-bind:class={"'#{@request_path}' == '/#{@locale}/images' ? '' : 'hidden sm:inline'"}>
+              <%= gettext("My generations") %>
+            </span>
           </.link>
           <%= if @show_pinger do %>
             <div class="absolute animate-pulse top-2 right-2 w-2 h-2 bg-accent-main rounded-full" />
@@ -90,7 +98,9 @@ defmodule LitcoversWeb.UiComponents do
         >
           <.link navigate={"/#{@locale}/covers"} class="flex items-center gap-2 w-full px-8 py-4">
             <Heroicons.book_open class="w-3 h-3 text-slate-200" />
-            <span x-bind:class={"'#{@request_path}' == '/#{@locale}/covers' ? '' : 'hidden sm:inline'"}><%= gettext("My covers") %></span>
+            <span x-bind:class={"'#{@request_path}' == '/#{@locale}/covers' ? '' : 'hidden sm:inline'"}>
+              <%= gettext("My covers") %>
+            </span>
           </.link>
           <%= if @show_cover_pinger do %>
             <div class="absolute animate-pulse top-2 right-2 w-2 h-2 bg-accent-main rounded-full" />

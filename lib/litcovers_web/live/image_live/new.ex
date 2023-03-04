@@ -17,6 +17,18 @@ defmodule LitcoversWeb.ImageLive.New do
 
     check_new_payments(socket, self())
 
+    socket =
+      if socket.assigns.current_user.relaxed_mode do
+        relaxed_mode_releaser(socket.assigns.current_user, self())
+
+        push_event(socket, "init-relaxed-mode-timer", %{
+          id: "relaxed-timer-user-#{socket.assigns.current_user.id}",
+          relaxed_till: relaxed_mode_till(socket.assigns.current_user)
+        })
+      else
+        socket
+      end
+
     style_prompts = Metadata.list_all_where(:fantasy, :positive, :setting)
     prompt = style_prompts |> List.first()
     stage = get_stage(0)
@@ -89,7 +101,36 @@ defmodule LitcoversWeb.ImageLive.New do
 
   @impl true
   def handle_info({:update_user, user}, socket) do
-    socket = push_event(socket, "update-litcoins", %{id: "litcoins"})
+    socket = push_event(socket, "update-litcoins", %{id: "litcoins-of-user-#{user.id}"})
+    {:noreply, assign(socket, current_user: user)}
+  end
+
+  @impl true
+  def handle_info({:relaxed_mode, image_id}, socket) do
+    image = Media.get_image_preload!(image_id)
+    {:ok, user} = Accounts.relax_user_for(socket.assigns.current_user, 5)
+    relaxed_mode_releaser(user, self())
+
+    socket =
+      push_event(socket, "init-relaxed-mode-timer", %{
+        id: "relaxed-timer-user-#{user.id}",
+        relaxed_till: relaxed_mode_till(user)
+      })
+
+    {:noreply,
+     socket
+     |> assign(
+       image: image,
+       current_user: user,
+       is_generating: false,
+       has_images: true,
+       has_new_images: true
+     )}
+  end
+
+  def handle_info({:end_relax, user}, socket) do
+    params = %{relaxed_mode: false, recent_generations: 0}
+    {:ok, user} = Accounts.update_relaxed_mode(user, params)
     {:noreply, assign(socket, current_user: user)}
   end
 
@@ -121,7 +162,7 @@ defmodule LitcoversWeb.ImageLive.New do
   end
 
   def handle_event("save", %{"image" => image_params}, socket) do
-    unless socket.assigns.current_user.is_generating do
+    unless socket.assigns.current_user.is_generating or socket.assigns.current_user.relaxed_mode do
       %{"prompt_id" => prompt_id} = image_params
       prompt = Metadata.get_prompt!(prompt_id)
 
@@ -239,6 +280,26 @@ defmodule LitcoversWeb.ImageLive.New do
     end
   end
 
+  def relaxed_mode_releaser(user, caller) do
+    Task.start_link(fn ->
+      # calculate difference
+      now = NaiveDateTime.add(Timex.now(), 0)
+      release_after = NaiveDateTime.diff(user.relaxed_mode_till, now, :millisecond)
+
+      if release_after <= 0 do
+        send(caller, {:end_relax, user})
+      else
+        release_after |> Process.sleep()
+        send(caller, {:end_relax, user})
+      end
+    end)
+  end
+
+  def relaxed_mode_till(user) do
+    now = NaiveDateTime.add(Timex.now(), 0)
+    NaiveDateTime.diff(user.relaxed_mode_till, now, :millisecond)
+  end
+
   defp check_new_payments(socket, caller) do
     Task.start_link(fn ->
       transactions = Payments.user_pending_transactions(socket.assigns.current_user)
@@ -305,6 +366,8 @@ defmodule LitcoversWeb.ImageLive.New do
   end
 
   attr :spin, :boolean, default: false
+  attr :relaxed_mode, :boolean, default: false
+  attr :user_id, :string, required: true
 
   def generate_btn(assigns) do
     ~H"""
@@ -312,9 +375,11 @@ defmodule LitcoversWeb.ImageLive.New do
       <button
         type="submit"
         class="btn-small flex items-center justify-center gap-3 py-5 bg-accent-main disabled:bg-dis-btn rounded-full w-full"
-        x-bind:disabled={"#{@spin} && true"}
+        x-bind:disabled={"#{@spin or @relaxed_mode} && true"}
       >
+        <span :if={@relaxed_mode} id={"relaxed-timer-user-#{@user_id}"}>00:00</span>
         <svg
+          :if={!@relaxed_mode}
           x-bind:class={"#{@spin} && 'animate-slow-spin'"}
           xmlns="http://www.w3.org/2000/svg"
           width="14"
@@ -331,7 +396,7 @@ defmodule LitcoversWeb.ImageLive.New do
             <clipPath id="b"><path fill="#fff" d="M-.5 0h14v14h-14z" /></clipPath>
           </defs>
         </svg>
-        <span><%= gettext("Generate") %></span>
+        <span :if={!@relaxed_mode}><%= gettext("Generate") %></span>
       </button>
     </div>
     """
