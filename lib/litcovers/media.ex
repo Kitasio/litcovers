@@ -51,6 +51,13 @@ defmodule Litcovers.Media do
     |> Repo.aggregate(:count) > 0
   end
 
+  def last_image(%Accounts.User{} = user) do
+    Image
+    |> user_images_query(user)
+    |> order_by(desc: :inserted_at)
+    |> Repo.one()
+  end
+
   defp all_unseen_images_query(query) do
     from(r in query, where: r.seen == false)
   end

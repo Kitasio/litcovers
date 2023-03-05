@@ -61,6 +61,16 @@ defmodule Litcovers.Accounts do
     from(r in query, where: r.is_generating == true and r.updated_at < ^ten_minutes_ago())
   end
 
+  defp has_recent_generations(query) do
+    from(r in query, where: r.recent_generations > 0)
+  end
+
+  def list_users_with_recent_generations() do
+    User
+    |> has_recent_generations()
+    |> Repo.all()
+  end
+
   def list_stuck_users() do
     User
     |> stuck_user_query()
