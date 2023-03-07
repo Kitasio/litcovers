@@ -96,7 +96,7 @@
       class="my-20 sticky top-20"
     >
       <div
-        class="relative bg-sec max-w-lg overflow-hidden rounded-lg aspect-cover transition-all duration-300 mx-auto"
+        class="relative bg-sec max-w-lg overflow-hidden rounded-lg transition-all duration-300 mx-auto"
         x-on:mouseenter="showToolbar = true"
         x-on:mouseleave="showToolbar = false"
         id={"img-box-#{@image.id}"}
@@ -111,7 +111,7 @@
           x-on:load="showImage = true"
           alt="Generated picture"
           class={[
-            "w-full h-full object-cover aspect-cover"
+            "w-full h-full object-cover"
           ]}
         />
         <div

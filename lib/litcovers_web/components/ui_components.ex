@@ -126,7 +126,7 @@ defmodule LitcoversWeb.UiComponents do
       ~H"""
       <div
         x-data={"{ showImage: false, showToolbar: false, imageUrl: '#{@img_url}' }"}
-        class={"relative bg-sec max-w-lg overflow-hidden rounded-lg aspect-#{@aspect_ratio} transition-all duration-300 mx-auto"}
+        class="relative bg-sec max-w-lg overflow-hidden rounded-lg transition-all duration-300 mx-auto"
         x-on:mouseenter="showToolbar = true"
         x-on:mouseleave="showToolbar = false"
         id={"img-box-#{@image_id}"}
@@ -140,7 +140,7 @@ defmodule LitcoversWeb.UiComponents do
           x-on:load="showImage = true"
           alt="Generated picture"
           class={[
-            "w-full h-full object-cover aspect-cover",
+            "w-full h-full object-cover",
             @class
           ]}
         />
@@ -162,7 +162,7 @@ defmodule LitcoversWeb.UiComponents do
       """
     else
       ~H"""
-      <div class={"relative bg-sec max-w-lg overflow-hidden rounded-lg aspect-#{@aspect_ratio} transition-all duration-300 mx-auto"} />
+      <div class={"relative aspect-#{@aspect_ratio} bg-sec max-w-lg overflow-hidden rounded-lg transition-all duration-300 mx-auto"} />
       """
     end
   end
