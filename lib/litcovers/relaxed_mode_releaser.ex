@@ -23,7 +23,7 @@ defmodule Litcovers.RelaxedModeReleaser do
   defp release(user) do
     last_image = Media.last_image(user)
 
-    if last_image.created_at > hour_ago() do
+    if last_image.inserted_at > hour_ago() do
       params = %{recent_generations: 0}
       Accounts.update_relaxed_mode(user, params)
     end

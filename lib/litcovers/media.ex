@@ -55,6 +55,7 @@ defmodule Litcovers.Media do
     Image
     |> user_images_query(user)
     |> order_by(desc: :inserted_at)
+    |> Ecto.Query.first()
     |> Repo.one()
   end
 
