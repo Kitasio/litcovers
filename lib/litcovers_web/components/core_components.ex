@@ -219,8 +219,9 @@ defmodule LitcoversWeb.CoreComponents do
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 py-2.5 px-4 bg-accent-main hover:bg-hover rounded-full",
-        "text-sm lg:text-base leading-6 text-white active:text-white/80 transition disabled:bg-dis-btn",
+        "bg-gradient-to-r from-[#FF00E5] via-[#8F00FF] to-[#3600D0]",
+        "phx-submit-loading:opacity-75 py-3 px-7 rounded-full",
+        "text-xs lg:text-sm font-semibold leading-6 text-white active:text-white/80 transition disabled:bg-dis-btn",
         @class
       ]}
       {@rest}
