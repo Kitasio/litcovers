@@ -46,7 +46,7 @@ module.exports = {
         'gray': '#C6C6C6'
       },
       fontFamily: {
-        'sans': ['"Helvetica Neue"']
+        'sans': ['Unbounded', '"Helvetica Neue"']
       }
     },
   },
